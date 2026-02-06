@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Visualizer - AI Mastery Bootcamp</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 10px; color: #64b5f6; }
+        .subtitle { text-align: center; color: #8892b0; margin-bottom: 30px; }
+        
+        .stage {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .input-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #64b5f6;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover { transform: scale(1.05); }
+        
+        .visualization {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .token {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            font-weight: bold;
+            animation: tokenize 0.5s ease-out;
+        }
+        
+        @keyframes tokenize {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .attention-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .attention-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .attention-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        .score-board {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #64b5f6;
+        }
+        
+        .score { font-size: 24px; color: #64b5f6; }
+        
+        .challenge {
+            background: rgba(100,181,246,0.1);
+            border-left: 4px solid #64b5f6;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .hint-box {
+            display: none;
+            background: rgba(255,193,7,0.1);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="score-board">
+        <div>XP: <span class="score" id="xp">0</span></div>
+        <div>Level: <span id="level">1</span></div>
+    </div>
+    
+    <div class="container">
+        <h1>🔮 Transformer Visualizer</h1>
+        <p class="subtitle">Watch how AI "understands" language - token by token</p>
+        
+        <div class="stage">
+            <h2>🎯 Challenge: Tokenize this sentence</h2>
+            <div class="input-section">
+                <input type="text" id="sentence" placeholder="Enter a sentence..." value="AI agents are the future">
+                <button onclick="visualize()">Visualize!</button>
+            </div>
+            
+            <div class="visualization" id="viz">
+                <h3>📦 Step 1: Tokenization</h3>
+                <p>Breaking text into tokens (pieces the model understands):</p>
+                <div id="tokens"></div>
+                
+                <h3 style="margin-top: 30px;">🕸️ Step 2: Attention Pattern</h3>
+                <p>Each token "attends" to other tokens (darker = more attention):</p>
+                <div class="attention-grid" id="attention"></div>
+                
+                <div class="challenge">
+                    <strong>🎮 Challenge:</strong> Click on any token above. Can you predict which other tokens it pays attention to?
+                    <button onclick="showHint()" style="margin-left: 10px; padding: 5px 15px; font-size: 14px;">Hint</button>
+                </div>
+                
+                <div class="hint-box" id="hint">
+                    💡 <strong>Hint:</strong> In the sentence "AI agents are the future", the word "future" pays strong attention to "AI" and "agents" - it's predicting what comes next based on what came before!
+                </div>
+            </div>
+        </div>
+        
+        <div class="stage">
+            <h2>🏆 Your Progress</h2>
+            <ul>
+                <li>✅ Understand tokenization</li>
+                <li>⬜ Master attention patterns</li>
+                <li>⬜ Predict next tokens</li>
+                <li>⬅️ Complete 5 challenges to unlock Level 2</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let xp = 0;
+        let level = 1;
+        
+        function visualize() {
+            const sentence = document.getElementById('sentence').value;
+            const viz = document.getElementById('viz');
+            const tokensDiv = document.getElementById('tokens');
+            const attentionDiv = document.getElementById('attention');
+            
+            viz.style.display = 'block';
+            
+            // Simulate tokenization (simplified for demo)
+            const words = sentence.split(' ');
+            tokensDiv.innerHTML = words.map((word, i) => 
+                `<span class="token" style="animation-delay: ${i * 0.1}s">${word}</span>`
+            ).join('');
+            
+            // Simulate attention heatmap
+            attentionDiv.innerHTML = '';
+            words.forEach((word1, i) => {
+                words.forEach((word2, j) => {
+                    // Calculate fake attention score
+                    let score = Math.random();
+                    if (i === j) score = 1; // Self-attention
+                    if (Math.abs(i - j) === 1) score = 0.7; // Adjacent words
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'attention-cell';
+                    cell.style.background = `rgba(100,181,246,${score})`;
+                    cell.style.color = score > 0.5 ? '#fff' : '#000';
+                    cell.textContent = score > 0.5 ? '👁️' : '·';
+                    cell.title = `${word1} → ${word2}: ${(score * 100).toFixed(0)}%`;
+                    cell.onclick = () => awardXP(10);
+                    attentionDiv.appendChild(cell);
+                });
+            });
+            
+            awardXP(25);
+        }
+        
+        function awardXP(points) {
+            xp += points;
+            document.getElementById('xp').textContent = xp;
+            
+            if (xp >= 100 && level === 1) {
+                level = 2;
+                document.getElementById('level').textContent = level;
+                alert('🎉 Level Up! You\'ve unlocked Advanced Attention Patterns!');
+            }
+        }
+        
+        function showHint() {
+            document.getElementById('hint').style.display = 'block';
+        }
+        
+        // Auto-load visualization on enter key
+        document.getElementById('sentence').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') visualize();
+        });
+    </script>
+</body>
+</html>
