@@ -422,7 +422,9 @@
         let commandsUsed = 0;
         let startTime = Date.now();
         let hintsUsed = 0;
-        let currentDirectory = '/var/log'; // Track current directory
+        let currentDirectory = '/var/log';
+        let commandHistory = [];
+        let historyIndex = -1;
 
         // Load game data
         fetch('/data/commands/cli-commands.json')
@@ -467,68 +469,204 @@
         }
 
         document.getElementById('command-input').addEventListener('keydown', function(e) {
-            if (e.key !== 'Enter') return;
-            e.preventDefault();
-
             const input = e.target;
-            const command = input.value.trim();
 
-            if (!command) return;
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const command = input.value.trim();
+                if (!command) return;
 
-            // Display command
-            addOutput(`$ ${command}`, 'command');
+                // Add to history
+                commandHistory.push(command);
+                historyIndex = -1;
 
-            commandsUsed++;
-            document.getElementById('commands-display').textContent = commandsUsed;
+                // Display command
+                addOutput(`$ ${command}`, 'command');
+                commandsUsed++;
+                document.getElementById('commands-display').textContent = commandsUsed;
 
-            // Disable input
-            input.disabled = true;
+                // Disable input
+                input.disabled = true;
 
-            // Process command after brief delay
-            setTimeout(() => processCommand(command), 200);
+                // Process command after brief delay
+                setTimeout(() => processCommand(command), 200);
+            } else if (e.key === 'ArrowUp') {
+                // Previous command in history
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+                    input.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                // Next command in history
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                } else {
+                    historyIndex = -1;
+                    input.value = '';
+                }
+            } else if (e.key === 'Tab') {
+                // Auto-complete (simplified)
+                e.preventDefault();
+                addOutput('Auto-complete not fully implemented in bootcamp simulator', 'success');
+                enableInput();
+            } else if (e.ctrlKey) {
+                // Handle keyboard shortcuts
+                if (e.key === 'c') {
+                    // Ctrl+C - interrupt
+                    e.preventDefault();
+                    addOutput('^C', 'error');
+                    enableInput();
+                } else if (e.key === 'l') {
+                    // Ctrl+L - clear screen
+                    e.preventDefault();
+                    document.getElementById('terminal-output').innerHTML = '';
+                    enableInput();
+                } else if (e.key === 'a') {
+                    // Ctrl+A - move to beginning (let browser handle it)
+                } else if (e.key === 'e') {
+                    // Ctrl+E - move to end (let browser handle it)
+                }
+            }
         });
 
         function processCommand(command) {
             const level = gameData.levels.find(l => l.level === currentLevel);
+            const parts = command.trim().split(/\s+/);
+            const baseCommand = parts[0].toLowerCase();
+            const args = parts.slice(1);
             
-            // Check for help
-            if (command === 'help') {
-                addOutput('Available commands: help, hint, clear, pwd, ls, cd, mkdir, npm, git, cat', 'success');
-                addOutput('Type the command from the objective to proceed!', 'success');
+            // Built-in bootcamp commands
+            if (baseCommand === 'help') {
+                addOutput('Available commands: pwd, ls, cd, mkdir, cat, touch, rm, cp, mv, git, npm, whoami, man, history, clear, hint', 'success');
+                addOutput('Keyboard shortcuts: Up/Down arrows (history), Ctrl+C (interrupt), Ctrl+L (clear)', 'success');
                 enableInput();
                 return;
             }
 
-            // Check for hint
-            if (command === 'hint') {
+            if (baseCommand === 'hint') {
                 showHint();
                 enableInput();
                 return;
             }
 
-            // Check for clear
-            if (command === 'clear') {
+            if (baseCommand === 'clear') {
                 document.getElementById('terminal-output').innerHTML = '';
                 enableInput();
                 return;
             }
 
-            // Check for terminal commands (pwd, ls, cat, etc.)
-            const baseCommand = command.split(' ')[0].toLowerCase();
-            if (gameData.terminalResponses[command.toLowerCase()] || gameData.terminalResponses[baseCommand]) {
-                const responseData = gameData.terminalResponses[command.toLowerCase()] || gameData.terminalResponses[baseCommand];
-                if (responseData) {
-                    const output = responseData.outputs[currentDirectory] || responseData.outputs['*'] || '';
-                    if (output) {
-                        addOutput(output, 'success');
-                    }
-                    addOutput(`\n${responseData.explanation}`, 'success');
-                    enableInput();
-                    return;
+            if (baseCommand === 'history') {
+                if (commandHistory.length === 0) {
+                    addOutput('No commands in history', 'success');
+                } else {
+                    commandHistory.forEach((cmd, i) => {
+                        addOutput(`  ${i + 1}  ${cmd}`, 'success');
+                    });
                 }
+                enableInput();
+                return;
             }
 
-            // Check easter eggs first
+            // Terminal commands with directory support
+            if (baseCommand === 'pwd') {
+                addOutput(currentDirectory, 'success');
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'ls') {
+                executeLs(args);
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'cd') {
+                executeCD(args[0] || '');
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'mkdir') {
+                if (args.length === 0) {
+                    addOutput('mkdir: missing operand', 'error');
+                } else {
+                    addOutput(`✓ Created directory: ${args[0]}`, 'success');
+                }
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'cat') {
+                executeCAT(args[0] || '');
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'whoami') {
+                addOutput('user', 'success');
+                addOutput('You are the architect. The builder is me (AI). Together, we ship products.', 'success');
+                if (!gameData.easterEggs.find(e => e.command === 'whoami').found) {
+                    totalXP += 25;
+                    document.getElementById('xp-display').textContent = totalXP;
+                    GameEngine.awardXP(25, 'Easter egg: whoami');
+                }
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'man') {
+                if (args[0]) {
+                    addOutput(`Manual page for '${args[0]}' command`, 'success');
+                    if (args[0] === 'cd') {
+                        addOutput('cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\nChange the working directory to DIR.', 'success');
+                        totalXP += 20;
+                        document.getElementById('xp-display').textContent = totalXP;
+                        GameEngine.awardXP(20, 'Easter egg: man cd');
+                    }
+                } else {
+                    addOutput('man: What manual page do you want?', 'error');
+                }
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'echo') {
+                addOutput(args.join(' '), 'success');
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'touch') {
+                if (args.length === 0) {
+                    addOutput('touch: missing operand', 'error');
+                } else {
+                    addOutput(`✓ Created file: ${args[0]}`, 'success');
+                    if (args[0] === '.gitkeep') {
+                        totalXP += 25;
+                        document.getElementById('xp-display').textContent = totalXP;
+                        GameEngine.awardXP(25, 'Easter egg: touch .gitkeep');
+                    }
+                }
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'git') {
+                executeGit(args);
+                enableInput();
+                return;
+            }
+
+            if (baseCommand === 'npm') {
+                executeNPM(args);
+                enableInput();
+                return;
+            }
+
+            // Check easter eggs
             const easterEgg = gameData.easterEggs.find(egg => egg.command.toLowerCase() === command.toLowerCase());
             if (easterEgg) {
                 addOutput(easterEgg.response, 'success');
@@ -541,37 +679,19 @@
                 return;
             }
 
-            // Check if command is correct
+            // Check if command is correct for level
             const isCorrect = level.acceptCommands.some(c => 
                 c.toLowerCase() === command.toLowerCase()
             );
 
             if (isCorrect) {
                 // Update directory if cd command
-                if (command.toLowerCase().includes('cd ')) {
-                    const target = command.split('cd ')[1].trim();
-                    if (target === '..' || target === '../') {
-                        // Go up one directory
-                        const parts = currentDirectory.split('/');
-                        if (parts.length > 1) parts.pop();
-                        currentDirectory = parts.join('/') || '/';
-                    } else if (target === '~') {
-                        currentDirectory = '/home/user';
-                    } else if (target.startsWith('/')) {
-                        currentDirectory = target;
-                    } else {
-                        // Relative path
-                        if (currentDirectory === '/') {
-                            currentDirectory = '/' + target;
-                        } else {
-                            currentDirectory = currentDirectory + '/' + target;
-                        }
-                    }
+                if (baseCommand === 'cd' && args.length > 0) {
+                    executeCD(args[0]);
                 }
 
-                // Show realistic output
+                // Show level completion
                 addOutput(level.response, 'success');
-                
                 totalXP += level.xp;
                 document.getElementById('xp-display').textContent = totalXP;
                 GameEngine.awardXP(level.xp, `Level ${currentLevel}: ${level.title}`);
@@ -586,10 +706,110 @@
                     }
                 }, 1500);
             } else {
-                // Wrong command
-                addOutput(`Command not recognized: ${command}`, 'error');
-                addOutput(`Try 'help' for available commands, or 'hint' for level guidance!`, 'error');
+                // Unknown command
+                addOutput(`bash: ${baseCommand}: command not found`, 'error');
+                addOutput(`Type 'help' for available commands, or 'hint' for level guidance!`, 'error');
                 enableInput();
+            }
+        }
+
+        function executeLs(flags) {
+            const listing = gameData.fileListing[currentDirectory];
+            if (!listing) {
+                addOutput(`ls: cannot access '${currentDirectory}': No such file or directory`, 'error');
+                return;
+            }
+
+            let output = '';
+            const hasA = flags.join('').includes('a');
+            const hasL = flags.join('').includes('l');
+            const hasH = flags.join('').includes('h');
+
+            if (hasL) {
+                output = listing.detailed;
+            } else if (hasA) {
+                output = listing.all;
+            } else {
+                output = listing.normal;
+            }
+
+            addOutput(output, 'success');
+        }
+
+        function executeCD(target) {
+            if (!target) {
+                currentDirectory = '/home/user';
+                return;
+            }
+
+            if (target === '~') {
+                currentDirectory = '/home/user';
+            } else if (target === '/') {
+                currentDirectory = '/';
+            } else if (target === '..' || target === '../') {
+                const parts = currentDirectory.split('/').filter(p => p);
+                if (parts.length > 0) parts.pop();
+                currentDirectory = '/' + parts.join('/');
+            } else if (target === '-') {
+                // Go to previous directory (simplified - just go home)
+                currentDirectory = '/home/user';
+            } else if (target.startsWith('/')) {
+                currentDirectory = target;
+            } else {
+                // Relative path
+                if (currentDirectory === '/') {
+                    currentDirectory = '/' + target;
+                } else {
+                    currentDirectory = currentDirectory + '/' + target;
+                }
+            }
+        }
+
+        function executeCAT(filename) {
+            if (!filename) {
+                addOutput('cat: missing operand', 'error');
+                return;
+            }
+
+            const filepath = filename.startsWith('/') ? filename : currentDirectory + '/' + filename;
+            const content = gameData.fileContents[filepath];
+
+            if (content) {
+                addOutput(content, 'success');
+            } else {
+                addOutput(`cat: ${filename}: No such file or directory`, 'error');
+            }
+        }
+
+        function executeGit(args) {
+            if (args.length === 0) {
+                addOutput('git: command requires a subcommand', 'error');
+                return;
+            }
+
+            const subcommand = args[0].toLowerCase();
+            const response = gameData.gitResponses[subcommand];
+
+            if (response) {
+                addOutput(response, 'success');
+            } else {
+                addOutput(`git: '${subcommand}' is not a git command`, 'error');
+            }
+        }
+
+        function executeNPM(args) {
+            if (args.length === 0) {
+                addOutput('npm: command requires a subcommand', 'error');
+                return;
+            }
+
+            const subcommand = args[0].toLowerCase();
+            const response = gameData.npmResponses[subcommand];
+
+            if (response) {
+                addOutput(response, 'success');
+            } else {
+                addOutput(`npm: '${subcommand}' is not an npm command`, 'error');
             }
         }
 

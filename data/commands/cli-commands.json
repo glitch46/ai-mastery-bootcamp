@@ -135,120 +135,114 @@
       "lesson": "git push = ship your code to the world"
     }
   ],
-  "terminalResponses": {
-    "pwd": {
-      "explanation": "Shows your current working directory path.",
-      "outputs": {
-        "/var/log": "/var/log",
-        "/home/user": "/home/user",
-        "/home/user/.SAASApp": "/home/user/.SAASApp",
-        "/home/user/.SAASApp/src": "/home/user/.SAASApp/src",
-        "/home/user/languageapp": "/home/user/languageapp"
-      }
+  "filesystem": {
+    "/": {
+      "dirs": ["bin", "boot", "dev", "etc", "home", "lib", "media", "mnt", "opt", "proc", "root", "run", "sbin", "srv", "sys", "tmp", "usr", "var"],
+      "files": [],
+      "permissions": "drwxr-xr-x"
     },
-    "ls": {
-      "explanation": "Lists files in current directory.",
-      "outputs": {
-        "/var/log": "auth.log  btmp  kern.log  syslog  wtmp  lastlog",
-        "/home/user": ".SAASApp  .bashrc  .profile  .cache  Desktop  Documents  Downloads",
-        "/home/user/.SAASApp": "package.json  README.md  src/  .env.example",
-        "/home/user/.SAASApp/src": "app.js  components/  utils/  styles.css",
-        "/home/user/languageapp": "package.json  src/  README.md  .gitignore  node_modules/"
-      }
+    "/home": {
+      "dirs": ["user"],
+      "files": []
     },
-    "ls -a": {
-      "explanation": "Lists ALL files, including hidden ones (starting with dot).",
-      "outputs": {
-        "/home/user": ".  ..  .SAASApp  .bashrc  .profile  .cache  .config  .git  .gitconfig  .ssh  Desktop  Documents  Downloads",
-        "/home/user/.SAASApp": ".  ..  .env.example  .gitignore  package.json  README.md  src/"
-      }
+    "/home/user": {
+      "dirs": [".cache", ".config", ".git", ".ssh", ".SAASApp", "Desktop", "Documents", "Downloads"],
+      "files": [".bashrc", ".profile", ".gitconfig"],
+      "hidden": [".bashrc", ".profile", ".gitconfig", ".cache", ".config", ".git", ".ssh"]
     },
-    "ls -l": {
-      "explanation": "Detailed listing showing permissions, owner, size, date, and filename.",
-      "outputs": {
-        "/home/user/.SAASApp": "total 32\ndrwxr-xr-x  5 user user  4096 Feb 10 14:23 src\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example",
-        "/home/user": "total 48\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile"
-      }
+    "/home/user/.SAASApp": {
+      "dirs": ["src", "tests", "public"],
+      "files": ["package.json", "README.md", ".env.example", ".gitignore"],
+      "hidden": [".env.example", ".gitignore"]
     },
-    "ls -la": {
-      "explanation": "Detailed listing of ALL files (including hidden).",
-      "outputs": {
-        "/home/user": "total 56\ndrwxr-xr-x  8 user user  4096 Feb 10 14:20 .\ndrwxr-xr-x  3 root root  4096 Jan 15 08:00 ..\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile\ndrwx------  2 user user  4096 Feb  9 11:22 .cache\ndrwx------  2 user user  4096 Feb 10 13:45 .ssh"
-      }
+    "/home/user/.SAASApp/src": {
+      "dirs": ["components", "utils"],
+      "files": ["app.js", "index.js", "styles.css"]
     },
-    "cat package.json": {
-      "explanation": "Displays the contents of package.json file.",
-      "outputs": {
-        "/home/user/languageapp": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\",\n    \"dev\": \"nodemon index.js\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"express\": \"^4.18.2\",\n    \"axios\": \"^1.4.0\"\n  }\n}"
-      }
+    "/home/user/languageapp": {
+      "dirs": ["src", "public", "node_modules"],
+      "files": ["package.json", "README.md", ".gitignore", ".env"],
+      "hidden": [".gitignore", ".env"]
     },
-    "git status": {
-      "explanation": "Shows which files have been modified, staged, or are untracked.",
-      "outputs": {
-        "/home/user/languageapp": "On branch main\n\nChanges not staged for commit:\n  modified:   src/app.js\n  new file:   src/components/Header.jsx\n\nUntracked files:\n  .env\n\nnothing added to commit but untracked files present"
-      }
-    },
-    "git log": {
-      "explanation": "Shows your commit history.",
-      "outputs": {
-        "/home/user/languageapp": "commit 7a8f9c2d5e1b3f4a9c8e2d1f0a3b5c6\nAuthor: You <you@example.com>\nDate:   Wed Feb 10 14:25:30 2025 +0000\n\n    Updated components\n\ncommit 5f1b3a9d2c8e4f1a7b9c2e5d1f3a6b8\nAuthor: You <you@example.com>\nDate:   Tue Feb 9 10:15:45 2025 +0000\n\n    Initial setup\n\ncommit 2c8e4d1f7a9b3c5e1d2f4a6b8c9e1d3\nAuthor: You <you@example.com>\nDate:   Mon Feb 8 16:30:20 2025 +0000\n\n    Project scaffolding"
-      }
-    },
-    "whoami": {
-      "explanation": "Shows the current logged-in user.",
-      "outputs": {
-        "*": "user"
-      }
-    },
-    "npm install": {
-      "explanation": "Installs all project dependencies listed in package.json.",
-      "outputs": {
-        "*": "up to date, audited 156 packages in 2.4s\n\nadded 156 packages, and audited 156 packages in 4.2s\n\n42 vulnerabilities (39 low, 2 moderate, 1 high)\n\nrun `npm audit fix` to fix them, or `npm audit` for details"
-      }
-    },
-    "npm i": {
-      "explanation": "Short form of 'npm install' - installs dependencies.",
-      "outputs": {
-        "*": "up to date, audited 156 packages in 2.4s\n\nadded 156 packages in 3.8s"
-      }
-    },
-    "clear": {
-      "explanation": "Clears the terminal screen.",
-      "outputs": {
-        "*": ""
-      }
+    "/var/log": {
+      "dirs": [],
+      "files": ["auth.log", "syslog", "kernel.log", "apt.log", "btmp", "wtmp"]
     }
+  },
+  "fileListing": {
+    "/var/log": {
+      "normal": "auth.log  apt.log  btmp  kernel.log  syslog  wtmp",
+      "detailed": "total 64\n-rw-r--r--  1 root root  12288 Feb 10 14:30 auth.log\n-rw-r--r--  1 root root   4096 Feb 10 14:25 apt.log\n-rw-r--r--  1 root root   8192 Feb 10 14:20 btmp\n-rw-r--r--  1 root root   6144 Feb 10 14:15 kernel.log\n-rw-r--r--  1 root root  16384 Feb 10 14:10 syslog\n-rw-r--r--  1 root root   2048 Feb 10 14:05 wtmp",
+      "all": ".  ..  auth.log  apt.log  btmp  kernel.log  syslog  wtmp"
+    },
+    "/home/user": {
+      "normal": "Desktop  Documents  Downloads  .SAASApp",
+      "detailed": "total 32\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile\n-rw-r--r--  1 user user   128 Feb  5 10:30 .gitconfig",
+      "all": ".  ..  .bashrc  .cache  .config  .git  .gitconfig  .profile  .ssh  .SAASApp  Desktop  Documents  Downloads"
+    },
+    "/home/user/.SAASApp": {
+      "normal": "README.md  package.json  public/  src/  tests/",
+      "detailed": "total 48\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 public\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 src\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 tests\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example\n-rw-r--r--  1 user user   512 Feb 10 12:30 .gitignore",
+      "all": ".  ..  .env.example  .gitignore  README.md  package.json  public/  src/  tests/"
+    },
+    "/home/user/.SAASApp/src": {
+      "normal": "app.js  components/  index.js  styles.css  utils/",
+      "detailed": "total 24\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 components\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 utils\n-rw-r--r--  1 user user  3456 Feb 10 13:30 app.js\n-rw-r--r--  1 user user  2048 Feb 10 13:25 index.js\n-rw-r--r--  1 user user  1024 Feb 10 13:20 styles.css",
+      "all": ".  ..  app.js  components/  index.js  styles.css  utils/"
+    },
+    "/home/user/languageapp": {
+      "normal": "README.md  package.json  public/  src/",
+      "detailed": "total 32\ndrwxr-xr-x  3 user user  4096 Feb 10 14:30 node_modules\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 public\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 src\n-rw-r--r--  1 user user  2048 Feb 10 14:15 package.json\n-rw-r--r--  1 user user  3072 Feb 10 14:10 README.md\n-rw-r--r--  1 user user   256 Feb 10 14:05 .env\n-rw-r--r--  1 user user   512 Feb 10 14:05 .gitignore",
+      "all": ".  ..  .env  .gitignore  README.md  package.json  node_modules/  public/  src/"
+    }
+  },
+  "fileContents": {
+    "/home/user/.SAASApp/package.json": "{\n  \"name\": \"saasapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"A SaaS application\",\n  \"main\": \"src/index.js\",\n  \"scripts\": {\n    \"start\": \"node src/index.js\",\n    \"dev\": \"nodemon src/index.js\",\n    \"test\": \"jest\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.2\",\n    \"cors\": \"^2.8.5\",\n    \"dotenv\": \"^16.0.3\"\n  }\n}",
+    "/home/user/languageapp/package.json": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"src/index.js\",\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"axios\": \"^1.4.0\"\n  }\n}"
+  },
+  "gitResponses": {
+    "status": "On branch main\n\nChanges not staged for commit:\n  modified:   src/app.js\n  new file:   src/components/Header.jsx\n\nUntracked files:\n  .env\n\nnothing added to commit but untracked files present",
+    "log": "commit 7a8f9c2d5e1b3f4a9c8e2d1f0a3b5c6\nAuthor: You <you@example.com>\nDate:   Wed Feb 10 14:25:30 2025 +0000\n\n    Updated components\n\ncommit 5f1b3a9d2c8e4f1a7b9c2e5d1f3a6b8\nAuthor: You <you@example.com>\nDate:   Tue Feb 9 10:15:45 2025 +0000\n\n    Initial setup",
+    "add": "✓ Files staged for commit",
+    "commit": "✓ Commit created successfully",
+    "push": "✓ Code pushed to remote",
+    "pull": "✓ Latest changes pulled"
+  },
+  "npmResponses": {
+    "install": "up to date, audited 156 packages in 2.4s\n\nadded 156 packages, and audited 156 packages in 4.2s\n\n42 vulnerabilities (39 low, 2 moderate, 1 high)",
+    "start": "✓ Application started on port 3000",
+    "test": "✓ All tests passed"
   },
   "easterEggs": [
     {
       "command": "whoami",
-      "explanation": "Shows the current logged-in user",
-      "response": "Shows: user\n\nYou are the architect. The builder is me (AI). Together, we ship products.",
+      "response": "user",
+      "explanation": "Shows current user",
       "xp": 25
-    },
-    {
-      "command": "pwd",
-      "explanation": "Shows your current directory",
-      "response": "Shows your full path",
-      "xp": 15
     },
     {
       "command": "man cd",
+      "response": "cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\n  options:\n    -L: Follow symbolic links\n\nYou've already learned this one!",
       "explanation": "Manual page for cd command",
-      "response": "cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\n  options:\n    -L: Follow symbolic links\n\nChange the working directory to DIR. The default DIR is the value of the\nHOME shell variable.\n\nYou've already learned this one!",
       "xp": 20
     },
     {
-      "command": "git log",
-      "explanation": "Shows commit history",
-      "response": "Shows your git commits",
+      "command": "ls -R",
+      "response": "Shows entire directory tree structure",
+      "explanation": "Recursively list all subdirectories",
       "xp": 30
-    },
-    {
-      "command": "cat package.json",
-      "explanation": "Shows project configuration",
-      "response": "Shows the package.json file contents",
-      "xp": 25
     }
-  ]
+  ],
+  "keyboardShortcuts": {
+    "Ctrl+C": "Interrupt/stop current command",
+    "Ctrl+D": "Exit terminal",
+    "Ctrl+L": "Clear screen",
+    "Ctrl+A": "Move to beginning of line",
+    "Ctrl+E": "Move to end of line",
+    "Ctrl+K": "Delete from cursor to end",
+    "Ctrl+U": "Delete from cursor to beginning",
+    "Tab": "Auto-complete",
+    "Up": "Previous command",
+    "Down": "Next command"
+  }
 }
