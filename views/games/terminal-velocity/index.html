@@ -690,7 +690,12 @@
             if (isCorrect) {
                 // Update directory if cd command
                 if (baseCommand === 'cd' && args.length > 0) {
-                    executeCD(args[0]);
+                    const cdSuccess = executeCD(args[0]);
+                    if (!cdSuccess) {
+                        // cd failed, don't proceed to next level
+                        enableInput();
+                        return;
+                    }
                 }
 
                 // Show level completion
@@ -740,32 +745,46 @@
         }
 
         function executeCD(target) {
-            if (!target) {
-                currentDirectory = '/home/user';
-            } else if (target === '~') {
-                currentDirectory = '/home/user';
+            // Validate target - reject invalid paths
+            if (!target || target.includes('\\') || target.includes('*') || target.includes('?')) {
+                addOutput(`bash: cd: ${target}: No such file or directory`, 'error');
+                return false;
+            }
+
+            let newDirectory = currentDirectory;
+
+            if (target === '~') {
+                newDirectory = '/home/user';
             } else if (target === '/') {
-                currentDirectory = '/';
+                newDirectory = '/';
             } else if (target === '..' || target === '../') {
                 const parts = currentDirectory.split('/').filter(p => p);
                 if (parts.length > 0) parts.pop();
-                currentDirectory = '/' + parts.join('/');
+                newDirectory = parts.length === 0 ? '/' : '/' + parts.join('/');
             } else if (target === '-') {
                 // Go to previous directory (simplified - just go home)
-                currentDirectory = '/home/user';
+                newDirectory = '/home/user';
             } else if (target.startsWith('/')) {
-                currentDirectory = target;
+                newDirectory = target;
             } else {
                 // Relative path
                 if (currentDirectory === '/') {
-                    currentDirectory = '/' + target;
+                    newDirectory = '/' + target;
                 } else {
-                    currentDirectory = currentDirectory + '/' + target;
+                    newDirectory = currentDirectory + '/' + target;
                 }
             }
             
+            // Check if directory exists in fileListing
+            if (!gameData.fileListing[newDirectory]) {
+                addOutput(`bash: cd: ${target}: No such file or directory`, 'error');
+                return false;
+            }
+
+            currentDirectory = newDirectory;
             // Update prompt with new directory
             updatePrompt();
+            return true;
         }
 
         function updatePrompt() {

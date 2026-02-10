@@ -170,6 +170,16 @@
     }
   },
   "fileListing": {
+    "/": {
+      "normal": "bin  boot  dev  etc  home  lib  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var",
+      "detailed": "total 87\ndrwxr-xr-x   2 root root  4096 Feb 10 14:30 bin\ndrwxr-xr-x   3 root root  4096 Feb 10 14:25 boot\ndrwxr-xr-x  19 root root  3900 Feb 10 14:20 dev\ndrwxr-xr-x   4 root root  4096 Feb 10 14:15 etc\ndrwxr-xr-x   3 root root  4096 Feb 10 14:10 home\ndrwxr-xr-x  14 root root 12288 Feb 10 14:05 lib\ndrwxr-xr-x   2 root root  4096 Feb 10 14:00 media\ndrwxr-xr-x   2 root root  4096 Feb 09 13:55 mnt\ndrwxr-xr-x   5 root root  4096 Feb 09 13:50 opt\ndr-xr-xr-x  13 root root     0 Feb 09 13:45 proc\ndrwx------   3 root root  4096 Feb 09 13:40 root\ndrwxr-xr-x  33 root root  1260 Feb 09 13:35 run\ndrwxr-xr-x   2 root root 12288 Feb 09 13:30 sbin\ndrwxr-xr-x   7 root root  4096 Feb 09 13:25 srv\ndr-xr-xr-x  13 root root     0 Feb 09 13:20 sys\ndrwxrwxrwt  14 root root  4096 Feb 10 14:30 tmp\ndrwxr-xr-x  13 root root  4096 Feb 09 13:15 usr\ndrwxr-xr-x  20 root root  4096 Feb 09 13:10 var",
+      "all": ".  ..  bin  boot  dev  etc  home  lib  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var"
+    },
+    "/home": {
+      "normal": "user",
+      "detailed": "total 4\ndrwxr-xr-x  2 user user 4096 Feb 10 14:30 user",
+      "all": ".  ..  user"
+    },
     "/var/log": {
       "normal": "auth.log  apt.log  btmp  kernel.log  syslog  wtmp",
       "detailed": "total 64\n-rw-r--r--  1 root root  12288 Feb 10 14:30 auth.log\n-rw-r--r--  1 root root   4096 Feb 10 14:25 apt.log\n-rw-r--r--  1 root root   8192 Feb 10 14:20 btmp\n-rw-r--r--  1 root root   6144 Feb 10 14:15 kernel.log\n-rw-r--r--  1 root root  16384 Feb 10 14:10 syslog\n-rw-r--r--  1 root root   2048 Feb 10 14:05 wtmp",
