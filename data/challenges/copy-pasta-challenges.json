@@ -3,342 +3,189 @@
     {
       "id": "easy-1",
       "difficulty": "easy",
-      "type": "whatDoesThisDo",
-      "title": "Array Filter Basics",
-      "code": "const numbers = [1, 2, 3, 4, 5, 6];\nconst result = numbers.filter(n => n % 2 === 0);",
-      "question": "What does this code do?",
+      "type": "evaluateOutput",
+      "title": "Landing Page Headline",
+      "prompt": "Generate a catchy headline for a productivity app landing page",
+      "aiOutput": "Streamline your workflow and maximize your productivity potential with our innovative solution.",
+      "question": "How would you rate this headline for a landing page?",
       "options": [
-        "Creates an array of even numbers",
-        "Creates an array of odd numbers",
-        "Multiplies all numbers by 2",
-        "Adds all numbers together"
+        "Excellent - memorable and specific",
+        "Good - clear but generic and forgettable",
+        "Poor - sounds like corporate jargon"
       ],
-      "correctAnswer": 0,
-      "explanation": "The filter method creates a new array with elements that pass the test. Here, 'n % 2 === 0' checks if a number is even (divisible by 2 with no remainder).",
+      "correctAnswer": 2,
+      "explanation": "This headline is full of buzzwords ('innovative', 'maximize potential', 'streamline'). A better one would be specific and memorable, like 'Stop switching apps. Start shipping.' A good headline tells you what the app does and why it matters.",
       "xp": 20
     },
     {
       "id": "easy-2",
       "difficulty": "easy",
-      "type": "whatDoesThisDo",
-      "title": "String Template",
-      "code": "const name = 'Alice';\nconst greeting = `Hello, ${name}!`;",
-      "question": "What will 'greeting' contain?",
+      "type": "improvementNeeded",
+      "title": "Product Description",
+      "prompt": "Write a product description for headphones",
+      "aiOutput": "These headphones feature high-quality audio reproduction with noise cancellation technology and extended battery life for all-day listening.",
+      "question": "What's missing from this description?",
       "options": [
-        "Hello, ${name}!",
-        "Hello, Alice!",
-        "Hello, name!",
-        "Error: syntax error"
+        "Emotional appeal - who cares HOW it works, tell them what they FEEL",
+        "Better technical specs",
+        "More features listed"
       ],
-      "correctAnswer": 1,
-      "explanation": "Template literals (backticks) allow variable interpolation using ${variable}. The variable 'name' is replaced with its value 'Alice'.",
+      "correctAnswer": 0,
+      "explanation": "Generic specs don't sell products. Emotions do. Better: 'Disappear into your music. All-day battery means you're never without your sound.' Focus on the EXPERIENCE, not the features.",
       "xp": 20
     },
     {
       "id": "easy-3",
       "difficulty": "easy",
-      "type": "spotTheIssue",
-      "title": "Missing Semicolon?",
-      "code": "function greet(name) {\n  return 'Hello ' + name\n}\nconsole.log(greet('World'))",
-      "question": "What's the issue with this code?",
+      "type": "toneCheck",
+      "title": "Email Subject Line",
+      "prompt": "Write an email subject line for a product launch",
+      "aiOutput": "Announcing Our New Product Launch Available Now",
+      "question": "What's the main problem with this subject line?",
       "options": [
-        "Missing semicolons (but code works anyway)",
-        "Function syntax is wrong",
-        "String concatenation won't work",
-        "There is no issue"
+        "It's boring and doesn't create curiosity or urgency",
+        "It's too long",
+        "It uses too many capital letters"
       ],
       "correctAnswer": 0,
-      "explanation": "While JavaScript has automatic semicolon insertion, it's best practice to include them. This code works but could cause issues in some edge cases.",
-      "xp": 20
-    },
-    {
-      "id": "easy-4",
-      "difficulty": "easy",
-      "type": "whatDoesThisDo",
-      "title": "Array Map",
-      "code": "const prices = [10, 20, 30];\nconst discounted = prices.map(p => p * 0.8);",
-      "question": "What does this code create?",
-      "options": [
-        "An array with 20% discounts applied",
-        "An array with 80% discounts applied",
-        "The total of all prices",
-        "An array with prices multiplied by 8"
-      ],
-      "correctAnswer": 0,
-      "explanation": "map() creates a new array by applying a function to each element. Multiplying by 0.8 gives 80% of the original price (20% discount).",
-      "xp": 20
-    },
-    {
-      "id": "easy-5",
-      "difficulty": "easy",
-      "type": "whatDoesThisDo",
-      "title": "Object Destructuring",
-      "code": "const user = { name: 'Bob', age: 25 };\nconst { name } = user;",
-      "question": "What is the value of 'name'?",
-      "options": [
-        "'Bob'",
-        "{ name: 'Bob', age: 25 }",
-        "undefined",
-        "'name'"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Destructuring extracts properties from objects. This creates a variable 'name' with the value of user.name, which is 'Bob'.",
+      "explanation": "No one wants to open 'Announcing...'. Better subject lines create curiosity or urgency: 'You've been asking for this...' or 'Finally, the tool we've all needed'",
       "xp": 20
     },
     {
       "id": "medium-1",
       "difficulty": "medium",
-      "type": "spotTheIssue",
-      "title": "Async Mistake",
-      "code": "async function getData() {\n  const response = fetch('https://api.example.com/data');\n  const data = response.json();\n  return data;\n}",
-      "question": "What's wrong with this code?",
+      "type": "qualityAnalysis",
+      "title": "Social Media Caption",
+      "prompt": "Write a Twitter caption for a coffee shop",
+      "aiOutput": "We are proud to introduce our new seasonal menu featuring locally-sourced, ethically-sourced beans from sustainable coffee farms around the world.",
+      "question": "What's wrong with this caption?",
       "options": [
-        "Missing 'await' keywords before async operations",
-        "fetch() is not a valid function",
-        "Should use 'return await data'",
-        "Nothing is wrong"
+        "It's too formal and corporate for Twitter's vibe",
+        "The audience doesn't care about sourcing",
+        "Coffee shops don't use Twitter"
       ],
       "correctAnswer": 0,
-      "explanation": "Both fetch() and response.json() return Promises. Without 'await', you're working with Promise objects instead of their resolved values. Should be: await fetch() and await response.json().",
+      "explanation": "Twitter is conversational. This sounds like a press release. Better: 'New season = new blends. We're obsessed 🤎☕' Social media should sound human, not corporate.",
       "xp": 30
     },
     {
       "id": "medium-2",
       "difficulty": "medium",
-      "type": "modification",
-      "title": "Add Error Handling",
-      "code": "async function getUser(id) {\n  const response = await fetch(`/api/users/${id}`);\n  const user = await response.json();\n  return user;\n}",
-      "question": "How would you add basic error handling?",
+      "type": "promptFeedback",
+      "title": "Marketing Copy - Improvement Round",
+      "prompt": "Write marketing copy for a task management app",
+      "aiOutput": "Our task management application provides comprehensive solutions for organizational efficiency and workflow optimization.",
+      "question": "If you got this output, what's your FIRST improvement prompt?",
       "options": [
-        "Wrap in try-catch and check response.ok",
-        "Add if (error) return null",
-        "Use .catch() at the end",
-        "Check if (response) before json()"
+        "Strip out buzzwords and make it specific. What does it actually DO? And who's it for?",
+        "Add more features",
+        "Make it longer and more detailed"
       ],
       "correctAnswer": 0,
-      "explanation": "Best practice: wrap async code in try-catch, check response.ok before parsing JSON, and handle different error types appropriately.",
-      "xp": 30
+      "explanation": "When AI output is generic, your follow-up should be: 'Remove buzzwords. This is for busy entrepreneurs. Tell me what they FEEL, not what it DOES.'",
+      "xp": 40
     },
     {
       "id": "medium-3",
       "difficulty": "medium",
-      "type": "whatDoesThisDo",
-      "title": "Closure Example",
-      "code": "function counter() {\n  let count = 0;\n  return function() {\n    count++;\n    return count;\n  };\n}\nconst myCounter = counter();",
-      "question": "What happens when you call myCounter() twice?",
+      "type": "voiceConsistency",
+      "title": "Brand Voice Check",
+      "prompt": "Three captions for a startup's Instagram",
+      "aiOutput": "1) 'Elevate your professional endeavors'\n2) 'Yo, we're shipping something spicy'\n3) 'Join thousands of satisfied users'",
+      "question": "What's the problem here?",
       "options": [
-        "Returns 1, then 2 (maintains state)",
-        "Returns 1, then 1 (resets each time)",
-        "Returns undefined",
-        "Throws an error"
+        "The tone is inconsistent - they don't sound like the same brand",
+        "They're all too long",
+        "None of them include emojis"
       ],
       "correctAnswer": 0,
-      "explanation": "This is a closure - the inner function 'remembers' the count variable from its outer scope. Each call increments and returns the count.",
-      "xp": 30
-    },
-    {
-      "id": "medium-4",
-      "difficulty": "medium",
-      "type": "spotTheIssue",
-      "title": "Loop Variable Scope",
-      "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 1000);\n}",
-      "question": "What will this print after 1 second?",
-      "options": [
-        "3, 3, 3",
-        "0, 1, 2",
-        "undefined, undefined, undefined",
-        "Nothing (error)"
-      ],
-      "correctAnswer": 0,
-      "explanation": "'var' is function-scoped, not block-scoped. By the time setTimeout runs, the loop has finished and i = 3. Using 'let' instead would print 0, 1, 2.",
-      "xp": 30
-    },
-    {
-      "id": "medium-5",
-      "difficulty": "medium",
-      "type": "dependency",
-      "title": "Import Statement",
-      "code": "import React, { useState, useEffect } from 'react';",
-      "question": "What does this import?",
-      "options": [
-        "React (default) plus useState and useEffect (named exports)",
-        "Three separate default exports",
-        "Only useState and useEffect",
-        "React with methods useState and useEffect"
-      ],
-      "correctAnswer": 0,
-      "explanation": "This imports the default export (React) and two named exports (useState, useEffect) from the 'react' library. This is standard React Hooks syntax.",
-      "xp": 30
+      "explanation": "Your AI output is only as good as your input. If you don't specify brand voice consistently, you get mush. Better prompt: 'All captions should sound like we're texting a friend. Startup energy. Smart but not serious.'",
+      "xp": 40
     },
     {
       "id": "hard-1",
       "difficulty": "hard",
-      "type": "whatDoesThisDo",
-      "title": "Array Reduce",
-      "code": "const items = [{price: 10}, {price: 20}, {price: 30}];\nconst total = items.reduce((sum, item) => sum + item.price, 0);",
-      "question": "What is the value of 'total'?",
+      "type": "deepAnalysis",
+      "title": "Email Campaign Audit",
+      "prompt": "Create an email for a SaaS launch",
+      "aiOutput": "Subject: Revolutionary Software Solution Now Available\nBody: We are excited to announce our new software platform that will transform your business efficiency. With advanced features and seamless integration, you'll experience unprecedented productivity gains.",
+      "question": "What are the TOP 3 issues with this email?",
       "options": [
-        "60",
-        "[10, 20, 30]",
-        "30",
-        "undefined"
+        "Vague subject, generic body, no urgency/scarcity, missing specific benefit",
+        "Too short",
+        "Doesn't have a call-to-action button"
       ],
       "correctAnswer": 0,
-      "explanation": "reduce() accumulates values. Starting from 0, it adds each item.price: 0 + 10 + 20 + 30 = 60. The second parameter (0) is the initial value.",
-      "xp": 40
+      "explanation": "This email has multiple problems: (1) Subject line doesn't create curiosity (2) Body lists features, not benefits (3) No reason to act NOW. Better subject: 'Early access closes Friday' with body focused on ONE key benefit.",
+      "xp": 50
     },
     {
       "id": "hard-2",
       "difficulty": "hard",
-      "type": "spotTheIssue",
-      "title": "React State Update",
-      "code": "const [count, setCount] = useState(0);\nfunction increment() {\n  setCount(count + 1);\n  setCount(count + 1);\n}",
-      "question": "If count is 0, what will it be after calling increment()?",
+      "type": "outputRedirection",
+      "title": "When AI Goes Off Rails",
+      "prompt": "Create a product description for a fitness app",
+      "aiOutput": "This fitness application utilizes cutting-edge artificial intelligence and machine learning algorithms to provide personalized workout recommendations based on your fitness level and goals.",
+      "question": "This is way too technical. How would you redirect the AI?",
       "options": [
-        "1 (not 2, because count is stale)",
-        "2",
-        "0",
-        "undefined"
+        "Tell it the audience (busy parents) and what they FEEL (motivated, energized, proud) - remove all technical jargon",
+        "Ask for more features",
+        "Ask it to make it longer"
       ],
       "correctAnswer": 0,
-      "explanation": "Both setCount calls use the same 'count' value (0). They both set it to 1. To fix, use the function form: setCount(c => c + 1).",
-      "xp": 40
-    },
-    {
-      "id": "hard-3",
-      "difficulty": "hard",
-      "type": "modification",
-      "title": "Debounce Function",
-      "code": "function search(query) {\n  fetch(`/api/search?q=${query}`).then(handleResults);\n}\ninput.addEventListener('input', (e) => search(e.target.value));",
-      "question": "How would you prevent too many API calls while typing?",
-      "options": [
-        "Add debouncing to delay the search function",
-        "Use setTimeout(search, 500)",
-        "Add if (query.length > 3) check",
-        "Use setInterval instead"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Debouncing delays function execution until after a pause in events. This prevents API calls on every keystroke. Libraries like lodash provide debounce() or you can implement it with setTimeout.",
-      "xp": 40
-    },
-    {
-      "id": "hard-4",
-      "difficulty": "hard",
-      "type": "whatDoesThisDo",
-      "title": "Spread Operator",
-      "code": "const obj1 = { a: 1, b: 2 };\nconst obj2 = { b: 3, c: 4 };\nconst merged = { ...obj1, ...obj2 };",
-      "question": "What is the value of merged.b?",
-      "options": [
-        "3 (obj2 overwrites obj1)",
-        "2 (obj1 stays)",
-        "[2, 3] (both values)",
-        "undefined"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Spread operator merges objects, with later properties overwriting earlier ones. obj2.b (3) comes after obj1.b (2), so merged.b = 3.",
-      "xp": 40
-    },
-    {
-      "id": "hard-5",
-      "difficulty": "hard",
-      "type": "dependency",
-      "title": "Complex Import",
-      "code": "import axios from 'axios';\nimport { format } from 'date-fns';\nimport './styles.css';",
-      "question": "What is being imported here?",
-      "options": [
-        "axios library, format function from date-fns, and CSS styles",
-        "Three npm packages",
-        "Three JavaScript modules",
-        "Error: can't import CSS"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Line 1: default export from axios. Line 2: named export 'format' from date-fns library. Line 3: CSS file (works in bundlers like Webpack/Vite).",
-      "xp": 40
+      "explanation": "Redirect: 'This is for busy parents who want to feel STRONG again. Forget tech jargon. Focus on the win: 20-min workouts that actually work. How do they feel after?'",
+      "xp": 50
     },
     {
       "id": "expert-1",
       "difficulty": "expert",
-      "type": "whatDoesThisDo",
-      "title": "Promise Chain",
-      "code": "Promise.resolve(5)\n  .then(x => x * 2)\n  .then(x => x + 3)\n  .then(console.log);",
-      "question": "What gets logged to the console?",
+      "type": "fullCampaignReview",
+      "title": "Complete Campaign Assessment",
+      "prompt": "Create a full email campaign (subject + 3 paragraphs + CTA)",
+      "aiOutput": "Subject: Important Update\n\nDear Valued Customer,\n\nWe are writing to inform you of a significant enhancement to our product offerings that will provide you with added value and improved functionality.\n\nOur team has worked tirelessly to develop features that address customer feedback and industry standards. These innovative solutions represent a commitment to excellence.\n\nWe look forward to your continued partnership and support as we move forward together.\n\nCTA: Learn More",
+      "question": "Rate this email. What's the CORE problem?",
       "options": [
-        "13",
-        "8",
-        "5",
-        "undefined"
+        "No connection to reader - it's all about 'we' and 'us', never 'you'. No emotion, no specifics, no reason to care.",
+        "It's too long",
+        "The CTA button color is wrong"
       ],
       "correctAnswer": 0,
-      "explanation": "Chain executes sequentially: 5 * 2 = 10, then 10 + 3 = 13. Each then() receives the return value of the previous one.",
-      "xp": 50
+      "explanation": "This email violates the basic rule: readers only care about themselves. EVERYTHING should be about THEM: what they'll save, what they'll achieve, how they'll feel. This email is completely self-focused.",
+      "xp": 75
     },
     {
       "id": "expert-2",
       "difficulty": "expert",
-      "type": "spotTheIssue",
-      "title": "Memory Leak",
-      "code": "useEffect(() => {\n  const interval = setInterval(() => {\n    setData(fetchNewData());\n  }, 1000);\n}, []);",
-      "question": "What's the problem with this React effect?",
+      "type": "masterYourPrompt",
+      "title": "The Prompt Prompt",
+      "prompt": "Write the PERFECT prompt that will generate the PERFECT email",
+      "aiOutput": "Write an email",
+      "question": "What's HILARIOUSLY wrong with this prompt?",
       "options": [
-        "Interval isn't cleared - creates memory leak",
-        "fetchNewData() should be awaited",
-        "Missing dependency in array",
-        "setInterval doesn't work in React"
+        "It's insanely vague - no context, no examples, no constraints, no tone",
+        "It's too direct",
+        "Emails can't be written by AI"
       ],
       "correctAnswer": 0,
-      "explanation": "useEffect should return a cleanup function: return () => clearInterval(interval). Without this, intervals pile up when component re-renders or unmounts.",
-      "xp": 50
+      "explanation": "This proves the golden rule: GARBAGE PROMPT = GARBAGE OUTPUT. Bad prompt = blank stare from AI. Your prompting skills matter MORE than AI's intelligence. The better your prompt, the better your output.",
+      "xp": 100
     },
     {
       "id": "expert-3",
       "difficulty": "expert",
-      "type": "modification",
-      "title": "Race Condition",
-      "code": "async function loadUser(id) {\n  setLoading(true);\n  const user = await fetchUser(id);\n  setUser(user);\n  setLoading(false);\n}",
-      "question": "How would you handle rapid ID changes (race condition)?",
+      "type": "mindsetShift",
+      "title": "The Real Skill",
+      "prompt": "Multiple AI-generated versions of copy",
+      "aiOutput": "Version A: Corporate, vague, buzzword-filled\nVersion B: Emotional, specific, action-oriented\nVersion C: Generic, safe, boring",
+      "question": "You're using Claude to generate copy. Which output matters most?",
       "options": [
-        "Use AbortController to cancel previous requests",
-        "Add if (!user) check",
-        "Use setTimeout to delay",
-        "Check if loading before fetching"
+        "Your ABILITY TO JUDGE WHICH ONE IS BEST and know HOW TO REDIRECT for better results",
+        "The original AI output - it should be perfect first time",
+        "How many versions it generates"
       ],
       "correctAnswer": 0,
-      "explanation": "If IDs change quickly, multiple requests race. AbortController cancels outdated requests. Also track latest request ID to ignore stale responses.",
-      "xp": 50
-    },
-    {
-      "id": "expert-4",
-      "difficulty": "expert",
-      "type": "whatDoesThisDo",
-      "title": "Complex Destructuring",
-      "code": "const data = { user: { name: 'Alice', age: 30 } };\nconst { user: { name: userName } } = data;",
-      "question": "What variables are created?",
-      "options": [
-        "Only 'userName' (equals 'Alice')",
-        "'user' and 'userName'",
-        "'user', 'name', and 'userName'",
-        "'data' and 'userName'"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Nested destructuring with renaming. This creates ONLY 'userName' variable (not 'user' or 'name'). It's equivalent to: const userName = data.user.name;",
-      "xp": 50
-    },
-    {
-      "id": "expert-5",
-      "difficulty": "expert",
-      "type": "dependency",
-      "title": "Full Component",
-      "code": "import React, { useState, useEffect } from 'react';\nimport styled from 'styled-components';\nimport { useQuery } from 'react-query';\nimport api from './api';",
-      "question": "What dependencies does this component need?",
-      "options": [
-        "react, styled-components, react-query, and local api module",
-        "Only React",
-        "react and three npm packages",
-        "Four npm packages"
-      ],
-      "correctAnswer": 0,
-      "explanation": "Needs: react (Hooks), styled-components (CSS-in-JS), react-query (data fetching), and a local ./api module. Three are npm packages, one is a local file.",
-      "xp": 50
+      "explanation": "The REAL skill isn't writing code or copy. It's JUDGMENT: knowing what good looks like, recognizing what's missing, and knowing how to redirect AI to fix it. That's what separates vibe coders from script-followers.",
+      "xp": 125
     }
   ]
 }

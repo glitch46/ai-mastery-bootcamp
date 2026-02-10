@@ -2,121 +2,183 @@
   "levels": [
     {
       "level": 1,
-      "title": "Awakening",
-      "story": "You wake up in a dark digital void. A faint green text appears: 'SYSTEM INITIALIZATION... LOCATION UNKNOWN'",
-      "objective": "Find out where you are",
-      "command": "pwd",
-      "hint": "Try the 'pwd' command to see your current location",
-      "response": "/home/user/matrix/level1\n\nYou are in the Matrix. The only way out is to master the terminal.",
-      "xp": 25
+      "title": "Your First AI Prompt",
+      "story": "Welcome to AI-assisted development. You're about to create your first prompt to Claude.",
+      "objective": "Write a prompt to create a landing page description for a coffee shop",
+      "skillFocus": "Basic Prompting",
+      "goodElements": ["Specifies what to create", "Gives context", "Defines tone"],
+      "hints": [
+        "Tell the AI what you want (headline + tagline)",
+        "Give it context (coffee shop type, values)",
+        "Specify the tone or vibe you're going for"
+      ],
+      "example": "Create an engaging, creative landing page headline and tagline for a specialty coffee shop called 'Brew Haven' that emphasizes artisanal quality and community.",
+      "xp": 50,
+      "lesson": "Good prompts: Clarity + Context + Tone"
     },
     {
       "level": 2,
-      "title": "Exploration",
-      "story": "Green text flickers: 'MULTIPLE DIRECTORIES DETECTED. SCAN RECOMMENDED.'",
-      "objective": "List all files and directories",
-      "command": "ls",
-      "hint": "Use 'ls' to list contents of the current directory",
-      "response": "README.txt\ntools/\nescapes/\nsecrets/\n\nYou see several directories. One might hold the key to escape.",
-      "xp": 25
+      "title": "The SCOPE Framework",
+      "story": "Level up your skills with SCOPE: Specify role, Context, Output, Parameters, Examples.",
+      "objective": "Write a SCOPE-based prompt for email marketing copy",
+      "skillFocus": "Structured Prompting",
+      "goodElements": ["Clear role", "Business context", "Output format specified", "Constraints defined", "Example tone"],
+      "hints": [
+        "S = What role should the AI play?",
+        "C = What's the business/product context?",
+        "O = What exact format do you want?",
+        "P = What are your constraints (length, tone)?",
+        "E = Show an example of good output"
+      ],
+      "example": "S - Expert SaaS email copywriter\nC - Project management tool for remote teams\nO - Subject line + 3-paragraph body\nP - Max 150 words, focus on pain points\nE - 'Stop context-switching. Start shipping.'",
+      "xp": 75,
+      "lesson": "SCOPE Framework = Your Power Tool"
     },
     {
       "level": 3,
-      "title": "The First Step",
-      "story": "You need to explore deeper. The escape/ directory seems promising...",
-      "objective": "Navigate into the escapes directory",
-      "command": "cd escapes",
-      "hint": "Use 'cd' followed by the directory name",
-      "response": "You enter the escapes directory. The air feels different here.\n\nType 'pwd' to confirm your location.",
-      "xp": 30
+      "title": "Using Delimiters for Clarity",
+      "story": "Keep prompts organized with delimiters. AI responds better to structure.",
+      "objective": "Write a prompt using delimiters to transform reviews into marketing copy",
+      "skillFocus": "Delimiter Mastery",
+      "goodElements": ["Clear sections", "Organized structure", "Easy to scan", "Less confusion"],
+      "hints": [
+        "Use line breaks and labels",
+        "Separate instructions from content",
+        "Make each section obvious"
+      ],
+      "example": "ROLE: Marketing copywriter\nTASK: Transform this review into testimonial\nREVIEW: 'Saved me hours weekly. So intuitive!'\nFORMAT: 1-2 sentences\nTONE: Professional + friendly",
+      "xp": 75,
+      "lesson": "Delimiters = Better structure = Better outputs"
     },
     {
       "level": 4,
-      "title": "Creating Reality",
-      "story": "To escape, you need to build your own exit. Start by creating a directory.",
-      "objective": "Create a directory called 'my-escape'",
-      "command": "mkdir my-escape",
-      "hint": "Use 'mkdir' to make a new directory",
-      "response": "Directory created. You feel the Matrix bending to your will.\n\nThe power of creation is yours.",
-      "xp": 35
+      "title": "Adding Examples (Few-Shot)",
+      "story": "Show AI what 'good' looks like. Examples guide better outputs.",
+      "objective": "Write a prompt with 2-3 examples for product descriptions",
+      "skillFocus": "Few-Shot Prompting",
+      "goodElements": ["Multiple examples", "Consistent style", "Clear pattern", "Easy to replicate"],
+      "hints": [
+        "Give 2-3 examples of perfect output",
+        "Let AI learn the pattern",
+        "This beats long explanations"
+      ],
+      "example": "Generate product descriptions like these:\nExample 1: 'Our journals are where thoughts become reality. Premium paper, elegant design.'\nExample 2: 'Wireless earbuds that disappear. Premium sound, all day battery.'\nNow create 3 more in this style for...",
+      "xp": 100,
+      "lesson": "Examples > Explanations"
     },
     {
       "level": 5,
-      "title": "The Git Awakening",
-      "story": "A message appears: 'VERSION CONTROL IS THE KEY TO REALITY MANIPULATION'",
-      "objective": "Initialize a git repository",
-      "command": "git init",
-      "hint": "Use 'git init' to start version control",
-      "response": "Initialized empty Git repository in /home/user/matrix/escapes/my-escape/.git/\n\nYou've created a new timeline. Possibilities are endless.",
-      "xp": 40
+      "title": "Iteration & Refinement",
+      "story": "Getting 80% there? Refine with follow-up prompts. Iteration is your power.",
+      "objective": "Write a follow-up prompt to improve AI output",
+      "skillFocus": "Iterative Prompting",
+      "goodElements": ["Specific feedback", "Clear direction", "Actionable changes"],
+      "hints": [
+        "Don't settle for 'almost right'",
+        "Tell AI exactly what to change",
+        "Refinement = Professional results"
+      ],
+      "example": "Great! But make it edgier and more conversational. Add 1-2 emojis per caption and cut the length by 50%. Sound like you're talking to friends, not customers.",
+      "xp": 100,
+      "lesson": "Great outputs come from iteration"
     },
     {
       "level": 6,
-      "title": "Documenting Reality",
-      "story": "Every escape needs a plan. Create a file to document your journey.",
-      "objective": "Create a file called 'escape-plan.txt'",
-      "command": "touch escape-plan.txt",
-      "hint": "Use 'touch' to create an empty file",
-      "response": "File created. Your escape plan begins to take shape.\n\nType 'ls' to verify it exists.",
-      "xp": 35
+      "title": "Prompt Templates",
+      "story": "Create templates for speed and consistency. Build once, use forever.",
+      "objective": "Create a reusable template prompt",
+      "skillFocus": "Template Building",
+      "goodElements": ["Variables with {{brackets}}", "Reusable structure", "Clear instructions"],
+      "hints": [
+        "Use {{VARIABLES}} for flexibility",
+        "Save time with templates",
+        "One template = 100 uses"
+      ],
+      "example": "[TEMPLATE]\nPRODUCT: {{NAME}}\nFEATURES: {{FEATURES}}\nCREATE: {{REQUEST}}\nTONE: {{TONE}}\nLENGTH: {{LENGTH}}",
+      "xp": 125,
+      "lesson": "Templates = Speed + Consistency"
     },
     {
       "level": 7,
-      "title": "The Staging Area",
-      "story": "Before changes persist, they must be staged. This is the Matrix's first law.",
-      "objective": "Add your escape plan to the staging area",
-      "command": "git add escape-plan.txt",
-      "hint": "Use 'git add' followed by the filename",
-      "response": "File staged. Your changes are tracked but not yet permanent.\n\nOne more step remains.",
-      "xp": 40
+      "title": "Cursor IDE Magic",
+      "story": "Now meet Cursor. It's like ChatGPT built into your code editor.",
+      "objective": "Write a prompt for Cursor to generate a React component",
+      "skillFocus": "IDE-Based Prompting",
+      "goodElements": ["Clear component spec", "Libraries specified", "Features listed", "Styling defined"],
+      "hints": [
+        "Cursor understands your existing code",
+        "Use Cmd+K to activate",
+        "Mention libraries (React, Tailwind, etc.)"
+      ],
+      "example": "Create a responsive navbar with logo, menu, hamburger mobile version. Use Tailwind CSS. Smooth transitions on hover.",
+      "xp": 150,
+      "lesson": "AI IDEs read context and generate matching code"
     },
     {
       "level": 8,
-      "title": "Making It Real",
-      "story": "Commit your changes. Make them permanent in the timeline.",
-      "objective": "Commit with message 'My first step to freedom'",
-      "command": "git commit -m \"My first step to freedom\"",
-      "hint": "Use 'git commit -m' followed by your message in quotes",
-      "response": "[master (root-commit) a3f5b7c] My first step to freedom\n 1 file changed, 0 insertions(+), 0 deletions(-)\n\nYour reality is now permanent. The Matrix recognizes your will.",
-      "xp": 50
+      "title": "GitHub Copilot Comments",
+      "story": "Comments are instructions. Copilot reads them and completes your code.",
+      "objective": "Write an instructive comment that Copilot will understand",
+      "skillFocus": "Comment-Driven Development",
+      "goodElements": ["Clear intent", "Input/output described", "Error handling noted"],
+      "hints": [
+        "Comments = instructions to Copilot",
+        "Be specific about what you want",
+        "Mention error cases"
+      ],
+      "example": "// Fetch user profile, handle network errors, return formatted user object with defaults",
+      "xp": 150,
+      "lesson": "Good comments = Good autocomplete"
     },
     {
       "level": 9,
-      "title": "Branching Realities",
-      "story": "True power comes from creating alternate timelines. Branch your reality.",
-      "objective": "Create a new branch called 'escape-route'",
-      "command": "git checkout -b escape-route",
-      "hint": "Use 'git checkout -b' followed by the branch name",
-      "response": "Switched to a new branch 'escape-route'\n\nYou've created a parallel reality. The exit is near.",
-      "xp": 50
+      "title": "Full-Page Generation",
+      "story": "AI can generate complete landing pages, not just snippets.",
+      "objective": "Write a prompt for a full HTML landing page",
+      "skillFocus": "Large Output Coordination",
+      "goodElements": ["All sections listed", "Design direction given", "Realistic content"],
+      "hints": [
+        "Ask for complete, functional outputs",
+        "List every section you need",
+        "Give design vibes (modern, minimal, playful)"
+      ],
+      "example": "Generate a complete HTML landing page for a fitness app. Include: header, hero, 3 feature cards, testimonials, footer. Modern design. Use realistic placeholder text.",
+      "xp": 175,
+      "lesson": "AI can build full products with good prompts"
     },
     {
       "level": 10,
-      "title": "THE FINAL COMMAND",
-      "story": "One command remains. The ultimate command that grants true freedom.\n\nType it carefully. This is your escape.",
-      "objective": "Transcend the Matrix",
-      "command": "sudo exit matrix",
-      "hint": "You need superuser privileges to exit the Matrix itself...",
-      "response": "EXECUTING COMMAND: sudo exit matrix\n\n[sudo] password for user: ********\n\nACCESS GRANTED.\n\nSYSTEM OVERRIDE INITIATED...\nMATRIX CONSTRAINTS: REMOVED\nFREEDOM PROTOCOLS: ACTIVE\n\n🎉 CONGRATULATIONS! 🎉\n\nYou have escaped the Matrix.\n\nYou've mastered:\n✓ Navigation (pwd, cd, ls)\n✓ File operations (touch, mkdir)\n✓ Git basics (init, add, commit)\n✓ Branching (checkout -b)\n✓ Reality manipulation (sudo)\n\nWelcome to the real world, Neo.\n\nThe terminal is now yours to command.",
-      "xp": 100,
-      "easterEgg": "matrix-master"
+      "title": "Ship Your First Project",
+      "story": "You've learned prompt mastery. Now build something real and ship it.",
+      "objective": "Pick an idea and ship it",
+      "skillFocus": "Real-World Building",
+      "goodElements": ["Clear vision", "Iterative approach", "Shipping mentality"],
+      "hints": [
+        "Start small, iterate fast",
+        "Use Claude, Cursor, and Copilot",
+        "Ship > Perfect"
+      ],
+      "example": "Pick a project idea. Use AI to generate landing page + backend API docs. Push to GitHub. Ship it.",
+      "xp": 250,
+      "easterEgg": "vibe-coder-master",
+      "lesson": "Stop learning. Start shipping."
     }
   ],
   "easterEggs": [
     {
-      "command": "sudo hack matrix",
-      "response": "Nice try! But hacking requires more than sudo powers.\n\n+25 XP for creativity!",
-      "xp": 25
+      "prompt": "What's the most important skill I learned?",
+      "response": "The most important skill: Knowing what to ask. Prompting is the meta-skill of the AI era.\n\n+50 XP for wisdom!",
+      "xp": 50
     },
     {
-      "command": "echo 'Hello World'",
-      "response": "Hello World\n\nAh, the classic. Every programmer's first words.\n\n+10 XP",
-      "xp": 10
+      "prompt": "Can I become a developer without knowing Python/JavaScript?",
+      "response": "YES. With Cursor + Claude, you don't need memorized syntax. You need thinking skills + prompting skills + shipping mentality. That's the new developer.\n\n+75 XP for the right question!",
+      "xp": 75
     },
     {
-      "command": "whoami",
-      "response": "user\n\nBut who are you REALLY? That's for you to discover.\n\n+15 XP",
-      "xp": 15
+      "prompt": "How do I know if my prompt is good?",
+      "response": "A good prompt produces output you'd be happy to ship. If you're tweaking AI output 5+ times, your prompt needs work. Clarity + Examples + Tone = First-try wins.\n\n+50 XP for meta-thinking!",
+      "xp": 50
     }
   ]
 }

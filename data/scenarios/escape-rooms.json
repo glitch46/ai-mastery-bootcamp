@@ -2,112 +2,115 @@
   "rooms": [
     {
       "id": "basics-chamber",
-      "name": "The Basics Chamber",
+      "name": "The Copywriting Studio",
       "difficulty": "Beginner",
-      "story": "You're locked in a dimly lit room. On the wall, glowing text reads: 'EXPLAIN RECURSION TO A 5-YEAR-OLD TO UNLOCK THE DOOR.' You have an AI terminal to craft the perfect prompt.",
-      "task": "Write a prompt that will make AI explain recursion in a way a 5-year-old would understand",
+      "story": "You're in a bright studio. A prompt appears: 'CREATE MAGNETIC LANDING PAGE COPY.' Your goal: write a prompt that makes Claude generate irresistible marketing copy.",
+      "task": "Write a prompt to generate a landing page headline and tagline for a coffee shop that emphasizes quality and community",
       "evaluationCriteria": {
-        "keywords": ["simple", "kid", "child", "5-year-old", "explain", "easy", "understand", "example", "like"],
-        "bonusKeywords": ["story", "fun", "game", "picture", "imagine"],
-        "antiPatterns": ["technical", "algorithm", "stack", "function calls", "complexity"],
-        "minLength": 20,
+        "keywords": ["creative", "engaging", "headline", "tagline", "tone", "brand", "appeal"],
+        "bonusKeywords": ["emotional", "target audience", "benefit", "call to action", "compelling"],
+        "antiPatterns": ["generic", "boring", "standard business"],
+        "minLength": 30,
         "maxLength": 300
       },
       "hints": [
-        "Think about what a 5-year-old already knows and can relate to",
-        "Use simple language and ask for concrete examples",
-        "Consider using analogies like toys, games, or everyday activities"
+        "What's the vibe? (Cozy, premium, hip?)",
+        "Who's your audience?",
+        "What makes this coffee shop special?"
       ],
-      "perfectExample": "Explain recursion to a 5-year-old child using a simple story or game they can imagine. Use everyday examples like stacking blocks or opening nested boxes. Keep it fun and avoid any technical terms.",
+      "perfectExample": "Create an engaging, creative landing page headline and tagline for a specialty coffee shop called 'Brew Haven'. The brand emphasizes artisanal quality, local sourcing, and community gathering. Make it feel premium but welcoming. Target coffee enthusiasts aged 25-45.",
       "passingScore": 60,
       "xpReward": 50
     },
     {
-      "id": "api-vault",
-      "name": "The API Vault",
+      "id": "content-factory",
+      "name": "The Content Factory",
       "difficulty": "Intermediate",
-      "story": "You're trapped in a high-tech vault. A holographic display shows: 'INTEGRATE A WEATHER API - SECURITY, ERRORS, AND ALL.' The vault will only open when you demonstrate complete understanding.",
-      "task": "Write a prompt to help you integrate a weather API, including getting the API key, handling errors, and security best practices",
+      "story": "You're in a factory that generates endless content. Your challenge: write ONE prompt that generates THREE compelling product descriptions with consistent voice.",
+      "task": "Write a prompt to generate 3 unique product descriptions for an e-commerce bookstore",
       "evaluationCriteria": {
-        "keywords": ["API", "weather", "key", "error", "handle", "security", "secure"],
-        "bonusKeywords": ["environment variable", ".env", "rate limit", "status code", "try-catch", "async"],
-        "antiPatterns": ["just give me code", "write for me", "do it"],
-        "minLength": 40,
-        "maxLength": 400
-      },
-      "hints": [
-        "Think about the complete lifecycle: finding API → getting key → storing securely → making requests → handling errors",
-        "Consider what could go wrong and how to handle it",
-        "Remember to ask about best practices, not just 'working code'"
-      ],
-      "perfectExample": "Help me integrate a weather API into my JavaScript app. Guide me through: 1) Selecting a free weather API, 2) Getting and storing the API key securely using environment variables, 3) Making async requests with proper error handling, 4) Handling rate limits and failed requests, 5) Security best practices like never exposing the key in frontend code.",
-      "passingScore": 65,
-      "xpReward": 75
-    },
-    {
-      "id": "feature-factory",
-      "name": "The Feature Factory",
-      "difficulty": "Intermediate",
-      "story": "Conveyor belts move broken code around you. A sign reads: 'ADD DARK MODE - BUT PRESERVE WHAT WORKS.' You need to upgrade without breaking.",
-      "task": "Write a prompt to add dark mode to an existing website, considering the current codebase and not breaking existing functionality",
-      "evaluationCriteria": {
-        "keywords": ["dark mode", "existing", "current", "without breaking", "preserve", "toggle", "switch"],
-        "bonusKeywords": ["CSS variables", "localStorage", "prefers-color-scheme", "accessibility", "contrast"],
-        "antiPatterns": ["rewrite everything", "from scratch", "delete"],
-        "minLength": 35,
+        "keywords": ["quantity", "unique", "consistent", "tone", "benefit", "appeal"],
+        "bonusKeywords": ["example", "style guide", "call to action", "target emotion"],
+        "antiPatterns": ["generic", "samey", "boring product copy"],
+        "minLength": 50,
         "maxLength": 350
       },
       "hints": [
-        "You're modifying existing code - context matters!",
-        "Think about user experience: how do they switch modes? How do you remember their choice?",
-        "Consider system preferences and accessibility"
+        "Specify how many you want",
+        "Show an example of the tone you want",
+        "Give variety guidance (don't make them all the same)"
       ],
-      "perfectExample": "Help me add dark mode to my existing website. I need to: 1) Implement a toggle button that switches between light and dark themes, 2) Use CSS variables for colors so I don't have to rewrite all styles, 3) Store the user's preference in localStorage, 4) Respect the system's prefers-color-scheme setting, 5) Ensure sufficient color contrast for accessibility in both modes. Guide me on how to implement this without breaking existing functionality.",
+      "perfectExample": "Generate 3 unique product descriptions for vintage science fiction books. Each should be 2-3 sentences, highlight why readers love them, and include an emotional hook. Example tone: 'Escape into futures that shaped our world. These aren't just stories—they're portals.' Make each description different in style but consistent in brand voice.",
       "passingScore": 65,
       "xpReward": 75
     },
     {
-      "id": "design-studio",
-      "name": "The Design Studio",
-      "difficulty": "Advanced",
-      "story": "You're in an elegant design studio. Blueprints float around you showing: 'MODERN SIGNUP FORM - BEAUTIFUL, ACCESSIBLE, RESPONSIVE.' Excellence is the only key out.",
-      "task": "Write a prompt to design a modern, accessible, and responsive signup form",
+      "id": "email-vault",
+      "name": "The Email Vault",
+      "difficulty": "Intermediate",
+      "story": "Email campaigns await. Your mission: write a SCOPE-based prompt for marketing copy that converts.",
+      "task": "Write a SCOPE-based prompt for an email campaign targeting remote teams",
       "evaluationCriteria": {
-        "keywords": ["signup", "form", "accessible", "responsive", "modern", "validation"],
-        "bonusKeywords": ["ARIA", "keyboard navigation", "screen reader", "mobile", "error messages", "UX"],
-        "antiPatterns": ["just basic", "simple form", "quick"],
-        "minLength": 45,
+        "keywords": ["role", "context", "output", "parameters", "examples", "target", "pain point"],
+        "bonusKeywords": ["SCOPE structure", "constraints", "tone", "specific metrics"],
+        "antiPatterns": ["vague", "missing SCOPE elements", "no examples"],
+        "minLength": 80,
         "maxLength": 400
       },
       "hints": [
-        "Think beyond just 'make it look nice' - what about users with disabilities?",
-        "Mobile users are half your audience - how does it work on small screens?",
-        "Good UX means helpful error messages and smooth validation"
+        "What role should AI play? (Copywriter, strategist, etc.)",
+        "What's the business context?",
+        "What exact output do you want?",
+        "What are your constraints?",
+        "Show an example of good copy"
       ],
-      "perfectExample": "Design a modern signup form with best practices for accessibility and UX. Requirements: 1) Responsive design that works on mobile, tablet, and desktop, 2) Accessible with proper ARIA labels, keyboard navigation, and screen reader support, 3) Real-time validation with helpful error messages, 4) Password strength indicator, 5) Loading states for async submission, 6) Clean, modern visual design with good contrast ratios. Provide HTML structure with semantic elements and explain accessibility considerations.",
+      "perfectExample": "S - Expert SaaS email copywriter\nC - Project management tool for remote teams, launching next month\nO - Subject line + 3-paragraph email\nP - Max 150 words, focus on time wasted in Slack vs. productivity\nE - 'Stop ping-ponging. Start shipping.' (punchy, action-focused)\n\nGenerate an email that makes team leads want to try us.",
       "passingScore": 70,
       "xpReward": 100
     },
     {
-      "id": "deployment-dock",
-      "name": "The Deployment Dock",
+      "id": "social-studio",
+      "name": "The Social Media Studio",
       "difficulty": "Advanced",
-      "story": "You stand at a shipping dock. Containers labeled 'PRODUCTION' await. A screen flashes: 'DEPLOY TO VERCEL - THE RIGHT WAY.' Ship it properly or stay trapped forever.",
-      "task": "Write a prompt to prepare a project for deployment to Vercel, including all configurations and best practices",
+      "story": "Social platforms await your content. Your challenge: write a prompt that generates Instagram captions with personality and punch.",
+      "task": "Write a prompt for Instagram captions that feel authentic and conversational",
       "evaluationCriteria": {
-        "keywords": ["deploy", "Vercel", "production", "environment", "build", "configuration"],
-        "bonusKeywords": ["env variables", "vercel.json", "build command", "output directory", "serverless", "optimiz"],
-        "antiPatterns": ["just deploy", "upload files", "quick deploy"],
-        "minLength": 40,
-        "maxLength": 400
+        "keywords": ["personality", "tone", "authentic", "conversational", "emoji", "style"],
+        "bonusKeywords": ["brand voice", "relatable", "engagement hook", "emoji strategy"],
+        "antiPatterns": ["corporate", "salesy", "robotic", "generic"],
+        "minLength": 60,
+        "maxLength": 350
       },
       "hints": [
-        "Deployment isn't just pushing code - what about environment variables? Build settings?",
-        "Think about what's different between development and production",
-        "Vercel has specific configuration files and requirements"
+        "Show the brand personality (sarcastic? warm? bold?)",
+        "Give an example caption",
+        "Specify emoji style",
+        "Make it feel human, not AI"
       ],
-      "perfectExample": "Guide me through deploying my Next.js app to Vercel following best practices. Cover: 1) Setting up vercel.json with proper configuration, 2) Configuring environment variables for production vs development, 3) Optimizing build settings and output directory, 4) Setting up custom domains and HTTPS, 5) Implementing proper error handling and logging for production, 6) Performance optimization (caching, compression, image optimization), 7) Security considerations (API keys, CORS, rate limiting). Walk me through each step with explanations.",
+      "perfectExample": "Write 5 Instagram captions for a coffee brand. Make them feel like they're from a friend, not a company. Use 1-2 emojis per caption, keep them short (2-3 sentences max). Example: 'Plot twist: your Tuesday just got better ☕✨ New single-origin drop is live.' Tone should be witty, relatable, never salesy.",
       "passingScore": 70,
+      "xpReward": 100
+    },
+    {
+      "id": "iteration-chamber",
+      "name": "The Iteration Chamber",
+      "difficulty": "Advanced",
+      "story": "You've got 80% there. Now it's time to master refinement: rewriting prompts to get the final 20% that makes outputs SHIP-READY.",
+      "task": "Write a follow-up prompt that refines and improves previous AI output",
+      "evaluationCriteria": {
+        "keywords": ["refine", "improve", "specific feedback", "direction", "tone", "different"],
+        "bonusKeywords": ["iterate", "better", "clearer", "more", "remove"],
+        "antiPatterns": ["just say 'better'", "vague feedback", "unclear changes"],
+        "minLength": 40,
+        "maxLength": 300
+      },
+      "hints": [
+        "What specifically didn't work?",
+        "What exact change do you want?",
+        "Show the direction with examples"
+      ],
+      "perfectExample": "That's close! But make it edgier and less corporate. Add 1-2 emojis per line. Cut the length by 40%. Sound like you're texting a friend, not writing for marketing. Remove all buzzwords like 'innovative' and 'cutting-edge'.",
+      "passingScore": 65,
       "xpReward": 100
     }
   ]
