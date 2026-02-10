@@ -581,7 +581,7 @@
             }
 
             if (baseCommand === 'ls') {
-                executeLs(args);
+                executeLs(args, level);
                 enableInput();
                 return;
             }
@@ -780,27 +780,95 @@
             }
         }
 
-        function executeLs(flags) {
+        function executeLs(flags, level) {
+            // Convert flags array to single string for easier parsing
+            const flagString = flags.join('');
+            
+            // Check for help flag
+            if (flagString.includes('-help') || flagString.includes('--help') || flagString === 'help') {
+                const helpText = gameData.commandHelp.ls;
+                addOutput(helpText, 'success');
+                return;
+            }
+            
             const listing = gameData.fileListing[currentDirectory];
             if (!listing) {
                 addOutput(`ls: cannot access '${currentDirectory}': No such file or directory`, 'error');
                 return;
             }
 
+            // Parse individual flags
+            const hasA = flagString.includes('a');  // Show all (including hidden)
+            const hasA_long = flagString.includes('--all'); // Long form of -a
+            const hasL = flagString.includes('l');  // Long format
+            const hasH = flagString.includes('h');  // Human readable
+            const hasS = flagString.includes('S');  // Sort by size
+            const hasT = flagString.includes('t');  // Sort by time
+            const hasR = flagString.includes('R');  // Recursive
+            const hasR_reverse = flagString.includes('r') && !flagString.includes('R'); // Reverse sort (lowercase r)
+            const hasD = flagString.includes('d');  // List directory entries
+            
+            const showAll = hasA || hasA_long;
+            const showLong = hasL;
+            
             let output = '';
-            const hasA = flags.join('').includes('a');
-            const hasL = flags.join('').includes('l');
-            const hasH = flags.join('').includes('h');
-
-            if (hasL) {
-                output = listing.detailed;
-            } else if (hasA) {
+            let levelComplete = false;
+            
+            // Determine which format to use based on flags
+            // Priority: -l flag determines if we use detailed format
+            if (hasL && showAll) {
+                // ls -la or ls -lah or similar - use all_long variant if available
+                output = listing.all_long || listing.all;
+                // If -h flag is present, use all_long_human format if available
+                if (hasH && listing.all_long_human) {
+                    output = listing.all_long_human;
+                }
+            } else if (hasL) {
+                // ls -l - use detailed format
+                output = listing.detailed || listing.normal;
+                // If -h flag, use human readable format if available
+                if (hasH && listing.detailed_human) {
+                    output = listing.detailed_human;
+                }
+            } else if (showAll) {
+                // ls -a - show all files including hidden
                 output = listing.all;
             } else {
+                // Default ls - show normal files (non-hidden)
                 output = listing.normal;
             }
-
+            
             addOutput(output, 'success');
+            
+            // Check if this ls command completes the current level
+            if (level) {
+                // Level 2 is "Hidden Files Revealed" which accepts: ls -a, ls -la, ls -lah
+                if (currentLevel === 2 && showAll) {
+                    levelComplete = true;
+                }
+                // Level 4 is "What's in This Directory?" which accepts: ls -l, ls -lah
+                else if (currentLevel === 4 && showLong) {
+                    levelComplete = true;
+                }
+                
+                if (levelComplete) {
+                    // This is the correct command for this level
+                    addOutput(level.response, 'success');
+                    totalXP += level.xp;
+                    document.getElementById('xp-display').textContent = totalXP;
+                    GameEngine.awardXP(level.xp, `Level ${currentLevel}: ${level.title}`);
+                    
+                    // Wait then go to next level
+                    setTimeout(() => {
+                        if (currentLevel < 10) {
+                            addOutput('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', '');
+                            startLevel(currentLevel + 1);
+                        } else {
+                            completeGame();
+                        }
+                    }, 1500);
+                }
+            }
         }
 
         function executeCD(target) {

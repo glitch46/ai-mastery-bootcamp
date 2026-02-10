@@ -185,27 +185,34 @@
       "detailed": "total 64\n-rw-r--r--  1 root root  12288 Feb 10 14:30 auth.log\n-rw-r--r--  1 root root   4096 Feb 10 14:25 apt.log\n-rw-r--r--  1 root root   8192 Feb 10 14:20 btmp\n-rw-r--r--  1 root root   6144 Feb 10 14:15 kernel.log\n-rw-r--r--  1 root root  16384 Feb 10 14:10 syslog\n-rw-r--r--  1 root root   2048 Feb 10 14:05 wtmp",
       "all": ".  ..  auth.log  apt.log  btmp  kernel.log  syslog  wtmp"
     },
-    "/home/user": {
-      "normal": "Desktop  Documents  Downloads  .SAASApp",
-      "detailed": "total 32\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile\n-rw-r--r--  1 user user   128 Feb  5 10:30 .gitconfig",
-      "all": ".  ..  .bashrc  .cache  .config  .git  .gitconfig  .profile  .ssh  .SAASApp  Desktop  Documents  Downloads"
-    },
-    "/home/user/.SAASApp": {
-      "normal": "README.md  package.json  public/  src/  tests/",
-      "detailed": "total 48\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 public\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 src\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 tests\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example\n-rw-r--r--  1 user user   512 Feb 10 12:30 .gitignore",
-      "all": ".  ..  .env.example  .gitignore  README.md  package.json  public/  src/  tests/"
-    },
+     "/home/user": {
+       "normal": "Desktop  Documents  Downloads  .SAASApp",
+       "detailed": "total 32\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile\n-rw-r--r--  1 user user   128 Feb  5 10:30 .gitconfig",
+       "all": ".  ..  .bashrc  .cache  .config  .git  .gitconfig  .profile  .ssh  .SAASApp  Desktop  Documents  Downloads",
+       "all_long": "total 48\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\ndrwx------  2 user user  4096 Feb 10 14:20 .cache\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 .config\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .git\ndrwx------  2 user user  4096 Feb 10 14:20 .ssh\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   128 Feb  5 10:30 .gitconfig\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile",
+       "all_long_human": "total 48K\ndrwxr-xr-x  2 user user 4.0K Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user 4.0K Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user 4.0K Feb  8 09:15 Downloads\ndrwx------  2 user user 4.0K Feb 10 14:20 .cache\ndrwxr-xr-x  2 user user 4.0K Feb 10 14:20 .config\ndrwxr-xr-x  3 user user 4.0K Feb 10 14:20 .git\ndrwx------  2 user user 4.0K Feb 10 14:20 .ssh\ndrwxr-xr-x  3 user user 4.0K Feb 10 14:20 .SAASApp\n-rw-r--r--  1 user user 220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user 128 Feb  5 10:30 .gitconfig\n-rw-r--r--  1 user user 655 Feb  5 10:30 .profile"
+     },
+     "/home/user/.SAASApp": {
+       "normal": "README.md  package.json  public/  src/  tests/",
+       "detailed": "total 48\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 public\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 src\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 tests\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example\n-rw-r--r--  1 user user   512 Feb 10 12:30 .gitignore",
+       "all": ".  ..  .env.example  .gitignore  README.md  package.json  public/  src/  tests/",
+       "all_long": "total 56\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 public\ndrwxr-xr-x  3 user user  4096 Feb 10 14:23 src\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 tests\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example\n-rw-r--r--  1 user user   512 Feb 10 12:30 .gitignore",
+       "all_long_human": "total 56K\ndrwxr-xr-x  3 user user 4.0K Feb 10 14:23 public\ndrwxr-xr-x  3 user user 4.0K Feb 10 14:23 src\ndrwxr-xr-x  2 user user 4.0K Feb 10 14:23 tests\n-rw-r--r--  1 user user 5.0K Feb 10 13:45 README.md\n-rw-r--r--  1 user user 2.0K Feb 10 13:45 package.json\n-rw-r--r--  1 user user 1.0K Feb 10 12:30 .env.example\n-rw-r--r--  1 user user 512 Feb 10 12:30 .gitignore"
+     },
     "/home/user/.SAASApp/src": {
       "normal": "app.js  components/  index.js  styles.css  utils/",
       "detailed": "total 24\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 components\ndrwxr-xr-x  2 user user  4096 Feb 10 14:23 utils\n-rw-r--r--  1 user user  3456 Feb 10 13:30 app.js\n-rw-r--r--  1 user user  2048 Feb 10 13:25 index.js\n-rw-r--r--  1 user user  1024 Feb 10 13:20 styles.css",
       "all": ".  ..  app.js  components/  index.js  styles.css  utils/"
     },
-    "/home/user/languageapp": {
-      "normal": "README.md  package.json  public/  src/",
-      "detailed": "total 32\ndrwxr-xr-x  3 user user  4096 Feb 10 14:30 node_modules\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 public\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 src\n-rw-r--r--  1 user user  2048 Feb 10 14:15 package.json\n-rw-r--r--  1 user user  3072 Feb 10 14:10 README.md\n-rw-r--r--  1 user user   256 Feb 10 14:05 .env\n-rw-r--r--  1 user user   512 Feb 10 14:05 .gitignore",
-      "all": ".  ..  .env  .gitignore  README.md  package.json  node_modules/  public/  src/"
-    }
-  },
+     "/home/user/languageapp": {
+       "normal": "README.md  package.json  public/  src/",
+       "detailed": "total 32\ndrwxr-xr-x  3 user user  4096 Feb 10 14:30 node_modules\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 public\ndrwxr-xr-x  2 user user  4096 Feb 10 14:20 src\n-rw-r--r--  1 user user  2048 Feb 10 14:15 package.json\n-rw-r--r--  1 user user  3072 Feb 10 14:10 README.md\n-rw-r--r--  1 user user   256 Feb 10 14:05 .env\n-rw-r--r--  1 user user   512 Feb 10 14:05 .gitignore",
+       "all": ".  ..  .env  .gitignore  README.md  package.json  node_modules/  public/  src/"
+     }
+   },
+   "commandHelp": {
+     "ls": "ls - list directory contents\n\nSYNOPSIS\n  ls [OPTION]... [FILE]...\n\nDESCRIPTION\n  List information about the FILEs (the current directory by default).\n\nOPTIONS\n  -a, --all              Do not ignore hidden files (those starting with .)\n  -A, --almost-all       Like -a, but do not list implied . and ..\n  -l                     Use a long listing format\n  -h, --human-readable   Print human readable file sizes (1K 2M 1G)\n  -S                     Sort by file size, largest first\n  -t                     Sort by time modified, most recently modified first\n  -r, --reverse          Reverse order while sorting\n  -R, --recursive        List subdirectories recursively\n  -d, --directory        List directory entries instead of contents\n  --group-directories-first  Group directories first, before files\n  -v, --version          Output version information and exit\n  --help                 Display this help and exit\n\nEXAMPLES\n  ls                    List files in current directory\n  ls -a                 List all files including hidden\n  ls -la                List all files in long format\n  ls -lah               List all files in long format with human-readable sizes\n  ls -lS                List files sorted by size\n  ls -lt                List files sorted by modification time\n  ls -R                 List subdirectories recursively"
+   },
   "fileContents": {
     "/home/user/.SAASApp/package.json": "{\n  \"name\": \"saasapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"A SaaS application\",\n  \"main\": \"src/index.js\",\n  \"scripts\": {\n    \"start\": \"node src/index.js\",\n    \"dev\": \"nodemon src/index.js\",\n    \"test\": \"jest\"\n  },\n  \"dependencies\": {\n    \"express\": \"^4.18.2\",\n    \"cors\": \"^2.8.5\",\n    \"dotenv\": \"^16.0.3\"\n  }\n}",
     "/home/user/languageapp/package.json": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"src/index.js\",\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\",\n    \"test\": \"react-scripts test\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"react-dom\": \"^18.2.0\",\n    \"axios\": \"^1.4.0\"\n  }\n}"
