@@ -2,183 +2,164 @@
   "levels": [
     {
       "level": 1,
-      "title": "Your First AI Prompt",
-      "story": "Welcome to AI-assisted development. You're about to create your first prompt to Claude.",
-      "objective": "Write a prompt to create a landing page description for a coffee shop",
-      "skillFocus": "Basic Prompting",
-      "goodElements": ["Specifies what to create", "Gives context", "Defines tone"],
-      "hints": [
-        "Tell the AI what you want (headline + tagline)",
-        "Give it context (coffee shop type, values)",
-        "Specify the tone or vibe you're going for"
-      ],
-      "example": "Create an engaging, creative landing page headline and tagline for a specialty coffee shop called 'Brew Haven' that emphasizes artisanal quality and community.",
+      "title": "Navigate Home",
+      "story": "You're in /var/log. You need to get back home. Use 'pwd' to see where you are, then navigate to your home directory.",
+      "objective": "Navigate to /home/user (your home directory)",
+      "command": "cd /home/user",
+      "acceptCommands": ["cd /home/user", "cd ~"],
+      "response": "✓ Welcome home! You're now in /home/user",
+      "hint": "Use 'cd' (change directory) to navigate. You can use ~ as shortcut for home.",
       "xp": 50,
-      "lesson": "Good prompts: Clarity + Context + Tone"
+      "lesson": "cd = navigate between folders"
     },
     {
       "level": 2,
-      "title": "The SCOPE Framework",
-      "story": "Level up your skills with SCOPE: Specify role, Context, Output, Parameters, Examples.",
-      "objective": "Write a SCOPE-based prompt for email marketing copy",
-      "skillFocus": "Structured Prompting",
-      "goodElements": ["Clear role", "Business context", "Output format specified", "Constraints defined", "Example tone"],
-      "hints": [
-        "S = What role should the AI play?",
-        "C = What's the business/product context?",
-        "O = What exact format do you want?",
-        "P = What are your constraints (length, tone)?",
-        "E = Show an example of good output"
-      ],
-      "example": "S - Expert SaaS email copywriter\nC - Project management tool for remote teams\nO - Subject line + 3-paragraph body\nP - Max 150 words, focus on pain points\nE - 'Stop context-switching. Start shipping.'",
+      "title": "Hidden Files Revealed",
+      "story": "You're in /home/user. Your boss hid the .SAASApp directory (it starts with a dot so it's hidden). Find it using ls with the right flag.",
+      "objective": "List all files including hidden ones",
+      "command": "ls -a",
+      "acceptCommands": ["ls -a", "ls -la", "ls -lah"],
+      "response": "✓ Found it! .SAASApp is revealed (along with .bashrc, .profile, .cache, etc.)",
+      "hint": "The flag -a shows ALL files (including hidden ones that start with .)",
       "xp": 75,
-      "lesson": "SCOPE Framework = Your Power Tool"
+      "lesson": "ls -a = see hidden files"
     },
     {
       "level": 3,
-      "title": "Using Delimiters for Clarity",
-      "story": "Keep prompts organized with delimiters. AI responds better to structure.",
-      "objective": "Write a prompt using delimiters to transform reviews into marketing copy",
-      "skillFocus": "Delimiter Mastery",
-      "goodElements": ["Clear sections", "Organized structure", "Easy to scan", "Less confusion"],
-      "hints": [
-        "Use line breaks and labels",
-        "Separate instructions from content",
-        "Make each section obvious"
-      ],
-      "example": "ROLE: Marketing copywriter\nTASK: Transform this review into testimonial\nREVIEW: 'Saved me hours weekly. So intuitive!'\nFORMAT: 1-2 sentences\nTONE: Professional + friendly",
-      "xp": 75,
-      "lesson": "Delimiters = Better structure = Better outputs"
+      "title": "Enter the Hidden Directory",
+      "story": "Now that you see .SAASApp, navigate into it. You'll find your project there.",
+      "objective": "Enter the .SAASApp directory",
+      "command": "cd .SAASApp",
+      "acceptCommands": ["cd .SAASApp", "cd /home/user/.SAASApp"],
+      "response": "✓ You're now inside .SAASApp. Time to get to work!",
+      "hint": "You can use relative path (cd .SAASApp) or absolute path (cd /home/user/.SAASApp)",
+      "xp": 50,
+      "lesson": "Relative vs absolute paths"
     },
     {
       "level": 4,
-      "title": "Adding Examples (Few-Shot)",
-      "story": "Show AI what 'good' looks like. Examples guide better outputs.",
-      "objective": "Write a prompt with 2-3 examples for product descriptions",
-      "skillFocus": "Few-Shot Prompting",
-      "goodElements": ["Multiple examples", "Consistent style", "Clear pattern", "Easy to replicate"],
-      "hints": [
-        "Give 2-3 examples of perfect output",
-        "Let AI learn the pattern",
-        "This beats long explanations"
-      ],
-      "example": "Generate product descriptions like these:\nExample 1: 'Our journals are where thoughts become reality. Premium paper, elegant design.'\nExample 2: 'Wireless earbuds that disappear. Premium sound, all day battery.'\nNow create 3 more in this style for...",
-      "xp": 100,
-      "lesson": "Examples > Explanations"
+      "title": "What's in This Directory?",
+      "story": "You're in .SAASApp. List the files to see what's here. Your project has package.json, src folder, and a README.",
+      "objective": "List files in detail format",
+      "command": "ls -l",
+      "acceptCommands": ["ls -l", "ls -lah"],
+      "response": "✓ You see:\n  package.json (10KB)\n  README.md (5KB)\n  src/ (directory)\n  .env.example (2KB)",
+      "hint": "Use ls -l to see detailed info: permissions, size, date modified, etc.",
+      "xp": 75,
+      "lesson": "ls -l = detailed file listing"
     },
     {
       "level": 5,
-      "title": "Iteration & Refinement",
-      "story": "Getting 80% there? Refine with follow-up prompts. Iteration is your power.",
-      "objective": "Write a follow-up prompt to improve AI output",
-      "skillFocus": "Iterative Prompting",
-      "goodElements": ["Specific feedback", "Clear direction", "Actionable changes"],
-      "hints": [
-        "Don't settle for 'almost right'",
-        "Tell AI exactly what to change",
-        "Refinement = Professional results"
-      ],
-      "example": "Great! But make it edgier and more conversational. Add 1-2 emojis per caption and cut the length by 50%. Sound like you're talking to friends, not customers.",
-      "xp": 100,
-      "lesson": "Great outputs come from iteration"
+      "title": "Go Back One Directory",
+      "story": "You went too deep into a nested folder. Get back to parent directory using 'cd ..'",
+      "objective": "Navigate to parent directory",
+      "command": "cd ..",
+      "acceptCommands": ["cd ..", "cd ../"],
+      "response": "✓ You're back in /home/user. Parent directory reached!",
+      "hint": "cd .. = go up one level. cd ../.. = go up two levels. cd - = go back to previous directory",
+      "xp": 50,
+      "lesson": "cd .. = go to parent directory"
     },
     {
       "level": 6,
-      "title": "Prompt Templates",
-      "story": "Create templates for speed and consistency. Build once, use forever.",
-      "objective": "Create a reusable template prompt",
-      "skillFocus": "Template Building",
-      "goodElements": ["Variables with {{brackets}}", "Reusable structure", "Clear instructions"],
-      "hints": [
-        "Use {{VARIABLES}} for flexibility",
-        "Save time with templates",
-        "One template = 100 uses"
-      ],
-      "example": "[TEMPLATE]\nPRODUCT: {{NAME}}\nFEATURES: {{FEATURES}}\nCREATE: {{REQUEST}}\nTONE: {{TONE}}\nLENGTH: {{LENGTH}}",
-      "xp": 125,
-      "lesson": "Templates = Speed + Consistency"
+      "title": "Create a New Folder",
+      "story": "You need to create a new folder called 'languageapp' for your next project.",
+      "objective": "Create a new directory called languageapp",
+      "command": "mkdir languageapp",
+      "acceptCommands": ["mkdir languageapp", "mkdir -p languageapp"],
+      "response": "✓ Created directory: languageapp",
+      "hint": "mkdir = make directory. Use mkdir -p to create nested folders automatically.",
+      "xp": 75,
+      "lesson": "mkdir = create folders"
     },
     {
       "level": 7,
-      "title": "Cursor IDE Magic",
-      "story": "Now meet Cursor. It's like ChatGPT built into your code editor.",
-      "objective": "Write a prompt for Cursor to generate a React component",
-      "skillFocus": "IDE-Based Prompting",
-      "goodElements": ["Clear component spec", "Libraries specified", "Features listed", "Styling defined"],
-      "hints": [
-        "Cursor understands your existing code",
-        "Use Cmd+K to activate",
-        "Mention libraries (React, Tailwind, etc.)"
-      ],
-      "example": "Create a responsive navbar with logo, menu, hamburger mobile version. Use Tailwind CSS. Smooth transitions on hover.",
-      "xp": 150,
-      "lesson": "AI IDEs read context and generate matching code"
+      "title": "Install Dependencies",
+      "story": "You're in a new project folder that has package.json. Install the dependencies using npm.",
+      "objective": "Install npm dependencies",
+      "command": "npm install",
+      "acceptCommands": ["npm install", "npm i"],
+      "response": "✓ Installed 156 packages in 2.4s\n  added 156 packages from 42 contributors\n  audited 156 packages in 1.2s",
+      "hint": "npm install = read package.json and download all dependencies. npm i is shorthand.",
+      "xp": 100,
+      "lesson": "npm install = download project dependencies"
     },
     {
       "level": 8,
-      "title": "GitHub Copilot Comments",
-      "story": "Comments are instructions. Copilot reads them and completes your code.",
-      "objective": "Write an instructive comment that Copilot will understand",
-      "skillFocus": "Comment-Driven Development",
-      "goodElements": ["Clear intent", "Input/output described", "Error handling noted"],
-      "hints": [
-        "Comments = instructions to Copilot",
-        "Be specific about what you want",
-        "Mention error cases"
-      ],
-      "example": "// Fetch user profile, handle network errors, return formatted user object with defaults",
-      "xp": 150,
-      "lesson": "Good comments = Good autocomplete"
+      "title": "Check Git Status",
+      "story": "You've made changes to your project. Check git status to see what's changed.",
+      "objective": "View current git status",
+      "command": "git status",
+      "acceptCommands": ["git status"],
+      "response": "✓ On branch main\n\nChanges not staged for commit:\n  modified: src/app.js\n  new file: src/components/Header.jsx\n\nUntracked files:\n  .env",
+      "hint": "git status = see what files have changed, what's staged, what's untracked",
+      "xp": 100,
+      "lesson": "git status = see your changes"
     },
     {
       "level": 9,
-      "title": "Full-Page Generation",
-      "story": "AI can generate complete landing pages, not just snippets.",
-      "objective": "Write a prompt for a full HTML landing page",
-      "skillFocus": "Large Output Coordination",
-      "goodElements": ["All sections listed", "Design direction given", "Realistic content"],
-      "hints": [
-        "Ask for complete, functional outputs",
-        "List every section you need",
-        "Give design vibes (modern, minimal, playful)"
+      "title": "Set Git Remote",
+      "story": "Time to push to GitHub! First, set your remote origin to your GitHub repo. Use git remote add origin [URL]",
+      "objective": "Add remote origin for GitHub push",
+      "command": "git remote add origin https://github.com/yourname/languageapp.git",
+      "acceptCommands": [
+        "git remote add origin https://github.com/yourname/languageapp.git",
+        "git remote add origin git@github.com:yourname/languageapp.git"
       ],
-      "example": "Generate a complete HTML landing page for a fitness app. Include: header, hero, 3 feature cards, testimonials, footer. Modern design. Use realistic placeholder text.",
-      "xp": 175,
-      "lesson": "AI can build full products with good prompts"
+      "response": "✓ Remote origin added successfully",
+      "hint": "git remote add origin [URL] = connect to GitHub. Check your GitHub repo for the exact URL.",
+      "xp": 125,
+      "lesson": "git remote = connect to GitHub"
     },
     {
       "level": 10,
-      "title": "Ship Your First Project",
-      "story": "You've learned prompt mastery. Now build something real and ship it.",
-      "objective": "Pick an idea and ship it",
-      "skillFocus": "Real-World Building",
-      "goodElements": ["Clear vision", "Iterative approach", "Shipping mentality"],
-      "hints": [
-        "Start small, iterate fast",
-        "Use Claude, Cursor, and Copilot",
-        "Ship > Perfect"
-      ],
-      "example": "Pick a project idea. Use AI to generate landing page + backend API docs. Push to GitHub. Ship it.",
-      "xp": 250,
-      "easterEgg": "vibe-coder-master",
-      "lesson": "Stop learning. Start shipping."
+      "title": "Push to GitHub",
+      "story": "Your changes are committed. Now push them to GitHub using git push. This is the final step to ship!",
+      "objective": "Push code to GitHub",
+      "command": "git push -u origin main",
+      "acceptCommands": ["git push -u origin main", "git push origin main", "git push"],
+      "response": "✓ Pushing to GitHub...\n  ✓ [main 7a8f9c2] Updated components\n  ✓ Pushed to https://github.com/yourname/languageapp.git\n  ✓ Your code is live!",
+      "hint": "git push = send commits to GitHub. -u flag sets upstream. After first push, just 'git push' works.",
+      "xp": 150,
+      "easterEgg": "shipped-it",
+      "lesson": "git push = ship your code to the world"
     }
   ],
   "easterEggs": [
     {
-      "prompt": "What's the most important skill I learned?",
-      "response": "The most important skill: Knowing what to ask. Prompting is the meta-skill of the AI era.\n\n+50 XP for wisdom!",
-      "xp": 50
+      "command": "whoami",
+      "response": "You are the architect. The builder is me (AI). Together, we ship products.",
+      "xp": 25
     },
     {
-      "prompt": "Can I become a developer without knowing Python/JavaScript?",
-      "response": "YES. With Cursor + Claude, you don't need memorized syntax. You need thinking skills + prompting skills + shipping mentality. That's the new developer.\n\n+75 XP for the right question!",
-      "xp": 75
+      "command": "clear",
+      "response": "Screen cleared. Ready for more commands!",
+      "xp": 0
     },
     {
-      "prompt": "How do I know if my prompt is good?",
-      "response": "A good prompt produces output you'd be happy to ship. If you're tweaking AI output 5+ times, your prompt needs work. Clarity + Examples + Tone = First-try wins.\n\n+50 XP for meta-thinking!",
-      "xp": 50
+      "command": "pwd",
+      "response": "Shows your current directory path. Use this to orient yourself!",
+      "xp": 15
+    },
+    {
+      "command": "man cd",
+      "response": "cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\n\nYou've already learned this one!",
+      "xp": 20
+    },
+    {
+      "command": "ls",
+      "response": "Lists files in current directory.",
+      "xp": 10
+    },
+    {
+      "command": "cat package.json",
+      "response": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"index.js\",\n  \"dependencies\": {\n    \"react\": \"^18.0.0\",\n    \"express\": \"^4.18.0\"\n  }\n}\n\n+25 XP for exploring!",
+      "xp": 25
+    },
+    {
+      "command": "git log",
+      "response": "commit 7a8f9c2 - Updated components\ncommit 5f1b3a9 - Initial setup\ncommit 2c8e4d1 - Project scaffolding\n\nYour project history!",
+      "xp": 30
     }
   ]
 }

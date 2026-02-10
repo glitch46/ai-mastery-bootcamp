@@ -10,6 +10,7 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
+            background: #000;
         }
 
         .game-container {
@@ -23,8 +24,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 30px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
         }
 
         .game-title {
@@ -55,29 +56,34 @@
             font-size: 1.8rem;
             font-weight: 700;
             font-family: var(--font-mono);
-            color: var(--accent-green);
+            color: #00ff88;
         }
 
         .stat-label {
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--text-muted);
+            color: #666;
         }
 
         .terminal-container {
             flex: 1;
-            padding: 30px;
+            padding: 20px 30px;
             overflow-y: auto;
+            background: #000;
         }
 
         .terminal {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: #000;
-            border-radius: 12px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 60px rgba(0, 255, 136, 0.3);
+            font-family: var(--font-mono);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .terminal-header {
@@ -107,24 +113,32 @@
         }
 
         .terminal-body {
+            flex: 1;
             padding: 20px;
-            min-height: 500px;
-            max-height: 600px;
             overflow-y: auto;
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #00ff88;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .output {
-            color: #00ff88;
+            margin-bottom: 8px;
             white-space: pre-wrap;
-            margin-bottom: 10px;
+            word-wrap: break-word;
         }
 
         .output.story {
             color: #00d4ff;
             font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .output.objective {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 12px;
         }
 
         .output.error {
@@ -132,30 +146,50 @@
         }
 
         .output.success {
-            color: #00ff00;
+            color: #00ff88;
             font-weight: bold;
         }
 
-        .input-line {
+        .output.command {
+            color: #fff;
+        }
+
+        .input-wrapper {
             display: flex;
-            align-items: center;
-            margin-top: 10px;
+            align-items: flex-start;
+            margin-top: 8px;
+            padding: 0 20px;
+            gap: 8px;
         }
 
         .prompt {
             color: #00ff88;
-            margin-right: 8px;
             user-select: none;
+            flex-shrink: 0;
+        }
+
+        .input-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         #command-input {
-            flex: 1;
             background: transparent;
             border: none;
             color: #fff;
             font-family: var(--font-mono);
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            min-height: 1.5em;
+        }
+
+        #command-input::placeholder {
+            color: #444;
         }
 
         #command-input:disabled {
@@ -169,6 +203,15 @@
             background: #00ff88;
             animation: blink 1s step-end infinite;
             margin-left: 2px;
+            flex-shrink: 0;
+        }
+
+        #command-input:focus ~ .cursor {
+            opacity: 1;
+        }
+
+        #command-input:disabled ~ .cursor {
+            display: none;
         }
 
         @keyframes blink {
@@ -176,20 +219,26 @@
         }
 
         .hint-box {
-            margin-top: 30px;
-            padding: 20px;
-            background: var(--bg-card);
-            border-left: 4px solid var(--accent-yellow);
-            border-radius: 8px;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 15px;
+            background: #1a2a1a;
+            border-left: 4px solid #ffd700;
+            border-radius: 4px;
+            display: none;
         }
 
         .hint-box h3 {
-            color: var(--accent-yellow);
-            margin-top: 0;
+            color: #ffd700;
+            margin: 0 0 10px 0;
+            font-size: 0.9rem;
         }
 
-        .btn-hint {
-            margin-top: 10px;
+        .hint-box p {
+            margin: 0;
+            color: #00ff88;
+            font-size: 0.85rem;
         }
 
         .victory-screen {
@@ -216,6 +265,7 @@
             font-size: 3rem;
             margin-bottom: 20px;
             animation: glow 2s ease-in-out infinite;
+            color: #00ff88;
         }
 
         @keyframes glow {
@@ -233,8 +283,23 @@
         .victory-stat {
             background: var(--bg-card);
             padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .victory-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: #00ff88;
+        }
+
+        .victory-stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
         }
 
         .back-button {
@@ -242,6 +307,35 @@
             top: 20px;
             left: 20px;
             z-index: 100;
+        }
+
+        .level-indicator {
+            display: flex;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .level-step {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .level-step.current {
+            background: #00ff88;
+            color: #000;
+            border-color: #00ff88;
+        }
+
+        .level-step.completed {
+            background: #00ff00;
+            color: #000;
+            border-color: #00ff00;
         }
     </style>
 </head>
@@ -254,7 +348,7 @@
                 <span style="font-size: 2rem;">⚡</span>
                 <div>
                     <h1>TERMINAL VELOCITY</h1>
-                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">Escape the Matrix through CLI mastery</p>
+                    <p style="margin: 0; font-size: 0.9rem; color: #666;">Master CLI commands to build real projects</p>
                 </div>
             </div>
             <div class="game-stats">
@@ -264,7 +358,7 @@
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="xp-display">0</div>
-                    <div class="stat-label">XP</div>
+                    <div class="stat-label">XP Earned</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="commands-display">0</div>
@@ -279,47 +373,51 @@
                     <div class="terminal-dot red"></div>
                     <div class="terminal-dot yellow"></div>
                     <div class="terminal-dot green"></div>
-                    <div class="terminal-title">terminal-velocity@matrix ~ zsh</div>
+                    <div class="terminal-title">terminal-velocity@bootcamp ~ zsh</div>
                 </div>
                 <div class="terminal-body" id="terminal-output">
                     <div class="output success">TERMINAL VELOCITY - Version 1.0</div>
-                    <div class="output">Welcome to the Matrix. Type commands to proceed.</div>
-                    <div class="output">Type 'help' for available commands.</div>
-                    <div class="output" style="color: #666;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+                    <div class="output">Welcome to the bootcamp terminal. Learn real CLI skills to build and ship projects.</div>
+                    <div class="output" style="color: #666;">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
                 </div>
-            </div>
-
-            <div class="hint-box" id="hint-box" style="display: none; max-width: 900px; margin: 20px auto;">
-                <h3>💡 Hint</h3>
-                <p id="hint-text"></p>
-                <button class="btn btn-secondary btn-hint" onclick="closeHint()">Got it!</button>
+                <div class="hint-box" id="hint-box">
+                    <h3>💡 Hint:</h3>
+                    <p id="hint-text"></p>
+                </div>
+                <div class="input-wrapper">
+                    <span class="prompt">$ </span>
+                    <div class="input-container">
+                        <input type="text" id="command-input" autofocus autocomplete="off" placeholder="Enter command and press Enter...">
+                        <span class="cursor"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="victory-screen" id="victory-screen">
         <div class="victory-content">
-            <h1>🎉 MATRIX ESCAPED! 🎉</h1>
-            <p style="font-size: 1.2rem; color: var(--text-secondary);">
-                You have mastered the terminal and broken free from the Matrix!
+            <h1>🎉 TERMINAL MASTERED! 🎉</h1>
+            <p style="font-size: 1.2rem; color: #00ff88;">
+                You've learned real CLI skills. Now you can build and ship projects from the command line!
             </p>
             
             <div class="victory-stats">
-                <div class="victory-stat">
-                    <div class="stat-value" id="final-xp">0</div>
-                    <div class="stat-label">Total XP</div>
+                <div>
+                    <div class="victory-stat-value" id="final-xp">0</div>
+                    <div class="victory-stat-label">Total XP</div>
                 </div>
-                <div class="victory-stat">
-                    <div class="stat-value" id="final-commands">0</div>
-                    <div class="stat-label">Commands Used</div>
+                <div>
+                    <div class="victory-stat-value" id="final-commands">0</div>
+                    <div class="victory-stat-label">Commands Learned</div>
                 </div>
-                <div class="victory-stat">
-                    <div class="stat-value" id="final-time">0:00</div>
-                    <div class="stat-label">Time</div>
+                <div>
+                    <div class="victory-stat-value" id="final-time">0:00</div>
+                    <div class="victory-stat-label">Time</div>
                 </div>
-                <div class="victory-stat">
-                    <div class="stat-value" id="final-secrets">0</div>
-                    <div class="stat-label">Secrets Found</div>
+                <div>
+                    <div class="victory-stat-value" id="final-level">10</div>
+                    <div class="victory-stat-label">Levels</div>
                 </div>
             </div>
 
@@ -337,8 +435,8 @@
         let gameData = null;
         let totalXP = 0;
         let commandsUsed = 0;
-        let secretsFound = 0;
         let startTime = Date.now();
+        let hintsUsed = 0;
 
         // Load game data
         fetch('/data/commands/cli-commands.json')
@@ -355,122 +453,21 @@
             currentLevel = levelNum;
             document.getElementById('level-display').textContent = levelNum;
 
-            // Display story
-            addOutput(level.story, 'story');
-            addOutput(`\nOBJECTIVE: ${level.objective}`, 'success');
-            addOutput('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', '');
+            // Clear hint
+            document.getElementById('hint-box').style.display = 'none';
+            hintsUsed = 0;
 
-            // Create input line
-            createInputLine();
-        }
+            // Display level info
+            addOutput(`\n[Level ${levelNum}/10] ${level.title}`, 'story');
+            addOutput(`\n${level.story}`, 'story');
+            addOutput(`\nObjective: ${level.objective}`, 'objective');
+            addOutput(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`, '');
 
-        function createInputLine() {
-            const terminal = document.getElementById('terminal-output');
-            const inputLine = document.createElement('div');
-            inputLine.className = 'input-line';
-            inputLine.innerHTML = `
-                <span class="prompt">$ </span>
-                <input type="text" id="command-input" autofocus>
-                <span class="cursor"></span>
-            `;
-            terminal.appendChild(inputLine);
-
+            // Enable input
             const input = document.getElementById('command-input');
+            input.disabled = false;
+            input.value = '';
             input.focus();
-            input.addEventListener('keydown', handleCommand);
-
-            // Scroll to bottom
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function handleCommand(e) {
-            if (e.key !== 'Enter') return;
-
-            const input = e.target;
-            const command = input.value.trim();
-
-            if (!command) return;
-
-            // Display command
-            addOutput(`$ ${command}`, '');
-
-            commandsUsed++;
-            document.getElementById('commands-display').textContent = commandsUsed;
-
-            // Remove input line
-            input.removeEventListener('keydown', handleCommand);
-            input.disabled = true;
-
-            // Process command
-            processCommand(command);
-        }
-
-        function processCommand(command) {
-            // Check for help
-            if (command === 'help') {
-                addOutput('Available commands: help, hint, clear', '');
-                addOutput('Try typing the command needed for your current objective!', '');
-                createInputLine();
-                return;
-            }
-
-            // Check for hint request
-            if (command === 'hint') {
-                showHint();
-                createInputLine();
-                return;
-            }
-
-            // Check for clear
-            if (command === 'clear') {
-                document.getElementById('terminal-output').innerHTML = '';
-                createInputLine();
-                return;
-            }
-
-            // Check for easter eggs
-            const easterEgg = gameData.easterEggs.find(egg => egg.command === command);
-            if (easterEgg) {
-                addOutput(easterEgg.response, 'success');
-                totalXP += easterEgg.xp;
-                updateXP();
-                GameEngine.awardXP(easterEgg.xp, 'Easter egg discovered');
-                secretsFound++;
-                createInputLine();
-                return;
-            }
-
-            // Check if command matches current level
-            const level = gameData.levels.find(l => l.level === currentLevel);
-            
-            if (command === level.command) {
-                // Correct command!
-                addOutput(level.response, 'success');
-                totalXP += level.xp;
-                updateXP();
-                GameEngine.awardXP(level.xp, `Level ${currentLevel} completed`);
-
-                // Check if there's an easter egg for this level
-                if (level.easterEgg) {
-                    GameEngine.foundEasterEgg(level.easterEgg);
-                }
-
-                // Wait then start next level
-                setTimeout(() => {
-                    if (currentLevel < gameData.levels.length) {
-                        addOutput('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', '');
-                        startLevel(currentLevel + 1);
-                    } else {
-                        // Game complete!
-                        completeGame();
-                    }
-                }, 2000);
-            } else {
-                // Wrong command
-                addOutput(`Command not recognized: ${command}`, 'error');
-                addOutput(`Type 'hint' if you need help!`, '');
-                createInputLine();
-            }
         }
 
         function addOutput(text, className = '') {
@@ -482,32 +479,123 @@
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        function updateXP() {
-            document.getElementById('xp-display').textContent = totalXP;
+        document.getElementById('command-input').addEventListener('keydown', function(e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+
+            const input = e.target;
+            const command = input.value.trim();
+
+            if (!command) return;
+
+            // Display command
+            addOutput(`$ ${command}`, 'command');
+
+            commandsUsed++;
+            document.getElementById('commands-display').textContent = commandsUsed;
+
+            // Disable input
+            input.disabled = true;
+
+            // Process command after brief delay
+            setTimeout(() => processCommand(command), 200);
+        });
+
+        function processCommand(command) {
+            const level = gameData.levels.find(l => l.level === currentLevel);
+            
+            // Check for help
+            if (command === 'help') {
+                addOutput('Available commands: help, hint, clear', 'success');
+                addOutput('Type the command from the objective to proceed!', 'success');
+                enableInput();
+                return;
+            }
+
+            // Check for hint
+            if (command === 'hint') {
+                showHint();
+                enableInput();
+                return;
+            }
+
+            // Check for clear
+            if (command === 'clear') {
+                document.getElementById('terminal-output').innerHTML = '';
+                enableInput();
+                return;
+            }
+
+            // Check easter eggs
+            const easterEgg = gameData.easterEggs.find(egg => egg.command.toLowerCase() === command.toLowerCase());
+            if (easterEgg) {
+                addOutput(easterEgg.response, 'success');
+                if (easterEgg.xp > 0) {
+                    totalXP += easterEgg.xp;
+                    document.getElementById('xp-display').textContent = totalXP;
+                    GameEngine.awardXP(easterEgg.xp, `Easter egg: ${command}`);
+                }
+                enableInput();
+                return;
+            }
+
+            // Check if command is correct
+            const isCorrect = level.acceptCommands.some(c => 
+                c.toLowerCase() === command.toLowerCase()
+            );
+
+            if (isCorrect) {
+                // Correct!
+                addOutput(level.response, 'success');
+                totalXP += level.xp;
+                document.getElementById('xp-display').textContent = totalXP;
+                GameEngine.awardXP(level.xp, `Level ${currentLevel}: ${level.title}`);
+
+                // Wait then go to next level
+                setTimeout(() => {
+                    if (currentLevel < 10) {
+                        addOutput('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', '');
+                        startLevel(currentLevel + 1);
+                    } else {
+                        completeGame();
+                    }
+                }, 1500);
+            } else {
+                // Wrong command
+                addOutput(`Command not recognized: ${command}`, 'error');
+                addOutput(`Type 'hint' if you need help!`, 'error');
+                enableInput();
+            }
         }
 
         function showHint() {
             const level = gameData.levels.find(l => l.level === currentLevel);
             document.getElementById('hint-text').textContent = level.hint;
             document.getElementById('hint-box').style.display = 'block';
+            hintsUsed++;
         }
 
-        function closeHint() {
-            document.getElementById('hint-box').style.display = 'none';
+        function enableInput() {
+            const input = document.getElementById('command-input');
+            input.disabled = false;
+            input.value = '';
+            input.focus();
         }
 
         function completeGame() {
             const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
             
             // Show victory screen
             document.getElementById('victory-screen').style.display = 'flex';
             document.getElementById('final-xp').textContent = totalXP;
             document.getElementById('final-commands').textContent = commandsUsed;
-            document.getElementById('final-time').textContent = GameEngine.formatTime(elapsedTime);
-            document.getElementById('final-secrets').textContent = secretsFound;
+            document.getElementById('final-time').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            document.getElementById('final-level').textContent = '10/10';
 
-            // Award completion achievement
-            GameEngine.unlockAchievement('matrix-escapee');
+            // Award achievements
+            GameEngine.unlockAchievement('cli-master');
             GameEngine.completeGame('terminal-velocity', totalXP);
         }
     </script>
