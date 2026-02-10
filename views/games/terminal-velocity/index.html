@@ -588,19 +588,49 @@
 
             // Check cd for level completion FIRST, then handle as general command
             if (baseCommand === 'cd') {
+                // First, try to execute the cd command
+                let targetDirectory = currentDirectory;
+                
+                if (args.length > 0) {
+                    // Calculate what directory we'd end up in
+                    const tempDir = currentDirectory;
+                    const cdSuccess = executeCD(args[0]);
+                    if (!cdSuccess) {
+                        enableInput();
+                        return;
+                    }
+                    targetDirectory = currentDirectory;
+                    currentDirectory = tempDir; // Restore temporarily to check level
+                } else {
+                    targetDirectory = '/home/user';
+                }
+
                 // Check if this cd command is the correct answer for the current level
-                const isCorrect = level.acceptCommands.some(c => 
+                // Match either: exact command match OR destination directory match
+                let isCorrect = level.acceptCommands.some(c => 
                     c.toLowerCase() === command.toLowerCase()
                 );
+                
+                // Also check if we're trying to reach the intended destination
+                // by checking if any of the accept commands would lead to this directory
+                if (!isCorrect && level.command && level.command.includes('cd')) {
+                    // Check if target matches what the level expects
+                    // Level 1: expects /home/user
+                    // Level 3: expects /home/user/.SAASApp
+                    // etc.
+                    if (level.level === 1 && targetDirectory === '/home/user') {
+                        isCorrect = true;
+                    } else if (level.level === 3 && targetDirectory === '/home/user/.SAASApp') {
+                        isCorrect = true;
+                    } else if (level.level === 5 && targetDirectory === '/home/user/.SAASApp') {
+                        isCorrect = true;
+                    }
+                }
 
                 if (isCorrect) {
-                    // This is the level objective - handle specially
+                    // Actually change the directory now
                     if (args.length > 0) {
-                        const cdSuccess = executeCD(args[0]);
-                        if (!cdSuccess) {
-                            enableInput();
-                            return;
-                        }
+                        executeCD(args[0]);
                     } else {
                         currentDirectory = '/home/user';
                         updatePrompt();
@@ -623,6 +653,7 @@
                     }, 1500);
                 } else {
                     // Just a regular cd command (not the level objective)
+                    // Execute the cd command for real
                     executeCD(args[0] || '');
                     enableInput();
                 }
