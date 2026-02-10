@@ -586,11 +586,8 @@
                 return;
             }
 
-            if (baseCommand === 'cd') {
-                executeCD(args[0] || '');
-                enableInput();
-                return;
-            }
+            // Don't handle 'cd' as general command - let it fall through to level check
+            // This way 'cd' commands can trigger level completion
 
             if (baseCommand === 'mkdir') {
                 if (args.length === 0) {
@@ -688,13 +685,19 @@
             );
 
             if (isCorrect) {
-                // Update directory if cd command
-                if (baseCommand === 'cd' && args.length > 0) {
-                    const cdSuccess = executeCD(args[0]);
-                    if (!cdSuccess) {
-                        // cd failed, don't proceed to next level
-                        enableInput();
-                        return;
+                // Update directory if cd command and show proper output
+                if (baseCommand === 'cd') {
+                    if (args.length > 0) {
+                        const cdSuccess = executeCD(args[0]);
+                        if (!cdSuccess) {
+                            // cd failed, don't proceed to next level
+                            enableInput();
+                            return;
+                        }
+                    } else {
+                        // cd with no args goes home
+                        currentDirectory = '/home/user';
+                        updatePrompt();
                     }
                 }
 
