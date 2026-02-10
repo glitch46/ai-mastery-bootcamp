@@ -586,8 +586,48 @@
                 return;
             }
 
-            // Don't handle 'cd' as general command - let it fall through to level check
-            // This way 'cd' commands can trigger level completion
+            // Check cd for level completion FIRST, then handle as general command
+            if (baseCommand === 'cd') {
+                // Check if this cd command is the correct answer for the current level
+                const isCorrect = level.acceptCommands.some(c => 
+                    c.toLowerCase() === command.toLowerCase()
+                );
+
+                if (isCorrect) {
+                    // This is the level objective - handle specially
+                    if (args.length > 0) {
+                        const cdSuccess = executeCD(args[0]);
+                        if (!cdSuccess) {
+                            enableInput();
+                            return;
+                        }
+                    } else {
+                        currentDirectory = '/home/user';
+                        updatePrompt();
+                    }
+
+                    // Show level completion
+                    addOutput(level.response, 'success');
+                    totalXP += level.xp;
+                    document.getElementById('xp-display').textContent = totalXP;
+                    GameEngine.awardXP(level.xp, `Level ${currentLevel}: ${level.title}`);
+
+                    // Wait then go to next level
+                    setTimeout(() => {
+                        if (currentLevel < 10) {
+                            addOutput('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', '');
+                            startLevel(currentLevel + 1);
+                        } else {
+                            completeGame();
+                        }
+                    }, 1500);
+                } else {
+                    // Just a regular cd command (not the level objective)
+                    executeCD(args[0] || '');
+                    enableInput();
+                }
+                return;
+            }
 
             if (baseCommand === 'mkdir') {
                 if (args.length === 0) {
@@ -679,28 +719,13 @@
                 return;
             }
 
-            // Check if command is correct for level
+            // Check if command is correct for level (for non-cd commands)
+            // Note: cd commands are handled above in their own section
             const isCorrect = level.acceptCommands.some(c => 
                 c.toLowerCase() === command.toLowerCase()
             );
 
             if (isCorrect) {
-                // Update directory if cd command and show proper output
-                if (baseCommand === 'cd') {
-                    if (args.length > 0) {
-                        const cdSuccess = executeCD(args[0]);
-                        if (!cdSuccess) {
-                            // cd failed, don't proceed to next level
-                            enableInput();
-                            return;
-                        }
-                    } else {
-                        // cd with no args goes home
-                        currentDirectory = '/home/user';
-                        updatePrompt();
-                    }
-                }
-
                 // Show level completion
                 addOutput(level.response, 'success');
                 totalXP += level.xp;
