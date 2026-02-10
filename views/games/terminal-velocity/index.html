@@ -370,7 +370,7 @@
                     <p id="hint-text"></p>
                 </div>
                 <div class="input-wrapper">
-                    <span class="prompt">$ </span>
+                    <span class="prompt" id="prompt">user@bootcamp /var/log $ </span>
                     <div class="input-container">
                         <input type="text" id="command-input" autofocus autocomplete="off" placeholder="Enter command and press Enter...">
                         <span class="cursor"></span>
@@ -442,6 +442,9 @@
             currentDirectory = level.startDirectory;
             document.getElementById('level-display').textContent = levelNum;
 
+            // Update prompt with new directory
+            updatePrompt();
+
             // Clear hint
             document.getElementById('hint-box').style.display = 'none';
             hintsUsed = 0;
@@ -480,8 +483,8 @@
                 commandHistory.push(command);
                 historyIndex = -1;
 
-                // Display command
-                addOutput(`$ ${command}`, 'command');
+                // Display command with current directory
+                addOutput(`user@bootcamp ${currentDirectory} $ ${command}`, 'command');
                 commandsUsed++;
                 document.getElementById('commands-display').textContent = commandsUsed;
 
@@ -739,10 +742,7 @@
         function executeCD(target) {
             if (!target) {
                 currentDirectory = '/home/user';
-                return;
-            }
-
-            if (target === '~') {
+            } else if (target === '~') {
                 currentDirectory = '/home/user';
             } else if (target === '/') {
                 currentDirectory = '/';
@@ -762,6 +762,16 @@
                 } else {
                     currentDirectory = currentDirectory + '/' + target;
                 }
+            }
+            
+            // Update prompt with new directory
+            updatePrompt();
+        }
+
+        function updatePrompt() {
+            const prompt = document.getElementById('prompt');
+            if (prompt) {
+                prompt.textContent = `user@bootcamp ${currentDirectory} $ `;
             }
         }
 
