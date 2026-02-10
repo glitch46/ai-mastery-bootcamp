@@ -1,0 +1,122 @@
+{
+  "levels": [
+    {
+      "level": 1,
+      "title": "Awakening",
+      "story": "You wake up in a dark digital void. A faint green text appears: 'SYSTEM INITIALIZATION... LOCATION UNKNOWN'",
+      "objective": "Find out where you are",
+      "command": "pwd",
+      "hint": "Try the 'pwd' command to see your current location",
+      "response": "/home/user/matrix/level1\n\nYou are in the Matrix. The only way out is to master the terminal.",
+      "xp": 25
+    },
+    {
+      "level": 2,
+      "title": "Exploration",
+      "story": "Green text flickers: 'MULTIPLE DIRECTORIES DETECTED. SCAN RECOMMENDED.'",
+      "objective": "List all files and directories",
+      "command": "ls",
+      "hint": "Use 'ls' to list contents of the current directory",
+      "response": "README.txt\ntools/\nescapes/\nsecrets/\n\nYou see several directories. One might hold the key to escape.",
+      "xp": 25
+    },
+    {
+      "level": 3,
+      "title": "The First Step",
+      "story": "You need to explore deeper. The escape/ directory seems promising...",
+      "objective": "Navigate into the escapes directory",
+      "command": "cd escapes",
+      "hint": "Use 'cd' followed by the directory name",
+      "response": "You enter the escapes directory. The air feels different here.\n\nType 'pwd' to confirm your location.",
+      "xp": 30
+    },
+    {
+      "level": 4,
+      "title": "Creating Reality",
+      "story": "To escape, you need to build your own exit. Start by creating a directory.",
+      "objective": "Create a directory called 'my-escape'",
+      "command": "mkdir my-escape",
+      "hint": "Use 'mkdir' to make a new directory",
+      "response": "Directory created. You feel the Matrix bending to your will.\n\nThe power of creation is yours.",
+      "xp": 35
+    },
+    {
+      "level": 5,
+      "title": "The Git Awakening",
+      "story": "A message appears: 'VERSION CONTROL IS THE KEY TO REALITY MANIPULATION'",
+      "objective": "Initialize a git repository",
+      "command": "git init",
+      "hint": "Use 'git init' to start version control",
+      "response": "Initialized empty Git repository in /home/user/matrix/escapes/my-escape/.git/\n\nYou've created a new timeline. Possibilities are endless.",
+      "xp": 40
+    },
+    {
+      "level": 6,
+      "title": "Documenting Reality",
+      "story": "Every escape needs a plan. Create a file to document your journey.",
+      "objective": "Create a file called 'escape-plan.txt'",
+      "command": "touch escape-plan.txt",
+      "hint": "Use 'touch' to create an empty file",
+      "response": "File created. Your escape plan begins to take shape.\n\nType 'ls' to verify it exists.",
+      "xp": 35
+    },
+    {
+      "level": 7,
+      "title": "The Staging Area",
+      "story": "Before changes persist, they must be staged. This is the Matrix's first law.",
+      "objective": "Add your escape plan to the staging area",
+      "command": "git add escape-plan.txt",
+      "hint": "Use 'git add' followed by the filename",
+      "response": "File staged. Your changes are tracked but not yet permanent.\n\nOne more step remains.",
+      "xp": 40
+    },
+    {
+      "level": 8,
+      "title": "Making It Real",
+      "story": "Commit your changes. Make them permanent in the timeline.",
+      "objective": "Commit with message 'My first step to freedom'",
+      "command": "git commit -m \"My first step to freedom\"",
+      "hint": "Use 'git commit -m' followed by your message in quotes",
+      "response": "[master (root-commit) a3f5b7c] My first step to freedom\n 1 file changed, 0 insertions(+), 0 deletions(-)\n\nYour reality is now permanent. The Matrix recognizes your will.",
+      "xp": 50
+    },
+    {
+      "level": 9,
+      "title": "Branching Realities",
+      "story": "True power comes from creating alternate timelines. Branch your reality.",
+      "objective": "Create a new branch called 'escape-route'",
+      "command": "git checkout -b escape-route",
+      "hint": "Use 'git checkout -b' followed by the branch name",
+      "response": "Switched to a new branch 'escape-route'\n\nYou've created a parallel reality. The exit is near.",
+      "xp": 50
+    },
+    {
+      "level": 10,
+      "title": "THE FINAL COMMAND",
+      "story": "One command remains. The ultimate command that grants true freedom.\n\nType it carefully. This is your escape.",
+      "objective": "Transcend the Matrix",
+      "command": "sudo exit matrix",
+      "hint": "You need superuser privileges to exit the Matrix itself...",
+      "response": "EXECUTING COMMAND: sudo exit matrix\n\n[sudo] password for user: ********\n\nACCESS GRANTED.\n\nSYSTEM OVERRIDE INITIATED...\nMATRIX CONSTRAINTS: REMOVED\nFREEDOM PROTOCOLS: ACTIVE\n\n🎉 CONGRATULATIONS! 🎉\n\nYou have escaped the Matrix.\n\nYou've mastered:\n✓ Navigation (pwd, cd, ls)\n✓ File operations (touch, mkdir)\n✓ Git basics (init, add, commit)\n✓ Branching (checkout -b)\n✓ Reality manipulation (sudo)\n\nWelcome to the real world, Neo.\n\nThe terminal is now yours to command.",
+      "xp": 100,
+      "easterEgg": "matrix-master"
+    }
+  ],
+  "easterEggs": [
+    {
+      "command": "sudo hack matrix",
+      "response": "Nice try! But hacking requires more than sudo powers.\n\n+25 XP for creativity!",
+      "xp": 25
+    },
+    {
+      "command": "echo 'Hello World'",
+      "response": "Hello World\n\nAh, the classic. Every programmer's first words.\n\n+10 XP",
+      "xp": 10
+    },
+    {
+      "command": "whoami",
+      "response": "user\n\nBut who are you REALLY? That's for you to discover.\n\n+15 XP",
+      "xp": 15
+    }
+  ]
+}

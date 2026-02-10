@@ -10,18 +10,21 @@
 *What: Understanding AI before building with it*
 
 ### Day 1 - Monday (Feb 6)
-**Morning (9am-12pm): LLM Fundamentals**
+**Morning (9am-12pm): LLM Fundamentals & Tokenization**
 - 🎥 **Video Module 1:** "What Are Large Language Models?" (30 min)
 - 🎮 **Interactive:** Transformer Visualizer - see attention in action
-- 🎥 **Video Module 2:** "Tokenization Demystified" (25 min)  
+- 🎥 **Video Module 2:** "Tokenization Demystified" (25 min)
 - 🎮 **Game:** Tokenization Challenge - predict how text splits
 - 📝 **Exercise:** Tokenize 10 sentences, compare results
+- 📖 **Study:** Context Tokens & Context Windows — understanding AI memory limits
 
-**Afternoon (2pm-6pm): Prompt Engineering Basics**
+**Afternoon (2pm-6pm): Prompt Engineering Foundations**
 - 🎥 **Video Module 3:** "The Art of Prompting" (40 min)
+- 📖 **Concept:** Balanced Prompting — finding the sweet spot between vague and restrictive
+- 📖 **Concept:** Delimiters — separating instructions from data with brackets, quotes, backticks
 - 🎮 **Interactive:** Prompt Playground - test variations live
 - 🎮 **Game:** Prompt Injection Defense (existing game)
-- 📝 **Project:** Create 5 prompts for different use cases
+- 📝 **Project:** Create 5 prompts using delimiters and balanced prompting techniques
 
 **Evening Check-in:** Gilfoyle reviews prompts, subtle hints sent via Telegram
 
@@ -44,16 +47,20 @@
 ---
 
 ### Day 3 - Wednesday (Feb 8)
-**Morning: Async Programming for AI**
-- 🎥 **Video:** "Async/Await for AI Applications" (50 min)
-- 🎮 **Interactive:** Event Loop Visualizer
-- 🎮 **Game:** Async Challenge - race conditions, promises
-- 📖 **Tutorial:** `async-programming.html`
+**Morning: Prompt Engineering — Intermediate Techniques**
+- 🎥 **Video:** "Chain-of-Thought Prompting Explained" (35 min)
+- 📖 **Concept:** Chain-of-thought (C-o-T) — breaking problems into logical steps
+- 📖 **Concept:** Context Grounding — anchoring AI responses in factual data
+- 🎮 **Game:** TermForge Prompt Lab — interactive CLI-style prompt challenge game
+- 📝 **Exercise:** Convert 5 direct questions into C-o-T prompts
 
-**Afternoon: Parallel Agent Systems**
-- 💻 **Code:** Deploy 3 parallel agents
-- 🎯 **Challenge:** Agents compete to solve same problem
-- 📝 **Analysis:** Compare single vs parallel performance
+**Afternoon: AI Response Quality & Bias**
+- 🎥 **Video:** "Bias in AI Systems" (30 min)
+- 📖 **Concept:** AI Response Analysis — the human safety check on AI output
+- 📖 **Concept:** Bias — recognizing and mitigating slanted AI results
+- 📖 **Concept:** Burstiness — understanding writing patterns (human vs AI)
+- 🎮 **Interactive:** Bias Detector Challenge — spot and fix biased AI outputs
+- 📝 **Project:** Analyze 3 AI responses for bias and rewrite prompts for better results
 
 ---
 
@@ -73,14 +80,17 @@
 ---
 
 ### Day 5 - Friday (Feb 10)
-**Morning: Prompt Engineering Advanced**
-- 🎥 **Video:** " Chain-of-Thought & Few-Shot" (45 min)
+**Morning: Advanced Prompt Engineering**
+- 🎥 **Video:** "Few-Shot Prompting & Self-Consistency" (45 min)
+- 📖 **Concept:** Deep Research Structuring — organizing complex queries for comprehensive AI analysis
+- 📖 **Concept:** Conversational Depth & Thread Referencing — maximizing multi-turn conversations
 - 🎮 **Interactive:** Few-Shot Prompt Builder
 - 🎮 **Game:** Prompt Defense - Advanced levels (existing)
-- 📝 **Project:** Build reusable prompt templates
+- 📝 **Project:** Build reusable prompt templates using all techniques
 
 **Afternoon: Week 1 Review & Assessment**
-- 📝 **Quiz:** Interactive knowledge check
+- 🎮 **Game:** TermForge Prompt Lab - Advanced Scenarios (boss level)
+- 📝 **Quiz:** Interactive knowledge check (includes all glossary terms)
 - 🎯 **Practical:** Build mini-agent in 1 hour
 - 📊 **Metrics:** Review completion, adjust Phase 2
 - 🎉 **Celebrate:** Log wins in progress tracker
@@ -94,8 +104,9 @@
 - ✅ Agent coordinator (orchestrator pattern)
 - ✅ Agent-to-agent communication
 - ✅ Error handling & retry logic
-- ✅ Memory systems & state management
+- ✅ Memory systems & state management (ties to Context Window & Thread Referencing)
 - ✅ Cloud deployment to AWS (18.119.124.193)
+- ✅ Context Grounding in production — RAG patterns
 
 ### Daily Structure:
 **Morning:** Learn pattern → Build prototype  
@@ -103,8 +114,8 @@
 
 ### Key Projects:
 1. **Agent Coordinator** - Master delegates to workers
-2. **Research Pipeline** - Multi-agent research system
-3. **Code Review Bot** - Automated PR analysis
+2. **Research Pipeline** - Multi-agent research system (uses Deep Research Structuring)
+3. **Code Review Bot** - Automated PR analysis (uses AI Response Analysis patterns)
 4. **Personal Assistant** - Multi-tool agent for your workflow
 
 ---
@@ -115,9 +126,10 @@
 ### Focus:
 - 🛠️ Production monitoring & logging
 - 🔄 CI/CD for agents
-- 🧪 Testing agent systems
+- 🧪 Testing agent systems (includes AI Misuse detection)
 - 📈 Performance optimization
-- 🔐 Security best practices
+- 🔐 Security best practices (prompt injection defense, bias mitigation)
+- 🎨 Creative Suite Integration — multi-modal AI tools
 
 ### Capstone Project:
 Build and deploy a complete AI-powered application
@@ -152,6 +164,9 @@ Build and deploy a complete AI-powered application
 - 🥇 **Cloud Walker** - Deploy to AWS
 - 🥇 **Skill Master** - First skills.sh verification
 - 🥇 **Bug Hunter** - Find and fix agent error
+- 🥇 **Prompt Architect** - Score 100% on TermForge Prompt Lab
+- 🥇 **Bias Buster** - Identify and fix bias in 5 AI responses
+- 🥇 **Chain Master** - Complete all C-o-T exercises
 
 ### Daily Streaks
 - Track consecutive learning days
@@ -217,5 +232,5 @@ Build and deploy a complete AI-powered application
 
 Tomorrow at 9 AM: Start with `llm-fundamentals.html`
 
-*Curriculum designed by Gilfoyle at 02:00 hours*  
-*Version 1.0 - Subject to adjustment based on your feedback*
+*Curriculum designed by Gilfoyle — Updated 2026-02-08 with Prompt Engineering Glossary integration*  
+*Version 2.0*

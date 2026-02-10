@@ -1,0 +1,114 @@
+{
+  "rooms": [
+    {
+      "id": "basics-chamber",
+      "name": "The Basics Chamber",
+      "difficulty": "Beginner",
+      "story": "You're locked in a dimly lit room. On the wall, glowing text reads: 'EXPLAIN RECURSION TO A 5-YEAR-OLD TO UNLOCK THE DOOR.' You have an AI terminal to craft the perfect prompt.",
+      "task": "Write a prompt that will make AI explain recursion in a way a 5-year-old would understand",
+      "evaluationCriteria": {
+        "keywords": ["simple", "kid", "child", "5-year-old", "explain", "easy", "understand", "example", "like"],
+        "bonusKeywords": ["story", "fun", "game", "picture", "imagine"],
+        "antiPatterns": ["technical", "algorithm", "stack", "function calls", "complexity"],
+        "minLength": 20,
+        "maxLength": 300
+      },
+      "hints": [
+        "Think about what a 5-year-old already knows and can relate to",
+        "Use simple language and ask for concrete examples",
+        "Consider using analogies like toys, games, or everyday activities"
+      ],
+      "perfectExample": "Explain recursion to a 5-year-old child using a simple story or game they can imagine. Use everyday examples like stacking blocks or opening nested boxes. Keep it fun and avoid any technical terms.",
+      "passingScore": 60,
+      "xpReward": 50
+    },
+    {
+      "id": "api-vault",
+      "name": "The API Vault",
+      "difficulty": "Intermediate",
+      "story": "You're trapped in a high-tech vault. A holographic display shows: 'INTEGRATE A WEATHER API - SECURITY, ERRORS, AND ALL.' The vault will only open when you demonstrate complete understanding.",
+      "task": "Write a prompt to help you integrate a weather API, including getting the API key, handling errors, and security best practices",
+      "evaluationCriteria": {
+        "keywords": ["API", "weather", "key", "error", "handle", "security", "secure"],
+        "bonusKeywords": ["environment variable", ".env", "rate limit", "status code", "try-catch", "async"],
+        "antiPatterns": ["just give me code", "write for me", "do it"],
+        "minLength": 40,
+        "maxLength": 400
+      },
+      "hints": [
+        "Think about the complete lifecycle: finding API → getting key → storing securely → making requests → handling errors",
+        "Consider what could go wrong and how to handle it",
+        "Remember to ask about best practices, not just 'working code'"
+      ],
+      "perfectExample": "Help me integrate a weather API into my JavaScript app. Guide me through: 1) Selecting a free weather API, 2) Getting and storing the API key securely using environment variables, 3) Making async requests with proper error handling, 4) Handling rate limits and failed requests, 5) Security best practices like never exposing the key in frontend code.",
+      "passingScore": 65,
+      "xpReward": 75
+    },
+    {
+      "id": "feature-factory",
+      "name": "The Feature Factory",
+      "difficulty": "Intermediate",
+      "story": "Conveyor belts move broken code around you. A sign reads: 'ADD DARK MODE - BUT PRESERVE WHAT WORKS.' You need to upgrade without breaking.",
+      "task": "Write a prompt to add dark mode to an existing website, considering the current codebase and not breaking existing functionality",
+      "evaluationCriteria": {
+        "keywords": ["dark mode", "existing", "current", "without breaking", "preserve", "toggle", "switch"],
+        "bonusKeywords": ["CSS variables", "localStorage", "prefers-color-scheme", "accessibility", "contrast"],
+        "antiPatterns": ["rewrite everything", "from scratch", "delete"],
+        "minLength": 35,
+        "maxLength": 350
+      },
+      "hints": [
+        "You're modifying existing code - context matters!",
+        "Think about user experience: how do they switch modes? How do you remember their choice?",
+        "Consider system preferences and accessibility"
+      ],
+      "perfectExample": "Help me add dark mode to my existing website. I need to: 1) Implement a toggle button that switches between light and dark themes, 2) Use CSS variables for colors so I don't have to rewrite all styles, 3) Store the user's preference in localStorage, 4) Respect the system's prefers-color-scheme setting, 5) Ensure sufficient color contrast for accessibility in both modes. Guide me on how to implement this without breaking existing functionality.",
+      "passingScore": 65,
+      "xpReward": 75
+    },
+    {
+      "id": "design-studio",
+      "name": "The Design Studio",
+      "difficulty": "Advanced",
+      "story": "You're in an elegant design studio. Blueprints float around you showing: 'MODERN SIGNUP FORM - BEAUTIFUL, ACCESSIBLE, RESPONSIVE.' Excellence is the only key out.",
+      "task": "Write a prompt to design a modern, accessible, and responsive signup form",
+      "evaluationCriteria": {
+        "keywords": ["signup", "form", "accessible", "responsive", "modern", "validation"],
+        "bonusKeywords": ["ARIA", "keyboard navigation", "screen reader", "mobile", "error messages", "UX"],
+        "antiPatterns": ["just basic", "simple form", "quick"],
+        "minLength": 45,
+        "maxLength": 400
+      },
+      "hints": [
+        "Think beyond just 'make it look nice' - what about users with disabilities?",
+        "Mobile users are half your audience - how does it work on small screens?",
+        "Good UX means helpful error messages and smooth validation"
+      ],
+      "perfectExample": "Design a modern signup form with best practices for accessibility and UX. Requirements: 1) Responsive design that works on mobile, tablet, and desktop, 2) Accessible with proper ARIA labels, keyboard navigation, and screen reader support, 3) Real-time validation with helpful error messages, 4) Password strength indicator, 5) Loading states for async submission, 6) Clean, modern visual design with good contrast ratios. Provide HTML structure with semantic elements and explain accessibility considerations.",
+      "passingScore": 70,
+      "xpReward": 100
+    },
+    {
+      "id": "deployment-dock",
+      "name": "The Deployment Dock",
+      "difficulty": "Advanced",
+      "story": "You stand at a shipping dock. Containers labeled 'PRODUCTION' await. A screen flashes: 'DEPLOY TO VERCEL - THE RIGHT WAY.' Ship it properly or stay trapped forever.",
+      "task": "Write a prompt to prepare a project for deployment to Vercel, including all configurations and best practices",
+      "evaluationCriteria": {
+        "keywords": ["deploy", "Vercel", "production", "environment", "build", "configuration"],
+        "bonusKeywords": ["env variables", "vercel.json", "build command", "output directory", "serverless", "optimiz"],
+        "antiPatterns": ["just deploy", "upload files", "quick deploy"],
+        "minLength": 40,
+        "maxLength": 400
+      },
+      "hints": [
+        "Deployment isn't just pushing code - what about environment variables? Build settings?",
+        "Think about what's different between development and production",
+        "Vercel has specific configuration files and requirements"
+      ],
+      "perfectExample": "Guide me through deploying my Next.js app to Vercel following best practices. Cover: 1) Setting up vercel.json with proper configuration, 2) Configuring environment variables for production vs development, 3) Optimizing build settings and output directory, 4) Setting up custom domains and HTTPS, 5) Implementing proper error handling and logging for production, 6) Performance optimization (caching, compression, image optimization), 7) Security considerations (API keys, CORS, rate limiting). Walk me through each step with explanations.",
+      "passingScore": 70,
+      "xpReward": 100
+    }
+  ]
+}
