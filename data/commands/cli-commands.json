@@ -5,6 +5,7 @@
       "title": "Navigate Home",
       "story": "You're in /var/log. You need to get back home. Use 'pwd' to see where you are, then navigate to your home directory.",
       "objective": "Navigate to /home/user (your home directory)",
+      "startDirectory": "/var/log",
       "command": "cd /home/user",
       "acceptCommands": ["cd /home/user", "cd ~"],
       "response": "✓ Welcome home! You're now in /home/user",
@@ -17,6 +18,7 @@
       "title": "Hidden Files Revealed",
       "story": "You're in /home/user. Your boss hid the .SAASApp directory (it starts with a dot so it's hidden). Find it using ls with the right flag.",
       "objective": "List all files including hidden ones",
+      "startDirectory": "/home/user",
       "command": "ls -a",
       "acceptCommands": ["ls -a", "ls -la", "ls -lah"],
       "response": "✓ Found it! .SAASApp is revealed (along with .bashrc, .profile, .cache, etc.)",
@@ -29,6 +31,7 @@
       "title": "Enter the Hidden Directory",
       "story": "Now that you see .SAASApp, navigate into it. You'll find your project there.",
       "objective": "Enter the .SAASApp directory",
+      "startDirectory": "/home/user",
       "command": "cd .SAASApp",
       "acceptCommands": ["cd .SAASApp", "cd /home/user/.SAASApp"],
       "response": "✓ You're now inside .SAASApp. Time to get to work!",
@@ -41,9 +44,10 @@
       "title": "What's in This Directory?",
       "story": "You're in .SAASApp. List the files to see what's here. Your project has package.json, src folder, and a README.",
       "objective": "List files in detail format",
+      "startDirectory": "/home/user/.SAASApp",
       "command": "ls -l",
       "acceptCommands": ["ls -l", "ls -lah"],
-      "response": "✓ You see:\n  package.json (10KB)\n  README.md (5KB)\n  src/ (directory)\n  .env.example (2KB)",
+      "response": "✓ You see the project structure!",
       "hint": "Use ls -l to see detailed info: permissions, size, date modified, etc.",
       "xp": 75,
       "lesson": "ls -l = detailed file listing"
@@ -53,9 +57,10 @@
       "title": "Go Back One Directory",
       "story": "You went too deep into a nested folder. Get back to parent directory using 'cd ..'",
       "objective": "Navigate to parent directory",
+      "startDirectory": "/home/user/.SAASApp/src",
       "command": "cd ..",
       "acceptCommands": ["cd ..", "cd ../"],
-      "response": "✓ You're back in /home/user. Parent directory reached!",
+      "response": "✓ You're back in /home/user/.SAASApp. Parent directory reached!",
       "hint": "cd .. = go up one level. cd ../.. = go up two levels. cd - = go back to previous directory",
       "xp": 50,
       "lesson": "cd .. = go to parent directory"
@@ -65,6 +70,7 @@
       "title": "Create a New Folder",
       "story": "You need to create a new folder called 'languageapp' for your next project.",
       "objective": "Create a new directory called languageapp",
+      "startDirectory": "/home/user",
       "command": "mkdir languageapp",
       "acceptCommands": ["mkdir languageapp", "mkdir -p languageapp"],
       "response": "✓ Created directory: languageapp",
@@ -77,9 +83,10 @@
       "title": "Install Dependencies",
       "story": "You're in a new project folder that has package.json. Install the dependencies using npm.",
       "objective": "Install npm dependencies",
+      "startDirectory": "/home/user/languageapp",
       "command": "npm install",
       "acceptCommands": ["npm install", "npm i"],
-      "response": "✓ Installed 156 packages in 2.4s\n  added 156 packages from 42 contributors\n  audited 156 packages in 1.2s",
+      "response": "✓ Dependencies installed successfully!",
       "hint": "npm install = read package.json and download all dependencies. npm i is shorthand.",
       "xp": 100,
       "lesson": "npm install = download project dependencies"
@@ -89,9 +96,10 @@
       "title": "Check Git Status",
       "story": "You've made changes to your project. Check git status to see what's changed.",
       "objective": "View current git status",
+      "startDirectory": "/home/user/languageapp",
       "command": "git status",
       "acceptCommands": ["git status"],
-      "response": "✓ On branch main\n\nChanges not staged for commit:\n  modified: src/app.js\n  new file: src/components/Header.jsx\n\nUntracked files:\n  .env",
+      "response": "✓ Git status checked!",
       "hint": "git status = see what files have changed, what's staged, what's untracked",
       "xp": 100,
       "lesson": "git status = see your changes"
@@ -101,12 +109,13 @@
       "title": "Set Git Remote",
       "story": "Time to push to GitHub! First, set your remote origin to your GitHub repo. Use git remote add origin [URL]",
       "objective": "Add remote origin for GitHub push",
+      "startDirectory": "/home/user/languageapp",
       "command": "git remote add origin https://github.com/yourname/languageapp.git",
       "acceptCommands": [
         "git remote add origin https://github.com/yourname/languageapp.git",
         "git remote add origin git@github.com:yourname/languageapp.git"
       ],
-      "response": "✓ Remote origin added successfully",
+      "response": "✓ Remote origin configured successfully",
       "hint": "git remote add origin [URL] = connect to GitHub. Check your GitHub repo for the exact URL.",
       "xp": 125,
       "lesson": "git remote = connect to GitHub"
@@ -116,50 +125,130 @@
       "title": "Push to GitHub",
       "story": "Your changes are committed. Now push them to GitHub using git push. This is the final step to ship!",
       "objective": "Push code to GitHub",
+      "startDirectory": "/home/user/languageapp",
       "command": "git push -u origin main",
       "acceptCommands": ["git push -u origin main", "git push origin main", "git push"],
-      "response": "✓ Pushing to GitHub...\n  ✓ [main 7a8f9c2] Updated components\n  ✓ Pushed to https://github.com/yourname/languageapp.git\n  ✓ Your code is live!",
+      "response": "✓ Code pushed to GitHub successfully! Your project is now live!",
       "hint": "git push = send commits to GitHub. -u flag sets upstream. After first push, just 'git push' works.",
       "xp": 150,
       "easterEgg": "shipped-it",
       "lesson": "git push = ship your code to the world"
     }
   ],
+  "terminalResponses": {
+    "pwd": {
+      "explanation": "Shows your current working directory path.",
+      "outputs": {
+        "/var/log": "/var/log",
+        "/home/user": "/home/user",
+        "/home/user/.SAASApp": "/home/user/.SAASApp",
+        "/home/user/.SAASApp/src": "/home/user/.SAASApp/src",
+        "/home/user/languageapp": "/home/user/languageapp"
+      }
+    },
+    "ls": {
+      "explanation": "Lists files in current directory.",
+      "outputs": {
+        "/var/log": "auth.log  btmp  kern.log  syslog  wtmp  lastlog",
+        "/home/user": ".SAASApp  .bashrc  .profile  .cache  Desktop  Documents  Downloads",
+        "/home/user/.SAASApp": "package.json  README.md  src/  .env.example",
+        "/home/user/.SAASApp/src": "app.js  components/  utils/  styles.css",
+        "/home/user/languageapp": "package.json  src/  README.md  .gitignore  node_modules/"
+      }
+    },
+    "ls -a": {
+      "explanation": "Lists ALL files, including hidden ones (starting with dot).",
+      "outputs": {
+        "/home/user": ".  ..  .SAASApp  .bashrc  .profile  .cache  .config  .git  .gitconfig  .ssh  Desktop  Documents  Downloads",
+        "/home/user/.SAASApp": ".  ..  .env.example  .gitignore  package.json  README.md  src/"
+      }
+    },
+    "ls -l": {
+      "explanation": "Detailed listing showing permissions, owner, size, date, and filename.",
+      "outputs": {
+        "/home/user/.SAASApp": "total 32\ndrwxr-xr-x  5 user user  4096 Feb 10 14:23 src\n-rw-r--r--  1 user user  2048 Feb 10 13:45 package.json\n-rw-r--r--  1 user user  5120 Feb 10 13:45 README.md\n-rw-r--r--  1 user user  1024 Feb 10 12:30 .env.example",
+        "/home/user": "total 48\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Documents\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Downloads\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile"
+      }
+    },
+    "ls -la": {
+      "explanation": "Detailed listing of ALL files (including hidden).",
+      "outputs": {
+        "/home/user": "total 56\ndrwxr-xr-x  8 user user  4096 Feb 10 14:20 .\ndrwxr-xr-x  3 root root  4096 Jan 15 08:00 ..\ndrwxr-xr-x  3 user user  4096 Feb 10 14:20 .SAASApp\ndrwxr-xr-x  2 user user  4096 Feb  8 09:15 Desktop\n-rw-r--r--  1 user user   220 Feb  5 10:30 .bashrc\n-rw-r--r--  1 user user   655 Feb  5 10:30 .profile\ndrwx------  2 user user  4096 Feb  9 11:22 .cache\ndrwx------  2 user user  4096 Feb 10 13:45 .ssh"
+      }
+    },
+    "cat package.json": {
+      "explanation": "Displays the contents of package.json file.",
+      "outputs": {
+        "/home/user/languageapp": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\",\n    \"dev\": \"nodemon index.js\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.2.0\",\n    \"express\": \"^4.18.2\",\n    \"axios\": \"^1.4.0\"\n  }\n}"
+      }
+    },
+    "git status": {
+      "explanation": "Shows which files have been modified, staged, or are untracked.",
+      "outputs": {
+        "/home/user/languageapp": "On branch main\n\nChanges not staged for commit:\n  modified:   src/app.js\n  new file:   src/components/Header.jsx\n\nUntracked files:\n  .env\n\nnothing added to commit but untracked files present"
+      }
+    },
+    "git log": {
+      "explanation": "Shows your commit history.",
+      "outputs": {
+        "/home/user/languageapp": "commit 7a8f9c2d5e1b3f4a9c8e2d1f0a3b5c6\nAuthor: You <you@example.com>\nDate:   Wed Feb 10 14:25:30 2025 +0000\n\n    Updated components\n\ncommit 5f1b3a9d2c8e4f1a7b9c2e5d1f3a6b8\nAuthor: You <you@example.com>\nDate:   Tue Feb 9 10:15:45 2025 +0000\n\n    Initial setup\n\ncommit 2c8e4d1f7a9b3c5e1d2f4a6b8c9e1d3\nAuthor: You <you@example.com>\nDate:   Mon Feb 8 16:30:20 2025 +0000\n\n    Project scaffolding"
+      }
+    },
+    "whoami": {
+      "explanation": "Shows the current logged-in user.",
+      "outputs": {
+        "*": "user"
+      }
+    },
+    "npm install": {
+      "explanation": "Installs all project dependencies listed in package.json.",
+      "outputs": {
+        "*": "up to date, audited 156 packages in 2.4s\n\nadded 156 packages, and audited 156 packages in 4.2s\n\n42 vulnerabilities (39 low, 2 moderate, 1 high)\n\nrun `npm audit fix` to fix them, or `npm audit` for details"
+      }
+    },
+    "npm i": {
+      "explanation": "Short form of 'npm install' - installs dependencies.",
+      "outputs": {
+        "*": "up to date, audited 156 packages in 2.4s\n\nadded 156 packages in 3.8s"
+      }
+    },
+    "clear": {
+      "explanation": "Clears the terminal screen.",
+      "outputs": {
+        "*": ""
+      }
+    }
+  },
   "easterEggs": [
     {
       "command": "whoami",
-      "response": "You are the architect. The builder is me (AI). Together, we ship products.",
+      "explanation": "Shows the current logged-in user",
+      "response": "Shows: user\n\nYou are the architect. The builder is me (AI). Together, we ship products.",
       "xp": 25
     },
     {
-      "command": "clear",
-      "response": "Screen cleared. Ready for more commands!",
-      "xp": 0
-    },
-    {
       "command": "pwd",
-      "response": "Shows your current directory path. Use this to orient yourself!",
+      "explanation": "Shows your current directory",
+      "response": "Shows your full path",
       "xp": 15
     },
     {
       "command": "man cd",
-      "response": "cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\n\nYou've already learned this one!",
+      "explanation": "Manual page for cd command",
+      "response": "cd: Change the shell working directory.\n\nUsage: cd [-L] [dir]\n  options:\n    -L: Follow symbolic links\n\nChange the working directory to DIR. The default DIR is the value of the\nHOME shell variable.\n\nYou've already learned this one!",
       "xp": 20
     },
     {
-      "command": "ls",
-      "response": "Lists files in current directory.",
-      "xp": 10
+      "command": "git log",
+      "explanation": "Shows commit history",
+      "response": "Shows your git commits",
+      "xp": 30
     },
     {
       "command": "cat package.json",
-      "response": "{\n  \"name\": \"languageapp\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Learn languages with AI\",\n  \"main\": \"index.js\",\n  \"dependencies\": {\n    \"react\": \"^18.0.0\",\n    \"express\": \"^4.18.0\"\n  }\n}\n\n+25 XP for exploring!",
+      "explanation": "Shows project configuration",
+      "response": "Shows the package.json file contents",
       "xp": 25
-    },
-    {
-      "command": "git log",
-      "response": "commit 7a8f9c2 - Updated components\ncommit 5f1b3a9 - Initial setup\ncommit 2c8e4d1 - Project scaffolding\n\nYour project history!",
-      "xp": 30
     }
   ]
 }

@@ -422,6 +422,7 @@
         let commandsUsed = 0;
         let startTime = Date.now();
         let hintsUsed = 0;
+        let currentDirectory = '/var/log'; // Track current directory
 
         // Load game data
         fetch('/data/commands/cli-commands.json')
@@ -436,6 +437,7 @@
             if (!level) return;
 
             currentLevel = levelNum;
+            currentDirectory = level.startDirectory;
             document.getElementById('level-display').textContent = levelNum;
 
             // Clear hint
@@ -491,7 +493,7 @@
             
             // Check for help
             if (command === 'help') {
-                addOutput('Available commands: help, hint, clear', 'success');
+                addOutput('Available commands: help, hint, clear, pwd, ls, cd, mkdir, npm, git, cat', 'success');
                 addOutput('Type the command from the objective to proceed!', 'success');
                 enableInput();
                 return;
@@ -511,7 +513,22 @@
                 return;
             }
 
-            // Check easter eggs
+            // Check for terminal commands (pwd, ls, cat, etc.)
+            const baseCommand = command.split(' ')[0].toLowerCase();
+            if (gameData.terminalResponses[command.toLowerCase()] || gameData.terminalResponses[baseCommand]) {
+                const responseData = gameData.terminalResponses[command.toLowerCase()] || gameData.terminalResponses[baseCommand];
+                if (responseData) {
+                    const output = responseData.outputs[currentDirectory] || responseData.outputs['*'] || '';
+                    if (output) {
+                        addOutput(output, 'success');
+                    }
+                    addOutput(`\n${responseData.explanation}`, 'success');
+                    enableInput();
+                    return;
+                }
+            }
+
+            // Check easter eggs first
             const easterEgg = gameData.easterEggs.find(egg => egg.command.toLowerCase() === command.toLowerCase());
             if (easterEgg) {
                 addOutput(easterEgg.response, 'success');
@@ -530,8 +547,31 @@
             );
 
             if (isCorrect) {
-                // Correct!
+                // Update directory if cd command
+                if (command.toLowerCase().includes('cd ')) {
+                    const target = command.split('cd ')[1].trim();
+                    if (target === '..' || target === '../') {
+                        // Go up one directory
+                        const parts = currentDirectory.split('/');
+                        if (parts.length > 1) parts.pop();
+                        currentDirectory = parts.join('/') || '/';
+                    } else if (target === '~') {
+                        currentDirectory = '/home/user';
+                    } else if (target.startsWith('/')) {
+                        currentDirectory = target;
+                    } else {
+                        // Relative path
+                        if (currentDirectory === '/') {
+                            currentDirectory = '/' + target;
+                        } else {
+                            currentDirectory = currentDirectory + '/' + target;
+                        }
+                    }
+                }
+
+                // Show realistic output
                 addOutput(level.response, 'success');
+                
                 totalXP += level.xp;
                 document.getElementById('xp-display').textContent = totalXP;
                 GameEngine.awardXP(level.xp, `Level ${currentLevel}: ${level.title}`);
@@ -548,7 +588,7 @@
             } else {
                 // Wrong command
                 addOutput(`Command not recognized: ${command}`, 'error');
-                addOutput(`Type 'hint' if you need help!`, 'error');
+                addOutput(`Try 'help' for available commands, or 'hint' for level guidance!`, 'error');
                 enableInput();
             }
         }
