@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder | AI Mastery Bootcamp</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        /* ================================
+           PAGE LAYOUT
+           ================================ */
+        .page-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            transition: color var(--transition-fast);
+        }
+
+        .back-link:hover {
+            color: var(--accent-green);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .page-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .page-header .day-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-green);
+            background: var(--accent-green-dim);
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* ================================
+           COMPONENT PANELS
+           ================================ */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 768px) {
+            .panels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: border-color var(--transition-normal);
+        }
+
+        .panel--context { border-top: 3px solid var(--accent-green); }
+        .panel--task { border-top: 3px solid var(--accent-blue); }
+        .panel--details { border-top: 3px solid var(--accent-purple); }
+
+        .panel-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-md);
+        }
+
+        .panel--context .panel-label { color: var(--accent-green); }
+        .panel--task .panel-label { color: var(--accent-blue); }
+        .panel--details .panel-label { color: var(--accent-purple); }
+
+        .panel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .panel--context .panel-dot { background: var(--accent-green); }
+        .panel--task .panel-dot { background: var(--accent-blue); }
+        .panel--details .panel-dot { background: var(--accent-purple); }
+
+        .snippets-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .snippet {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+            line-height: 1.4;
+        }
+
+        .snippet:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .panel--context .snippet:hover { border-color: var(--accent-green); background: var(--accent-green-dim); }
+        .panel--task .snippet:hover { border-color: var(--accent-blue); background: var(--accent-blue-dim); }
+        .panel--details .snippet:hover { border-color: var(--accent-purple); background: var(--accent-purple-dim); }
+
+        .snippet.added {
+            opacity: 0.35;
+            pointer-events: none;
+            transform: none;
+        }
+
+        /* Custom input row */
+        .custom-input-row {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
+        }
+
+        .custom-input-row input {
+            flex: 1;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-secondary);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            transition: border-color var(--transition-fast);
+        }
+
+        .custom-input-row input::placeholder { color: var(--text-muted); }
+        .custom-input-row input:focus { outline: none; border-color: var(--accent-green); }
+
+        .custom-input-row button {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            padding: 0 var(--space-md);
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .custom-input-row button:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           BUILD AREA
+           ================================ */
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .build-area {
+            background: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            min-height: 120px;
+            margin-bottom: var(--space-xl);
+            transition: border-color var(--transition-normal);
+            position: relative;
+        }
+
+        .build-area.has-items {
+            border-style: solid;
+            border-color: var(--border-hover);
+        }
+
+        .build-area-empty {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: var(--space-xl) 0;
+        }
+
+        .build-area-empty svg {
+            display: block;
+            margin: 0 auto var(--space-md);
+            opacity: 0.3;
+        }
+
+        .build-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.82rem;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            animation: chipIn 0.25s ease-out;
+            max-width: 100%;
+        }
+
+        @keyframes chipIn {
+            from { opacity: 0; transform: scale(0.85) translateY(6px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .chip-removing {
+            animation: chipOut 0.2s ease-in forwards;
+        }
+
+        @keyframes chipOut {
+            to { opacity: 0; transform: scale(0.85) translateY(-4px); }
+        }
+
+        .chip--context {
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+
+        .chip--task {
+            background: var(--accent-blue-dim);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            color: var(--accent-blue);
+        }
+
+        .chip--details {
+            background: var(--accent-purple-dim);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            color: var(--accent-purple);
+        }
+
+        .chip:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .chip-x {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .chip-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ================================
+           ACTIONS ROW
+           ================================ */
+        .actions-row {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .btn-copy {
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            font-weight: 700;
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .btn-reset {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .btn-copy, .btn-reset {
+            padding: var(--space-sm) var(--space-xl);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+        }
+
+        .btn-reset {
+            border: 1px solid var(--border-color);
+        }
+
+        .copy-feedback {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.82rem;
+            color: var(--accent-green);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+
+        /* ================================
+           PREVIEW AREA
+           ================================ */
+        .preview-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .preview-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .preview-dot.red { background: #ff5f56; }
+        .preview-dot.yellow { background: #ffbd2e; }
+        .preview-dot.green { background: #27c93f; }
+
+        .preview-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .preview-body {
+            padding: var(--space-lg);
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            min-height: 80px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .preview-body .empty-state {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .preview-body .ctx-text { color: var(--accent-green); }
+        .preview-body .task-text { color: var(--accent-blue); }
+        .preview-body .det-text { color: var(--accent-purple); }
+
+        /* ================================
+           SCORE SECTION
+           ================================ */
+        .score-section {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: var(--space-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (max-width: 600px) {
+            .score-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .score-ring-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .score-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+
+        .score-ring svg {
+            width: 140px;
+            height: 140px;
+            transform: rotate(-90deg);
+        }
+
+        .score-ring-bg {
+            fill: none;
+            stroke: var(--bg-elevated);
+            stroke-width: 10;
+        }
+
+        .score-ring-fill {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;
+        }
+
+        .score-number {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            transition: color 0.4s ease;
+        }
+
+        .score-message {
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-height: 1.2em;
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            justify-content: center;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .breakdown-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+            font-size: 0.7rem;
+        }
+
+        .breakdown-check.checked {
+            border-color: var(--accent-green);
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .breakdown-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .breakdown-points {
+            margin-left: auto;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            transition: color var(--transition-fast);
+        }
+
+        .breakdown-points.earned {
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           XP TOAST
+           ================================ */
+        .xp-toast {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-xl);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-glow-green);
+            z-index: var(--z-toast);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .xp-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .xp-toast-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .xp-toast-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .xp-toast-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Back Link -->
+        <a href="/curriculum" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Back to Curriculum
+        </a>
+
+        <!-- Header -->
+        <header class="page-header">
+            <span class="day-tag">Day 1 Interactive</span>
+            <h1>Prompt Builder</h1>
+            <p class="subtitle">Assemble a great prompt from its core components: Context, Task, and Details. Click snippets to add them, or write your own.</p>
+        </header>
+
+        <!-- Component Panels -->
+        <div class="panels-grid">
+            <!-- Context Panel -->
+            <div class="panel panel--context">
+                <div class="panel-label"><span class="panel-dot"></span> Context</div>
+                <div class="snippets-list" id="context-snippets"></div>
+                <div class="custom-input-row">
+                    <input type="text" id="custom-context" placeholder="Write your own...">
+                    <button onclick="addCustom('context')">Add</button>
+                </div>
+            </div>
+
+            <!-- Task Panel -->
+            <div class="panel panel--task">
+                <div class="panel-label"><span class="panel-dot"></span> Task</div>
+                <div class="snippets-list" id="task-snippets"></div>
+                <div class="custom-input-row">
+                    <input type="text" id="custom-task" placeholder="Write your own...">
+                    <button onclick="addCustom('task')">Add</button>
+                </div>
+            </div>
+
+            <!-- Details Panel -->
+            <div class="panel panel--details">
+                <div class="panel-label"><span class="panel-dot"></span> Details</div>
+                <div class="snippets-list" id="details-snippets"></div>
+                <div class="custom-input-row">
+                    <input type="text" id="custom-details" placeholder="Write your own...">
+                    <button onclick="addCustom('details')">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Area -->
+        <div class="section-label">Build Area</div>
+        <div class="build-area" id="build-area">
+            <div class="build-area-empty" id="build-empty">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                Click snippets above to start building your prompt
+            </div>
+            <div class="build-chips" id="build-chips"></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-row">
+            <button class="btn-copy" id="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+            <button class="btn-reset" onclick="resetAll()">Reset</button>
+            <span class="copy-feedback" id="copy-feedback">Copied!</span>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section">
+            <div class="section-label">Preview</div>
+            <div class="preview-box">
+                <div class="preview-header">
+                    <span class="preview-dot red"></span>
+                    <span class="preview-dot yellow"></span>
+                    <span class="preview-dot green"></span>
+                    <span class="preview-title">assembled-prompt.txt</span>
+                </div>
+                <div class="preview-body" id="preview-body">
+                    <span class="empty-state">Your assembled prompt will appear here...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score -->
+        <div class="section-label">Quality Score</div>
+        <div class="score-section">
+            <div class="score-ring-wrap">
+                <div class="score-ring">
+                    <svg viewBox="0 0 140 140">
+                        <circle class="score-ring-bg" cx="70" cy="70" r="58"/>
+                        <circle class="score-ring-fill" id="score-ring-fill" cx="70" cy="70" r="58"
+                                stroke-dasharray="364.42"
+                                stroke-dashoffset="364.42"/>
+                    </svg>
+                    <div class="score-number" id="score-number">0</div>
+                </div>
+                <div class="score-message" id="score-message"></div>
+            </div>
+            <div class="score-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-check" id="check-context"><span></span></div>
+                    <span class="breakdown-label">Context provided</span>
+                    <span class="breakdown-points" id="pts-context">+0</span>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-check" id="check-task"><span></span></div>
+                    <span class="breakdown-label">Task defined</span>
+                    <span class="breakdown-points" id="pts-task">+0</span>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-check" id="check-detail1"><span></span></div>
+                    <span class="breakdown-label">At least 1 detail</span>
+                    <span class="breakdown-points" id="pts-detail1">+0</span>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-check" id="check-detail2"><span></span></div>
+                    <span class="breakdown-label">2+ details (bonus)</span>
+                    <span class="breakdown-points" id="pts-detail2">+0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XP Toast -->
+    <div class="xp-toast" id="xp-toast">
+        <span class="xp-toast-icon">&#9733;</span>
+        <div>
+            <div class="xp-toast-text">+25 XP Earned!</div>
+            <div class="xp-toast-sub">Built a quality prompt (75+ score)</div>
+        </div>
+    </div>
+
+    <script>
+    /* ================================
+       DATA
+       ================================ */
+    const SNIPPETS = {
+        context: [
+            "I'm building a React e-commerce app with TypeScript",
+            "Working on a Node.js REST API for a task management tool",
+            "Debugging a Python data pipeline that processes CSV files",
+            "Migrating a legacy jQuery app to React",
+            "Setting up CI/CD for a microservices architecture",
+            "Writing documentation for an open-source library"
+        ],
+        task: [
+            "Write a component that...",
+            "Create unit tests for...",
+            "Refactor this function to...",
+            "Generate API documentation for...",
+            "Debug and fix the error in...",
+            "Design a database schema for..."
+        ],
+        details: [
+            "using functional components with hooks",
+            "in TypeScript with strict mode",
+            "following REST conventions",
+            "with error handling for edge cases",
+            "keeping it under 50 lines",
+            "for junior developers",
+            "in a professional tone",
+            "with inline comments explaining each step"
+        ]
+    };
+
+    const MESSAGES = {
+        0:  "",
+        10: "Just getting started...",
+        25: "Good \u2014 you have one component. Keep going!",
+        50: "Getting there! Add more components.",
+        75: "Solid prompt! This will get great results.",
+        100:"Perfect score! All components covered."
+    };
+
+    /* ================================
+       STATE
+       ================================ */
+    let buildItems = []; // { id, type, text }
+    let nextId = 0;
+    let xpAwarded = false;
+
+    /* ================================
+       INIT
+       ================================ */
+    function init() {
+        renderSnippets('context');
+        renderSnippets('task');
+        renderSnippets('details');
+        updateAll();
+
+        // Enter key listeners for custom inputs
+        ['context', 'task', 'details'].forEach(type => {
+            document.getElementById('custom-' + type).addEventListener('keydown', e => {
+                if (e.key === 'Enter') addCustom(type);
+            });
+        });
+    }
+
+    function renderSnippets(type) {
+        const container = document.getElementById(type + '-snippets');
+        container.innerHTML = '';
+        SNIPPETS[type].forEach((text, idx) => {
+            const el = document.createElement('div');
+            el.className = 'snippet';
+            el.textContent = text;
+            el.dataset.type = type;
+            el.dataset.idx = idx;
+            // Mark as added if already in build
+            if (buildItems.some(b => b.type === type && b.text === text && !b.custom)) {
+                el.classList.add('added');
+            }
+            el.addEventListener('click', () => addSnippet(type, idx));
+            container.appendChild(el);
+        });
+    }
+
+    /* ================================
+       ADD / REMOVE
+       ================================ */
+    function addSnippet(type, idx) {
+        const text = SNIPPETS[type][idx];
+        // Prevent duplicates
+        if (buildItems.some(b => b.type === type && b.text === text)) return;
+        buildItems.push({ id: nextId++, type, text, custom: false });
+        renderSnippets(type);
+        updateAll();
+    }
+
+    function addCustom(type) {
+        const input = document.getElementById('custom-' + type);
+        const text = input.value.trim();
+        if (!text) return;
+        // Prevent exact duplicates
+        if (buildItems.some(b => b.type === type && b.text === text)) return;
+        buildItems.push({ id: nextId++, type, text, custom: true });
+        input.value = '';
+        updateAll();
+    }
+
+    function removeItem(id) {
+        const chip = document.querySelector(`.chip[data-id="${id}"]`);
+        if (chip) {
+            chip.classList.add('chip-removing');
+            setTimeout(() => {
+                buildItems = buildItems.filter(b => b.id !== id);
+                ['context', 'task', 'details'].forEach(renderSnippets);
+                updateAll();
+            }, 200);
+        } else {
+            buildItems = buildItems.filter(b => b.id !== id);
+            ['context', 'task', 'details'].forEach(renderSnippets);
+            updateAll();
+        }
+    }
+
+    function resetAll() {
+        buildItems = [];
+        xpAwarded = false;
+        ['context', 'task', 'details'].forEach(renderSnippets);
+        updateAll();
+        document.getElementById('xp-toast').classList.remove('show');
+    }
+
+    /* ================================
+       RENDER
+       ================================ */
+    function updateAll() {
+        renderBuildArea();
+        renderPreview();
+        renderScore();
+    }
+
+    function renderBuildArea() {
+        const chipsEl = document.getElementById('build-chips');
+        const emptyEl = document.getElementById('build-empty');
+        const area = document.getElementById('build-area');
+
+        if (buildItems.length === 0) {
+            emptyEl.style.display = '';
+            chipsEl.innerHTML = '';
+            area.classList.remove('has-items');
+            return;
+        }
+
+        emptyEl.style.display = 'none';
+        area.classList.add('has-items');
+
+        // Sort: context first, then task, then details
+        const order = { context: 0, task: 1, details: 2 };
+        const sorted = [...buildItems].sort((a, b) => order[a.type] - order[b.type]);
+
+        chipsEl.innerHTML = sorted.map(item => `
+            <div class="chip chip--${item.type}" data-id="${item.id}" onclick="removeItem(${item.id})" title="Click to remove">
+                <span class="chip-text">${escHtml(item.text)}</span>
+                <span class="chip-x">&#10005;</span>
+            </div>
+        `).join('');
+    }
+
+    function renderPreview() {
+        const body = document.getElementById('preview-body');
+        if (buildItems.length === 0) {
+            body.innerHTML = '<span class="empty-state">Your assembled prompt will appear here...</span>';
+            return;
+        }
+
+        const order = { context: 0, task: 1, details: 2 };
+        const sorted = [...buildItems].sort((a, b) => order[a.type] - order[b.type]);
+
+        const contextItems = sorted.filter(i => i.type === 'context');
+        const taskItems = sorted.filter(i => i.type === 'task');
+        const detailItems = sorted.filter(i => i.type === 'details');
+
+        let parts = [];
+        if (contextItems.length) {
+            parts.push('<span class="ctx-text">' + contextItems.map(i => escHtml(i.text)).join('. ') + '.</span>');
+        }
+        if (taskItems.length) {
+            parts.push('<span class="task-text">' + taskItems.map(i => escHtml(i.text)).join('. ') + '</span>');
+        }
+        if (detailItems.length) {
+            parts.push('<span class="det-text">' + detailItems.map(i => escHtml(i.text)).join(', ') + '.</span>');
+        }
+
+        body.innerHTML = parts.join(' ');
+    }
+
+    function renderScore() {
+        const hasContext = buildItems.some(b => b.type === 'context');
+        const hasTask = buildItems.some(b => b.type === 'task');
+        const detailCount = buildItems.filter(b => b.type === 'details').length;
+        const hasDetail1 = detailCount >= 1;
+        const hasDetail2 = detailCount >= 2;
+
+        let score = 0;
+        if (hasContext)  score += 25;
+        if (hasTask)     score += 25;
+        if (hasDetail1)  score += 25;
+        if (hasDetail2)  score += 25;
+
+        // Update ring
+        const circumference = 364.42;
+        const offset = circumference - (circumference * score / 100);
+        const ring = document.getElementById('score-ring-fill');
+        ring.style.strokeDashoffset = offset;
+
+        // Color
+        let color;
+        if (score <= 30) color = 'var(--error)';
+        else if (score <= 60) color = 'var(--accent-yellow)';
+        else color = 'var(--accent-green)';
+
+        ring.style.stroke = color;
+        const numEl = document.getElementById('score-number');
+        numEl.textContent = score;
+        numEl.style.color = color;
+
+        // Message
+        const msgEl = document.getElementById('score-message');
+        let msgKey = 0;
+        if (score >= 100) msgKey = 100;
+        else if (score >= 75) msgKey = 75;
+        else if (score >= 50) msgKey = 50;
+        else if (score >= 25) msgKey = 25;
+        else if (score > 0)  msgKey = 10;
+        msgEl.textContent = MESSAGES[msgKey];
+        msgEl.style.color = color;
+
+        // Breakdown checks
+        updateCheck('context', hasContext, 25);
+        updateCheck('task', hasTask, 25);
+        updateCheck('detail1', hasDetail1, 25);
+        updateCheck('detail2', hasDetail2, 25);
+
+        // XP award
+        if (score >= 75 && !xpAwarded) {
+            xpAwarded = true;
+            setTimeout(() => {
+                document.getElementById('xp-toast').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('xp-toast').classList.remove('show');
+                }, 4000);
+            }, 600);
+        }
+    }
+
+    function updateCheck(key, active, pts) {
+        const check = document.getElementById('check-' + key);
+        const points = document.getElementById('pts-' + key);
+        if (active) {
+            check.classList.add('checked');
+            check.querySelector('span').innerHTML = '&#10003;';
+            points.textContent = '+' + pts;
+            points.classList.add('earned');
+        } else {
+            check.classList.remove('checked');
+            check.querySelector('span').textContent = '';
+            points.textContent = '+0';
+            points.classList.remove('earned');
+        }
+    }
+
+    /* ================================
+       COPY
+       ================================ */
+    function copyPrompt() {
+        if (buildItems.length === 0) return;
+
+        const order = { context: 0, task: 1, details: 2 };
+        const sorted = [...buildItems].sort((a, b) => order[a.type] - order[b.type]);
+
+        const contextItems = sorted.filter(i => i.type === 'context');
+        const taskItems = sorted.filter(i => i.type === 'task');
+        const detailItems = sorted.filter(i => i.type === 'details');
+
+        let parts = [];
+        if (contextItems.length) parts.push(contextItems.map(i => i.text).join('. ') + '.');
+        if (taskItems.length) parts.push(taskItems.map(i => i.text).join('. '));
+        if (detailItems.length) parts.push(detailItems.map(i => i.text).join(', ') + '.');
+
+        const text = parts.join(' ');
+
+        navigator.clipboard.writeText(text).then(() => {
+            const fb = document.getElementById('copy-feedback');
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 2000);
+        }).catch(() => {
+            // Fallback
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            const fb = document.getElementById('copy-feedback');
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 2000);
+        });
+    }
+
+    /* ================================
+       UTIL
+       ================================ */
+    function escHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /* ================================
+       BOOT
+       ================================ */
+    init();
+    </script>
+</body>
+</html>

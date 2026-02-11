@@ -1,0 +1,162 @@
+{
+  "quizId": "tier2-application",
+  "title": "Week 1 Application: Defining Outcomes & Setting Guidelines",
+  "description": "Apply your knowledge of the outcome template, format/tone selection, and reusable guidelines. Covers Day 2 lessons on defining outcomes and setting clear guidelines for AI-assisted development.",
+  "day": 2,
+  "difficulty": 2,
+  "timeLimit": 900,
+  "passingScore": 70,
+  "xpReward": 75,
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "What is the outcome template introduced in Day 2 for structuring prompts?",
+      "options": [
+        "A) [Who] does [What] with [How] for [Why]",
+        "B) [Task] in [Format] using [Tone] for [Audience]",
+        "C) [Role] performs [Action] following [Rules] producing [Output]",
+        "D) [Context] + [Instruction] + [Constraint] = [Result]"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The outcome template is [Task] in [Format] using [Tone] for [Audience]. Each slot removes a category of ambiguity: Task defines the action, Format defines the output structure, Tone defines the voice, and Audience defines who will consume the result.",
+      "points": 10,
+      "topic": "defining-outcomes"
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "A developer needs to write a commit message for a change that migrates user sessions from Redis to DynamoDB. Which prompt best applies the outcome template?",
+      "options": [
+        "A) Write a commit message for this change.",
+        "B) Write a commit message in Conventional Commits format (type: subject + body) using a concise, technical tone for other contributors reading the git log. The change migrates user sessions from Redis to DynamoDB.",
+        "C) Write a really good commit message that explains everything about the session migration.",
+        "D) As a senior developer, write a commit message. Make it professional."
+      ],
+      "correctAnswer": "B",
+      "explanation": "Option B correctly fills all four slots: Task (write a commit message), Format (Conventional Commits with type: subject + body), Tone (concise, technical), and Audience (other contributors reading the git log). It also provides the specific change context.",
+      "points": 10,
+      "topic": "defining-outcomes"
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "Which output format would be MOST appropriate for documenting a team's deployment process for on-call engineers who may not be familiar with the service?",
+      "options": [
+        "A) Bullet-point summary",
+        "B) FAQ format",
+        "C) Step-by-step numbered guide with prerequisite checklist",
+        "D) Code with inline comments"
+      ],
+      "correctAnswer": "C",
+      "explanation": "A deployment runbook for on-call engineers who may be unfamiliar with the service needs a sequential, step-by-step format with prerequisites listed upfront. This ensures engineers can follow the process reliably without prior knowledge. Bullet summaries lack sequence, FAQ format isn't procedural, and code comments don't cover operational steps.",
+      "points": 10,
+      "topic": "defining-outcomes"
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "When should a 'persuasive' tone be used in AI-generated developer content?",
+      "options": [
+        "A) In API documentation for third-party developers",
+        "B) In PR descriptions and technical proposals where you need to convince reviewers",
+        "C) In Architecture Decision Records that need to remain neutral",
+        "D) In error log messages within application code"
+      ],
+      "correctAnswer": "B",
+      "explanation": "A persuasive tone is benefit-focused, concise, and action-oriented --- ideal for PR descriptions and proposals where you need to communicate the value of changes to reviewers. API docs should be technical, ADRs should be neutral, and error logs should be descriptive and factual.",
+      "points": 10,
+      "topic": "defining-outcomes"
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "What are the four categories of guidelines that every development team should define for AI-assisted work?",
+      "options": [
+        "A) Speed, Quality, Cost, Scope",
+        "B) Acceptable Content, Tone Requirements, Coding Standards, Output Limitations",
+        "C) Input Validation, Processing Rules, Output Formatting, Error Handling",
+        "D) Syntax, Semantics, Pragmatics, Style"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The four guideline categories are: Acceptable Content (what the AI should and should not produce), Tone Requirements (voice, formality, perspective), Coding Standards (language conventions, patterns, tooling preferences), and Output Limitations (length, scope, depth, what to omit).",
+      "points": 10,
+      "topic": "setting-guidelines"
+    },
+    {
+      "id": 6,
+      "type": "multiple_choice",
+      "question": "A team notices that AI keeps suggesting class-based React components even though they exclusively use functional components. What is the correct response?",
+      "options": [
+        "A) Switch the team to class components since the AI prefers them",
+        "B) Add 'Do not suggest class-based React components. We use functional components only.' to their guidelines under Acceptable Content",
+        "C) Rewrite every individual prompt to mention functional components",
+        "D) Stop using AI for React development"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The 'twice rule' applies: if you correct the AI for the same issue more than twice, it belongs in your guidelines, not in individual prompts. Adding an Acceptable Content guideline ensures this constraint applies to ALL future prompts automatically, without having to repeat it every time.",
+      "points": 10,
+      "topic": "setting-guidelines"
+    },
+    {
+      "id": 7,
+      "type": "multiple_choice",
+      "question": "Which of the following is an example of an Output Limitation guideline?",
+      "options": [
+        "A) Use TypeScript strict mode. No `any` types unless justified in a comment.",
+        "B) Code review comments should be constructive and use 'we' language.",
+        "C) Do not explain basic language syntax. Assume the reader is a mid-level developer.",
+        "D) Never generate mock data that resembles real customer information."
+      ],
+      "correctAnswer": "C",
+      "explanation": "Output Limitations control length, scope, depth, and what to omit. 'Do not explain basic language syntax' limits the depth and scope of the output. Option A is a Coding Standard, Option B is a Tone Requirement, and Option D is an Acceptable Content rule.",
+      "points": 10,
+      "topic": "setting-guidelines"
+    },
+    {
+      "id": 8,
+      "type": "multiple_choice",
+      "question": "A guideline states: 'Commit messages must use Conventional Commits format, imperative mood, with a body that explains why the change was made.' Which guideline category does this belong to?",
+      "options": [
+        "A) Acceptable Content",
+        "B) Tone Requirements",
+        "C) Coding Standards",
+        "D) Output Limitations"
+      ],
+      "correctAnswer": "B",
+      "explanation": "This is a Tone Requirement because it specifies the voice and format of written output (Conventional Commits format, imperative mood) and what the content should focus on (explaining 'why'). While it touches on format, the primary concern is how the message should read --- which falls under Tone.",
+      "points": 10,
+      "topic": "setting-guidelines"
+    },
+    {
+      "id": 9,
+      "type": "short_answer",
+      "question": "Transform the following vague prompt into a well-structured prompt using the [Task] in [Format] using [Tone] for [Audience] template:\n\nVague prompt: 'Document this endpoint.'\n\nAssume the endpoint is POST /api/v2/deployments in a Node.js Express API used by third-party developers.",
+      "sampleAnswer": "Write documentation for the POST /api/v2/deployments endpoint in a reference-doc format with request/response examples using a technical tone for third-party developers integrating our API. Include parameter descriptions with types and required markers, error codes for 400/401/409 responses, and a cURL example showing a complete request.",
+      "rubric": [
+        "Must specify the Task clearly (document the POST /api/v2/deployments endpoint)",
+        "Must specify a Format (reference doc, OpenAPI, or similar structured format with examples)",
+        "Must specify a Tone (technical, professional, or similar appropriate choice)",
+        "Must specify an Audience (third-party developers, external integrators, or similar)",
+        "Should include at least two specific Details (e.g., error codes, request/response schemas, examples)"
+      ],
+      "points": 15,
+      "topic": "defining-outcomes"
+    },
+    {
+      "id": 10,
+      "type": "short_answer",
+      "question": "You are the tech lead of a team building a Python FastAPI backend. Your team uses SQLAlchemy, Pydantic v2, and pytest. Write at least 3 Coding Standards guidelines and 2 Acceptable Content guidelines that you would include in your team's AI assistant guidelines.\n\nFormat your answer as a markdown list under each category heading.",
+      "sampleAnswer": "## Coding Standards\n- Language: Python 3.12+ with type hints on all function signatures\n- Framework: FastAPI with Pydantic v2 models for all request/response schemas\n- ORM: SQLAlchemy 2.0 with async session patterns; no raw SQL unless for complex queries\n- Testing: pytest with pytest-asyncio for async tests; minimum 80% coverage on new code\n- All functions must include docstrings following Google style\n\n## Acceptable Content\n- Do not suggest synchronous database operations; all DB access must use async/await\n- Do not generate code that catches bare `Exception`; use specific exception types\n- Never output database credentials, API keys, or secrets; always reference environment variables",
+      "rubric": [
+        "Must include at least 3 Coding Standards specific to Python/FastAPI/SQLAlchemy/Pydantic/pytest stack",
+        "Must include at least 2 Acceptable Content rules that define what the AI should NOT produce",
+        "Guidelines should be concrete and actionable (not vague like 'write good code')",
+        "Should reference specific tools, patterns, or conventions from the stated tech stack",
+        "Bonus for guidelines that prevent common AI mistakes (e.g., wrong import paths, deprecated patterns)"
+      ],
+      "points": 15,
+      "topic": "setting-guidelines"
+    }
+  ]
+}

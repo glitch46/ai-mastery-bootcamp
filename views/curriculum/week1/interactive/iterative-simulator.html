@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iterative Prompting Simulator | AI Mastery Bootcamp</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        /* ================================
+           PAGE LAYOUT
+           ================================ */
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+            min-height: 100vh;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            transition: color var(--transition-fast);
+        }
+
+        .back-link:hover {
+            color: var(--accent-green);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .page-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .page-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .page-header .day-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-green);
+            background: var(--accent-green-dim);
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* ================================
+           SCENARIO SELECTOR
+           ================================ */
+        .scenario-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scenario-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .scenario-card:nth-child(1)::before { background: var(--accent-green); }
+        .scenario-card:nth-child(2)::before { background: var(--accent-blue); }
+        .scenario-card:nth-child(3)::before { background: var(--accent-purple); }
+
+        .scenario-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .scenario-card:hover::before {
+            opacity: 1;
+        }
+
+        .scenario-card.selected {
+            border-color: var(--accent-green);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .scenario-card.selected::before {
+            opacity: 1;
+        }
+
+        .scenario-icon {
+            font-size: 1.75rem;
+            margin-bottom: var(--space-sm);
+            line-height: 1;
+        }
+
+        .scenario-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .scenario-focus {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .scenario-card:nth-child(1) .scenario-focus { color: var(--accent-green); }
+        .scenario-card:nth-child(2) .scenario-focus { color: var(--accent-blue); }
+        .scenario-card:nth-child(3) .scenario-focus { color: var(--accent-purple); }
+
+        .scenario-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* ================================
+           MAIN CONTENT AREA
+           ================================ */
+        .simulator-area {
+            display: none;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .simulator-area.active {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+        }
+
+        @media (max-width: 900px) {
+            .simulator-area.active {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ================================
+           LEFT: CHAT + INPUT
+           ================================ */
+        .chat-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        /* Turn tracker */
+        .turn-tracker {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+        }
+
+        .turn-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .turn-dots {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .turn-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all var(--transition-normal);
+            font-family: var(--font-mono);
+        }
+
+        .turn-dot.completed {
+            border-color: var(--accent-green);
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .turn-dot.current {
+            border-color: var(--accent-blue);
+            background: var(--accent-blue-dim);
+            color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.3);
+        }
+
+        /* Quality meter */
+        .quality-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            transition: box-shadow var(--transition-slow);
+        }
+
+        .quality-section.glow {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+        }
+
+        .quality-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .quality-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+        }
+
+        .quality-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            transition: color var(--transition-normal);
+        }
+
+        .quality-delta {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+            margin-left: var(--space-sm);
+        }
+
+        .quality-delta.show {
+            opacity: 1;
+            animation: deltaPopIn 0.4s ease-out;
+        }
+
+        @keyframes deltaPopIn {
+            0% { transform: translateY(6px) scale(0.8); opacity: 0; }
+            60% { transform: translateY(-2px) scale(1.1); }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .quality-track {
+            height: 10px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .quality-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            background: var(--gradient-primary);
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            width: 0%;
+        }
+
+        /* Chat window */
+        .chat-window {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .chat-dot.red { background: #ff5f56; }
+        .chat-dot.yellow { background: #ffbd2e; }
+        .chat-dot.green { background: #27c93f; }
+
+        .chat-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .chat-body {
+            padding: var(--space-md);
+            min-height: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            scroll-behavior: smooth;
+        }
+
+        /* Messages */
+        .msg {
+            display: flex;
+            gap: var(--space-sm);
+            animation: msgIn 0.3s ease-out;
+        }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .msg.user .msg-avatar {
+            background: var(--accent-blue-dim);
+            color: var(--accent-blue);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+        }
+
+        .msg.ai .msg-avatar {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .msg.system .msg-avatar {
+            background: var(--accent-purple-dim);
+            color: var(--accent-purple);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .msg-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .msg-sender {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 3px;
+        }
+
+        .msg.user .msg-sender { color: var(--accent-blue); }
+        .msg.ai .msg-sender { color: var(--accent-green); }
+        .msg.system .msg-sender { color: var(--accent-purple); }
+
+        .msg-bubble {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .msg-bubble pre {
+            margin: var(--space-sm) 0;
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            overflow-x: auto;
+        }
+
+        .msg-bubble code {
+            font-size: 0.82rem;
+        }
+
+        .msg.system .msg-bubble {
+            border-color: rgba(157, 78, 221, 0.3);
+            background: var(--accent-purple-dim);
+        }
+
+        .msg-cursor {
+            display: inline-block;
+            width: 7px;
+            height: 1em;
+            background: var(--accent-green);
+            animation: blink 1s step-end infinite;
+            margin-left: 1px;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Hint callout */
+        .hint-bubble {
+            border-color: rgba(255, 214, 10, 0.3);
+            background: rgba(255, 214, 10, 0.06);
+        }
+
+        .hint-bubble .hint-icon {
+            color: var(--accent-yellow);
+            font-weight: 700;
+        }
+
+        /* Input area */
+        .input-area {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: flex-end;
+        }
+
+        .input-area textarea {
+            flex: 1;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            padding: var(--space-md);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: none;
+            min-height: 56px;
+            max-height: 120px;
+            transition: border-color var(--transition-fast);
+            line-height: 1.5;
+        }
+
+        .input-area textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-area textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .input-area textarea:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .send-btn {
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            min-height: 56px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Suggested prompt */
+        .suggestion {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            padding: var(--space-xs) 0;
+        }
+
+        .suggestion span {
+            color: var(--accent-blue);
+            cursor: pointer;
+            border-bottom: 1px dashed rgba(0, 168, 255, 0.4);
+            transition: color var(--transition-fast);
+        }
+
+        .suggestion span:hover {
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           RIGHT: IMPROVEMENT LOG
+           ================================ */
+        .log-panel {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .log-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .log-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .log-title svg {
+            width: 14px;
+            height: 14px;
+            color: var(--accent-green);
+        }
+
+        .log-entries {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .log-entry {
+            display: flex;
+            gap: var(--space-sm);
+            animation: msgIn 0.3s ease-out;
+        }
+
+        .log-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .log-detail {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .log-technique {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .log-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .log-empty {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Tips card */
+        .tips-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .tips-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-blue);
+            margin-bottom: var(--space-md);
+        }
+
+        .tip-item {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+
+        .tip-turn {
+            font-weight: 700;
+            color: var(--accent-green);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+        }
+
+        /* ================================
+           COMPLETION SUMMARY
+           ================================ */
+        .completion-overlay {
+            display: none;
+            margin-bottom: var(--space-xl);
+        }
+
+        .completion-overlay.active {
+            display: block;
+            animation: msgIn 0.5s ease-out;
+        }
+
+        .completion-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            text-align: center;
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .completion-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            line-height: 1;
+        }
+
+        .completion-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin-bottom: var(--space-sm);
+        }
+
+        .completion-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+
+        .journey-steps {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+
+        .journey-step {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .journey-step-num {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-green);
+            margin-bottom: var(--space-xs);
+        }
+
+        .journey-step-quality {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .journey-step-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .journey-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .journey-arrow { display: none; }
+        }
+
+        .completion-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-try-another {
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-xl);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-try-another:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .btn-back-scenarios {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-xl);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-back-scenarios:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           XP TOAST
+           ================================ */
+        .xp-toast {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-xl);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-glow-green);
+            z-index: var(--z-toast);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .xp-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .xp-toast-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .xp-toast-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .xp-toast-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ================================
+           SCROLLBAR
+           ================================ */
+        .chat-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Back Link -->
+        <a href="/curriculum" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Back to Curriculum
+        </a>
+
+        <!-- Header -->
+        <header class="page-header">
+            <span class="day-tag">Day 4 Interactive</span>
+            <h1>Iterative Prompting Simulator</h1>
+            <p class="subtitle">Experience how multi-turn refinement transforms vague prompts into precise, high-quality AI outputs. Pick a scenario and refine your way to a 95+ quality score.</p>
+        </header>
+
+        <!-- Scenario Selector -->
+        <div class="scenario-section" id="scenario-section">
+            <div class="section-label">Choose a Scenario</div>
+            <div class="scenario-grid" id="scenario-grid"></div>
+        </div>
+
+        <!-- Simulator Area -->
+        <div class="simulator-area" id="simulator-area">
+            <!-- Left: Chat Column -->
+            <div class="chat-column">
+                <!-- Turn Tracker -->
+                <div class="turn-tracker">
+                    <span class="turn-label" id="turn-label">Turn 1 of 4</span>
+                    <div class="turn-dots" id="turn-dots">
+                        <div class="turn-dot current">1</div>
+                        <div class="turn-dot">2</div>
+                        <div class="turn-dot">3</div>
+                        <div class="turn-dot">4</div>
+                    </div>
+                </div>
+
+                <!-- Quality Meter -->
+                <div class="quality-section" id="quality-section">
+                    <div class="quality-header">
+                        <span class="quality-label">Output Quality</span>
+                        <div>
+                            <span class="quality-value" id="quality-value">0 / 100</span>
+                            <span class="quality-delta" id="quality-delta"></span>
+                        </div>
+                    </div>
+                    <div class="quality-track">
+                        <div class="quality-fill" id="quality-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Chat Window -->
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <span class="chat-dot red"></span>
+                        <span class="chat-dot yellow"></span>
+                        <span class="chat-dot green"></span>
+                        <span class="chat-title" id="chat-title">iterative-session</span>
+                    </div>
+                    <div class="chat-body" id="chat-body"></div>
+                </div>
+
+                <!-- Suggestion -->
+                <div class="suggestion" id="suggestion"></div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <textarea id="prompt-input" placeholder="Type your prompt..." rows="2"></textarea>
+                    <button class="send-btn" id="send-btn" onclick="handleSend()">Send</button>
+                </div>
+            </div>
+
+            <!-- Right: Log Panel -->
+            <div class="log-panel">
+                <div class="log-card">
+                    <div class="log-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                        Improvement Log
+                    </div>
+                    <div class="log-entries" id="log-entries">
+                        <div class="log-empty">Improvements will appear here as you refine your prompts...</div>
+                    </div>
+                </div>
+
+                <div class="tips-card" id="tips-card">
+                    <div class="tips-title">Turn-by-Turn Guide</div>
+                    <div id="tips-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Summary -->
+        <div class="completion-overlay" id="completion-overlay">
+            <div class="completion-card">
+                <div class="completion-icon">&#9889;</div>
+                <div class="completion-title">Iteration Complete!</div>
+                <div class="completion-subtitle" id="completion-subtitle">You transformed a vague prompt into a professional-grade output.</div>
+                <div class="journey-steps" id="journey-steps"></div>
+                <div class="completion-actions">
+                    <button class="btn-try-another" onclick="tryAnother()">Try Another Scenario</button>
+                    <button class="btn-back-scenarios" onclick="backToScenarios()">Back to Scenarios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XP Toast -->
+    <div class="xp-toast" id="xp-toast">
+        <span class="xp-toast-icon">&#9733;</span>
+        <div>
+            <div class="xp-toast-text">+50 XP Earned!</div>
+            <div class="xp-toast-sub">Completed iterative prompting scenario</div>
+        </div>
+    </div>
+
+    <script>
+    /* ================================
+       SCENARIO DATA
+       ================================ */
+    const SCENARIOS = [
+        {
+            id: 'api',
+            icon: '&#128268;',
+            title: 'Build a REST API',
+            focus: 'Developer Focus',
+            desc: 'Iterate from a vague API request to a complete OpenAPI specification with authentication.',
+            quality: [25, 50, 75, 95],
+            keywords: [
+                [], // Turn 1: any prompt
+                ['endpoint', 'endpoints', 'route', 'routes', 'get', 'post', 'put', 'delete', 'crud', 'resource', 'specific', 'users', 'items', 'products', 'path', 'method', 'url', 'structure'],
+                ['auth', 'authentication', 'jwt', 'token', 'security', 'secure', 'login', 'password', 'oauth', 'session', 'permission', 'authorize', 'authorization', 'protect', 'middleware'],
+                ['openapi', 'swagger', 'format', 'spec', 'specification', 'yaml', 'json', 'schema', 'document', 'restructure', 'convert', 'standard', 'documentation']
+            ],
+            suggestions: [
+                'Try: "Build me a REST API"',
+                'Hint: Ask about specific endpoints, routes, or resources',
+                'Hint: Ask about authentication, security, or JWT tokens',
+                'Hint: Ask for an OpenAPI spec, Swagger format, or restructured documentation'
+            ],
+            turnLabels: [
+                'Vague Request',
+                'Adding Specifics',
+                'Adding Authentication',
+                'Format & Specification'
+            ],
+            logEntries: [
+                { technique: 'Initial Request', desc: 'Started with a broad, unspecific prompt' },
+                { technique: 'Specificity', desc: 'Added concrete endpoints, resources, and HTTP methods' },
+                { technique: 'New Dimension', desc: 'Introduced authentication and security requirements' },
+                { technique: 'Format Control', desc: 'Requested structured output format (OpenAPI spec)' }
+            ],
+            responses: [
+                `Sure! Here's a basic overview of building a REST API:
+
+A REST API (Representational State Transfer) is an architectural style for web services. You'll want to:
+
+1. Choose a framework (Express.js, Flask, Django, etc.)
+2. Define your routes
+3. Handle HTTP methods (GET, POST, PUT, DELETE)
+4. Return JSON responses
+5. Add error handling
+
+Would you like me to go into more detail on any of these?`,
+
+                `Here's a more detailed API structure with specific endpoints:
+
+<pre>GET    /api/users          - List all users
+POST   /api/users          - Create a new user
+GET    /api/users/:id      - Get user by ID
+PUT    /api/users/:id      - Update user
+DELETE /api/users/:id      - Delete user
+
+GET    /api/users/:id/posts     - Get user's posts
+POST   /api/users/:id/posts     - Create post for user
+GET    /api/posts/:id            - Get specific post
+PUT    /api/posts/:id            - Update post
+DELETE /api/posts/:id            - Delete post</pre>
+
+Request/Response format:
+<pre>POST /api/users
+Content-Type: application/json
+
+{
+  "name": "string",
+  "email": "string",
+  "role": "admin | user"
+}
+
+Response: 201 Created
+{
+  "id": "uuid",
+  "name": "string",
+  "email": "string",
+  "role": "string",
+  "createdAt": "ISO-8601"
+}</pre>`,
+
+                `Great thinking! Here's the API with JWT authentication added:
+
+<pre>// Authentication Endpoints
+POST   /api/auth/register   - Register new user
+POST   /api/auth/login      - Login, returns JWT
+POST   /api/auth/refresh    - Refresh expired token
+POST   /api/auth/logout     - Invalidate token</pre>
+
+JWT Implementation:
+<pre>// Login Response
+{
+  "accessToken": "eyJhbG...",
+  "refreshToken": "dGhpcy...",
+  "expiresIn": 3600
+}
+
+// Protected Route Headers
+Authorization: Bearer eyJhbG...
+
+// Middleware
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).json({ error: 'Invalid token' });
+  }
+};</pre>
+
+Role-based access:
+<pre>// Role middleware
+const requireRole = (...roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) {
+    return res.status(403).json({ error: 'Insufficient permissions' });
+  }
+  next();
+};
+
+// Usage
+router.delete('/users/:id', authenticate, requireRole('admin'), deleteUser);</pre>`,
+
+                `Here's your complete API as an OpenAPI 3.0 specification:
+
+<pre>openapi: 3.0.3
+info:
+  title: User Management API
+  version: 1.0.0
+  description: RESTful API with JWT authentication
+
+servers:
+  - url: https://api.example.com/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      required: [name, email]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 1 }
+        email: { type: string, format: email }
+        role: { type: string, enum: [admin, user] }
+        createdAt: { type: string, format: date-time }
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+        code: { type: integer }
+
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: JWT token pair
+        '401':
+          description: Invalid credentials
+
+  /users:
+    get:
+      summary: List all users
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: Paginated user list
+    post:
+      summary: Create user
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201':
+          description: User created</pre>
+
+This is ready to import into Swagger UI, Postman, or any OpenAPI-compatible tool.`
+            ],
+            hintMessages: [
+                '', // Turn 1 always passes
+                'Your prompt is a bit general. Try asking about specific endpoints, routes, or resources the API should handle. What data will this API manage?',
+                'Good progress! Now think about security. Try asking about authentication, JWT tokens, or how to protect the endpoints.',
+                'Almost there! For the final refinement, ask to convert the output into a standard format like OpenAPI/Swagger specification, or request restructured documentation.'
+            ]
+        },
+        {
+            id: 'docs',
+            icon: '&#128196;',
+            title: 'Write Technical Documentation',
+            focus: 'Writer Focus',
+            desc: 'Evolve generic documentation into audience-specific, example-rich technical writing.',
+            quality: [20, 45, 70, 90],
+            keywords: [
+                [],
+                ['api', 'reference', 'section', 'sections', 'structure', 'method', 'methods', 'function', 'functions', 'parameter', 'parameters', 'specific', 'detail', 'endpoint', 'class', 'module', 'table'],
+                ['example', 'examples', 'code', 'snippet', 'snippets', 'sample', 'demo', 'usage', 'tutorial', 'walkthrough', 'show', 'illustrate', 'demonstrate'],
+                ['audience', 'beginner', 'junior', 'senior', 'restructure', 'reorganize', 'rewrite', 'tone', 'level', 'persona', 'reader', 'format', 'simplify', 'advanced', 'developer', 'onboarding']
+            ],
+            suggestions: [
+                'Try: "Write documentation for my project"',
+                'Hint: Ask for specific sections like API reference, parameters, or method details',
+                'Hint: Request code examples, usage snippets, or sample implementations',
+                'Hint: Ask to restructure for a specific audience (beginners, seniors, etc.)'
+            ],
+            turnLabels: [
+                'Generic Request',
+                'Adding Structure',
+                'Adding Examples',
+                'Audience Targeting'
+            ],
+            logEntries: [
+                { technique: 'Initial Request', desc: 'Started with a broad documentation request' },
+                { technique: 'Structure & Specifics', desc: 'Added detailed API reference with parameters and methods' },
+                { technique: 'Concrete Examples', desc: 'Included code snippets and real usage patterns' },
+                { technique: 'Audience Adaptation', desc: 'Restructured content for a specific reader persona' }
+            ],
+            responses: [
+                `Here's an overview of writing technical documentation:
+
+Documentation is essential for any software project. Good docs should cover:
+
+1. **Getting Started** - Installation and setup
+2. **Overview** - What the project does
+3. **Configuration** - How to configure it
+4. **API Reference** - Available functions/methods
+5. **FAQ** - Common questions
+
+Key principles:
+- Keep it up to date
+- Use clear, concise language
+- Include a table of contents
+- Add search functionality if possible
+
+Would you like me to elaborate on any section?`,
+
+                `Here's a detailed API reference section:
+
+<pre># API Reference
+
+## Authentication Module
+
+### \`createSession(config)\`
+
+Creates a new authenticated session.
+
+| Parameter | Type     | Required | Description           |
+|-----------|----------|----------|-----------------------|
+| apiKey    | string   | Yes      | Your API key          |
+| region    | string   | No       | Server region         |
+| timeout   | number   | No       | Timeout in ms (30000) |
+| retries   | number   | No       | Max retry count (3)   |
+
+**Returns:** \`Session\` object
+
+**Throws:** \`AuthError\` if API key is invalid
+
+---
+
+### \`session.query(collection, filters)\`
+
+| Parameter  | Type   | Required | Description          |
+|------------|--------|----------|----------------------|
+| collection | string | Yes      | Target collection    |
+| filters    | object | No       | Query filter object  |
+
+**Returns:** \`Promise&lt;QueryResult&gt;\`
+
+### \`session.insert(collection, data)\`
+
+| Parameter  | Type   | Required | Description          |
+|------------|--------|----------|----------------------|
+| collection | string | Yes      | Target collection    |
+| data       | object | Yes      | Document to insert   |
+
+**Returns:** \`Promise&lt;InsertResult&gt;\`</pre>`,
+
+                `Here's the documentation with code examples added:
+
+<pre># Quick Start Example
+
+\`\`\`javascript
+import { createSession } from '@acme/sdk';
+
+// Initialize with your API key
+const session = createSession({
+  apiKey: process.env.ACME_API_KEY,
+  region: 'us-east-1'
+});
+
+// Query documents
+const users = await session.query('users', {
+  where: { status: 'active' },
+  limit: 10,
+  orderBy: 'createdAt'
+});
+
+console.log(\`Found \${users.total} active users\`);
+\`\`\`
+
+# Error Handling Example
+
+\`\`\`javascript
+try {
+  const result = await session.insert('users', {
+    name: 'Jane Smith',
+    email: 'jane@example.com'
+  });
+  console.log('Created:', result.id);
+} catch (error) {
+  if (error.code === 'DUPLICATE_KEY') {
+    console.error('User already exists');
+  } else if (error.code === 'VALIDATION') {
+    console.error('Invalid data:', error.fields);
+  } else {
+    console.error('Unexpected error:', error.message);
+  }
+}
+\`\`\`
+
+# Pagination Pattern
+
+\`\`\`javascript
+async function getAllUsers(session) {
+  let page = 1;
+  let allUsers = [];
+
+  while (true) {
+    const result = await session.query('users', {
+      page,
+      limit: 100
+    });
+    allUsers.push(...result.data);
+
+    if (result.data.length < 100) break;
+    page++;
+  }
+
+  return allUsers;
+}
+\`\`\`</pre>`,
+
+                `Here's the documentation restructured for junior developers joining the team:
+
+<pre># Acme SDK - Getting Started Guide
+## For New Team Members
+
+Welcome! This guide will get you up and running with our
+SDK in about 10 minutes. No prior experience needed.
+
+---
+
+## What You'll Learn
+- How to connect to our API
+- How to read and write data
+- How to handle common errors
+- Where to go when you're stuck
+
+---
+
+## Step 1: Installation
+
+Open your terminal and run:
+\`\`\`bash
+npm install @acme/sdk
+\`\`\`
+
+## Step 2: Get Your API Key
+
+1. Go to dashboard.acme.com
+2. Click "Settings" > "API Keys"
+3. Click "Generate New Key"
+4. Copy the key (you won't see it again!)
+
+> **Important:** Never commit your API key to git.
+> Use environment variables instead.
+
+## Step 3: Your First Connection
+
+Create a file called \`test-connection.js\`:
+\`\`\`javascript
+// This is the main import you'll always need
+import { createSession } from '@acme/sdk';
+
+// Create a connection (think of it like logging in)
+const session = createSession({
+  apiKey: 'your-key-here'  // Use env vars in real code!
+});
+
+// Try fetching some data
+const result = await session.query('users', { limit: 5 });
+console.log('It works! Found', result.total, 'users');
+\`\`\`
+
+## Common Mistakes (We've All Made Them)
+
+| Mistake | Fix |
+|---------|-----|
+| "Cannot find module" | Run \`npm install\` first |
+| "Invalid API key" | Check for extra spaces when copying |
+| "Timeout error" | Check your internet / VPN connection |
+
+## Need Help?
+- **Slack:** #sdk-help channel
+- **Docs:** docs.acme.com/reference
+- **Pair programming:** Ask your team lead!</pre>
+
+The documentation now uses a friendly tone, progressive disclosure, and assumes no prior knowledge of the system.`
+            ],
+            hintMessages: [
+                '',
+                'Your prompt could be more specific. Try asking about a particular section like an API reference, method parameters, or structured sections with details.',
+                'Nice structure! Now try asking for code examples, usage snippets, or sample implementations to make the docs more practical.',
+                'Good examples! For the final step, try asking to restructure the docs for a specific audience like beginners, junior developers, or a particular reader persona.'
+            ]
+        },
+        {
+            id: 'db',
+            icon: '&#128451;',
+            title: 'Design a Database Schema',
+            focus: 'Architect Focus',
+            desc: 'Progress from a basic table list to a fully optimized schema with migration strategy.',
+            quality: [30, 55, 80, 95],
+            keywords: [
+                [],
+                ['relationship', 'relationships', 'foreign', 'key', 'constraint', 'constraints', 'one-to-many', 'many-to-many', 'reference', 'references', 'join', 'normalize', 'normalization', 'primary', 'unique', 'not null', 'cascade', 'table', 'tables', 'connect', 'link'],
+                ['index', 'indexes', 'indices', 'performance', 'optimize', 'optimization', 'query', 'speed', 'fast', 'slow', 'cache', 'partition', 'compound', 'covering', 'explain', 'bottleneck'],
+                ['migrate', 'migration', 'migrations', 'deploy', 'deployment', 'rollback', 'version', 'versioning', 'strategy', 'zero-downtime', 'backwards', 'compatible', 'staging', 'production', 'transition', 'plan']
+            ],
+            suggestions: [
+                'Try: "Design a database schema for an e-commerce app"',
+                'Hint: Ask about relationships, foreign keys, or constraints between tables',
+                'Hint: Ask about indexes, performance optimization, or query speed',
+                'Hint: Ask for a migration strategy, deployment plan, or versioning approach'
+            ],
+            turnLabels: [
+                'Basic Tables',
+                'Relationships & Constraints',
+                'Indexes & Optimization',
+                'Migration Strategy'
+            ],
+            logEntries: [
+                { technique: 'Initial Request', desc: 'Started with a basic schema design request' },
+                { technique: 'Relationships', desc: 'Added foreign keys, constraints, and table relationships' },
+                { technique: 'Performance', desc: 'Added indexes, optimizations, and query patterns' },
+                { technique: 'Deployment Planning', desc: 'Created migration strategy for safe schema rollout' }
+            ],
+            responses: [
+                `Here's a basic database schema for an e-commerce application:
+
+<pre>Table: users
+  - id
+  - name
+  - email
+  - password
+  - created_at
+
+Table: products
+  - id
+  - name
+  - description
+  - price
+  - stock
+  - created_at
+
+Table: orders
+  - id
+  - user_id
+  - total
+  - status
+  - created_at
+
+Table: order_items
+  - id
+  - order_id
+  - product_id
+  - quantity
+  - price
+
+Table: categories
+  - id
+  - name
+  - description</pre>
+
+This covers the basic entities. Let me know if you want more detail!`,
+
+                `Here's the schema with relationships and constraints defined:
+
+<pre>CREATE TABLE users (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        VARCHAR(100) NOT NULL,
+  email       VARCHAR(255) NOT NULL UNIQUE,
+  password    VARCHAR(255) NOT NULL,
+  role        VARCHAR(20) DEFAULT 'customer'
+              CHECK (role IN ('customer', 'admin', 'vendor')),
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE categories (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(100) NOT NULL UNIQUE,
+  parent_id   INT REFERENCES categories(id) ON DELETE SET NULL,
+  sort_order  INT DEFAULT 0
+);
+
+CREATE TABLE products (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        VARCHAR(200) NOT NULL,
+  description TEXT,
+  price       DECIMAL(10,2) NOT NULL CHECK (price >= 0),
+  stock       INT NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  category_id INT REFERENCES categories(id) ON DELETE SET NULL,
+  vendor_id   UUID REFERENCES users(id) ON DELETE CASCADE,
+  is_active   BOOLEAN DEFAULT true,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE orders (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+  status      VARCHAR(20) DEFAULT 'pending'
+              CHECK (status IN ('pending','confirmed','shipped',
+                                'delivered','cancelled')),
+  total       DECIMAL(12,2) NOT NULL CHECK (total >= 0),
+  shipping_address JSONB NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+  id          SERIAL PRIMARY KEY,
+  order_id    UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id  UUID NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+  quantity    INT NOT NULL CHECK (quantity > 0),
+  unit_price  DECIMAL(10,2) NOT NULL,
+  UNIQUE(order_id, product_id)
+);</pre>
+
+Key relationships:
+- users 1:N orders (one user, many orders)
+- orders 1:N order_items (one order, many line items)
+- products 1:N order_items (one product across many orders)
+- categories self-referencing (parent/child hierarchy)
+- products N:1 categories`,
+
+                `Here are the indexes and optimization strategies:
+
+<pre>-- ================================
+-- PRIMARY QUERY INDEXES
+-- ================================
+
+-- User lookups (login, profile)
+CREATE INDEX idx_users_email ON users(email);
+
+-- Product browsing & search
+CREATE INDEX idx_products_category ON products(category_id)
+  WHERE is_active = true;
+CREATE INDEX idx_products_vendor ON products(vendor_id);
+CREATE INDEX idx_products_price ON products(price)
+  WHERE is_active = true;
+
+-- Full-text search on products
+ALTER TABLE products ADD COLUMN search_vector tsvector;
+CREATE INDEX idx_products_search ON products
+  USING GIN(search_vector);
+
+-- Order queries (user order history)
+CREATE INDEX idx_orders_user_date ON orders(user_id, created_at DESC);
+CREATE INDEX idx_orders_status ON orders(status)
+  WHERE status NOT IN ('delivered', 'cancelled');
+
+-- Order items (order detail pages)
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_order_items_product ON order_items(product_id);
+
+-- Category tree traversal
+CREATE INDEX idx_categories_parent ON categories(parent_id);
+
+-- ================================
+-- COMPOUND / COVERING INDEXES
+-- ================================
+
+-- Covers the "product listing" query without table lookup
+CREATE INDEX idx_products_listing ON products(
+  category_id, price, name
+) INCLUDE (id, stock, is_active)
+  WHERE is_active = true;
+
+-- ================================
+-- MATERIALIZED VIEW FOR ANALYTICS
+-- ================================
+
+CREATE MATERIALIZED VIEW mv_product_stats AS
+SELECT
+  p.id,
+  p.name,
+  COUNT(oi.id) AS total_orders,
+  SUM(oi.quantity) AS total_sold,
+  SUM(oi.quantity * oi.unit_price) AS total_revenue
+FROM products p
+LEFT JOIN order_items oi ON oi.product_id = p.id
+GROUP BY p.id, p.name;
+
+CREATE UNIQUE INDEX idx_mv_product_stats ON mv_product_stats(id);
+
+-- Refresh strategy: run every 15 minutes via cron
+-- REFRESH MATERIALIZED VIEW CONCURRENTLY mv_product_stats;</pre>
+
+Performance notes:
+- Partial indexes filter out inactive products (saves space)
+- Covering index eliminates extra table lookups for listing pages
+- Materialized view pre-computes expensive analytics joins
+- GIN index enables fast full-text product search`,
+
+                `Here's the complete migration strategy for safe deployment:
+
+<pre># Migration Strategy: E-Commerce Schema v1.0
+## Zero-Downtime Deployment Plan
+
+### Phase 1: Pre-deployment (Week 1)
+- [ ] Review schema with team, finalize column types
+- [ ] Write migration scripts (forward + rollback)
+- [ ] Test migrations on staging with production-sized data
+- [ ] Benchmark key queries with EXPLAIN ANALYZE
+
+### Phase 2: Schema Migration (Deploy Day)
+
+Migration 001 - Create base tables:
+\`\`\`
+-- UP
+BEGIN;
+CREATE TABLE users (...);
+CREATE TABLE categories (...);
+CREATE TABLE products (...);
+COMMIT;
+
+-- DOWN (rollback)
+BEGIN;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS users;
+COMMIT;
+\`\`\`
+
+Migration 002 - Create order tables:
+\`\`\`
+-- UP (depends on: 001)
+BEGIN;
+CREATE TABLE orders (...);
+CREATE TABLE order_items (...);
+COMMIT;
+
+-- DOWN
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+\`\`\`
+
+Migration 003 - Add indexes (non-blocking):
+\`\`\`
+-- UP (run CONCURRENTLY, no locks)
+CREATE INDEX CONCURRENTLY idx_users_email ...;
+CREATE INDEX CONCURRENTLY idx_products_category ...;
+CREATE INDEX CONCURRENTLY idx_orders_user_date ...;
+
+-- DOWN
+DROP INDEX IF EXISTS idx_users_email;
+DROP INDEX IF EXISTS idx_products_category;
+DROP INDEX IF EXISTS idx_orders_user_date;
+\`\`\`
+
+### Phase 3: Data Migration
+- Migrate existing data in batches (1000 rows/batch)
+- Run validation checksums after each batch
+- Keep old tables readable during transition
+
+### Phase 4: Verification
+- Compare row counts: old vs new
+- Run integrity checks on foreign keys
+- Execute key query benchmarks
+- Monitor error rates for 24 hours
+
+### Rollback Plan
+- Each migration has a DOWN script
+- Rollback order: 003 -> 002 -> 001
+- Data rollback: restore from pre-migration snapshot
+- Maximum rollback window: 72 hours</pre>
+
+This strategy ensures zero-downtime deployment with safe rollback at every step.`
+            ],
+            hintMessages: [
+                '',
+                'Good start! Now think about how these tables connect. Try asking about relationships, foreign keys, or constraints between the tables.',
+                'Great structure! Now consider performance. Try asking about indexes, query optimization, or how to make common queries faster.',
+                'Almost there! For the final step, ask about a migration strategy, deployment plan, or how to safely roll out these schema changes to production.'
+            ]
+        }
+    ];
+
+    /* ================================
+       STATE
+       ================================ */
+    let currentScenario = null;
+    let currentTurn = 0; // 0-indexed (0 = Turn 1)
+    let currentQuality = 0;
+    let isTyping = false;
+    let typingTimeout = null;
+    let completedScenarios = new Set();
+
+    /* ================================
+       INIT
+       ================================ */
+    function init() {
+        renderScenarioCards();
+        setupKeyboardShortcuts();
+    }
+
+    function renderScenarioCards() {
+        const grid = document.getElementById('scenario-grid');
+        grid.innerHTML = SCENARIOS.map((s, i) => `
+            <div class="scenario-card" onclick="selectScenario(${i})" id="scenario-${s.id}">
+                <div class="scenario-icon">${s.icon}</div>
+                <div class="scenario-title">${s.title}</div>
+                <div class="scenario-focus">${s.focus}</div>
+                <p class="scenario-desc">${s.desc}</p>
+            </div>
+        `).join('');
+    }
+
+    function setupKeyboardShortcuts() {
+        document.getElementById('prompt-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+    }
+
+    /* ================================
+       SCENARIO SELECTION
+       ================================ */
+    function selectScenario(index) {
+        currentScenario = SCENARIOS[index];
+        currentTurn = 0;
+        currentQuality = 0;
+
+        // Update UI
+        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('scenario-' + currentScenario.id).classList.add('selected');
+
+        // Show simulator
+        document.getElementById('simulator-area').classList.add('active');
+        document.getElementById('completion-overlay').classList.remove('active');
+
+        // Reset chat
+        document.getElementById('chat-body').innerHTML = '';
+        document.getElementById('log-entries').innerHTML = '<div class="log-empty">Improvements will appear here as you refine your prompts...</div>';
+
+        // Update UI elements
+        updateTurnTracker();
+        updateQualityMeter(0, false);
+        updateTips();
+        updateSuggestion();
+        updateChatTitle();
+
+        // Enable input
+        enableInput();
+
+        // Add system message
+        addSystemMessage(`Scenario: ${currentScenario.title}. You have 4 turns to iteratively refine your prompt. Each turn, make your request more specific to improve the output quality. Start with your initial prompt!`);
+
+        // Scroll to simulator
+        document.getElementById('simulator-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ================================
+       SEND / HANDLE INPUT
+       ================================ */
+    function handleSend() {
+        if (isTyping) return;
+        if (currentTurn >= 4) return;
+
+        const input = document.getElementById('prompt-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = '';
+        disableInput();
+
+        // Add user message
+        addUserMessage(text);
+
+        // Check if prompt matches expected keywords
+        const isOnTarget = checkKeywords(text, currentTurn);
+
+        if (isOnTarget) {
+            // Show AI response with typing effect
+            const response = currentScenario.responses[currentTurn];
+            const newQuality = currentScenario.quality[currentTurn];
+            const delta = newQuality - currentQuality;
+
+            showTypingResponse(response, () => {
+                // Update quality
+                updateQualityMeter(newQuality, true, delta);
+                currentQuality = newQuality;
+
+                // Update log
+                addLogEntry(currentTurn);
+
+                // Advance turn
+                currentTurn++;
+                updateTurnTracker();
+
+                if (currentTurn >= 4) {
+                    // Scenario complete
+                    setTimeout(() => showCompletion(), 800);
+                } else {
+                    updateSuggestion();
+                    updateTips();
+                    enableInput();
+                }
+            });
+        } else {
+            // Show hint message
+            const hint = currentScenario.hintMessages[currentTurn];
+            showHintMessage(hint, () => {
+                updateSuggestion();
+                enableInput();
+            });
+        }
+    }
+
+    function checkKeywords(text, turn) {
+        // Turn 1: any reasonable prompt passes
+        if (turn === 0) return text.length > 3;
+
+        const keywords = currentScenario.keywords[turn];
+        const lower = text.toLowerCase();
+        return keywords.some(kw => lower.includes(kw));
+    }
+
+    /* ================================
+       MESSAGES
+       ================================ */
+    function addUserMessage(text) {
+        const chatBody = document.getElementById('chat-body');
+        const msg = document.createElement('div');
+        msg.className = 'msg user';
+        msg.innerHTML = `
+            <div class="msg-avatar">U</div>
+            <div class="msg-content">
+                <div class="msg-sender">You</div>
+                <div class="msg-bubble">${escHtml(text)}</div>
+            </div>
+        `;
+        chatBody.appendChild(msg);
+        scrollChat();
+    }
+
+    function addSystemMessage(text) {
+        const chatBody = document.getElementById('chat-body');
+        const msg = document.createElement('div');
+        msg.className = 'msg system';
+        msg.innerHTML = `
+            <div class="msg-avatar">S</div>
+            <div class="msg-content">
+                <div class="msg-sender">System</div>
+                <div class="msg-bubble">${text}</div>
+            </div>
+        `;
+        chatBody.appendChild(msg);
+        scrollChat();
+    }
+
+    function showTypingResponse(fullText, onComplete) {
+        isTyping = true;
+        const chatBody = document.getElementById('chat-body');
+
+        const msg = document.createElement('div');
+        msg.className = 'msg ai';
+        msg.innerHTML = `
+            <div class="msg-avatar">AI</div>
+            <div class="msg-content">
+                <div class="msg-sender">AI Assistant</div>
+                <div class="msg-bubble"><span class="msg-cursor"></span></div>
+            </div>
+        `;
+        chatBody.appendChild(msg);
+        scrollChat();
+
+        const bubble = msg.querySelector('.msg-bubble');
+        let charIndex = 0;
+        let textBuffer = '';
+
+        // Use innerHTML-safe approach: build text, then set once
+        // For typewriter we'll add characters progressively
+        const cursor = bubble.querySelector('.msg-cursor');
+
+        function typeNext() {
+            if (charIndex < fullText.length) {
+                // Add characters in small batches for performance
+                const batchSize = 3;
+                for (let i = 0; i < batchSize && charIndex < fullText.length; i++) {
+                    textBuffer += fullText[charIndex];
+                    charIndex++;
+                }
+                bubble.innerHTML = textBuffer + '<span class="msg-cursor"></span>';
+                scrollChat();
+                typingTimeout = setTimeout(typeNext, 12);
+            } else {
+                // Done typing
+                bubble.innerHTML = textBuffer;
+                isTyping = false;
+                scrollChat();
+                if (onComplete) onComplete();
+            }
+        }
+
+        // Small delay before typing starts
+        setTimeout(typeNext, 400);
+    }
+
+    function showHintMessage(hintText, onComplete) {
+        isTyping = true;
+        const chatBody = document.getElementById('chat-body');
+
+        const msg = document.createElement('div');
+        msg.className = 'msg ai';
+        msg.innerHTML = `
+            <div class="msg-avatar">AI</div>
+            <div class="msg-content">
+                <div class="msg-sender">AI Assistant</div>
+                <div class="msg-bubble hint-bubble"><span class="hint-icon">Tip:</span> ${escHtml(hintText)}</div>
+            </div>
+        `;
+        chatBody.appendChild(msg);
+        scrollChat();
+
+        // No typing animation for hints, show immediately
+        setTimeout(() => {
+            isTyping = false;
+            if (onComplete) onComplete();
+        }, 300);
+    }
+
+    function scrollChat() {
+        const chatBody = document.getElementById('chat-body');
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    /* ================================
+       TURN TRACKER
+       ================================ */
+    function updateTurnTracker() {
+        const label = document.getElementById('turn-label');
+        const dots = document.getElementById('turn-dots');
+
+        const displayTurn = Math.min(currentTurn + 1, 4);
+        label.textContent = currentTurn >= 4 ? 'Complete!' : `Turn ${displayTurn} of 4`;
+
+        const dotEls = dots.querySelectorAll('.turn-dot');
+        dotEls.forEach((dot, i) => {
+            dot.classList.remove('completed', 'current');
+            if (i < currentTurn) {
+                dot.classList.add('completed');
+                dot.innerHTML = '&#10003;';
+            } else if (i === currentTurn && currentTurn < 4) {
+                dot.classList.add('current');
+                dot.textContent = i + 1;
+            } else {
+                dot.textContent = i + 1;
+            }
+        });
+    }
+
+    /* ================================
+       QUALITY METER
+       ================================ */
+    function updateQualityMeter(value, animate, delta) {
+        const fill = document.getElementById('quality-fill');
+        const valueEl = document.getElementById('quality-value');
+        const deltaEl = document.getElementById('quality-delta');
+        const section = document.getElementById('quality-section');
+
+        fill.style.width = value + '%';
+        valueEl.textContent = value + ' / 100';
+
+        // Color
+        let color;
+        if (value <= 30) color = 'var(--error)';
+        else if (value <= 60) color = 'var(--accent-yellow)';
+        else color = 'var(--accent-green)';
+        valueEl.style.color = color;
+
+        // Delta
+        if (animate && delta > 0) {
+            deltaEl.textContent = '+' + delta;
+            deltaEl.classList.add('show');
+            section.classList.add('glow');
+
+            setTimeout(() => {
+                deltaEl.classList.remove('show');
+                section.classList.remove('glow');
+            }, 2500);
+        } else {
+            deltaEl.classList.remove('show');
+            section.classList.remove('glow');
+        }
+    }
+
+    /* ================================
+       IMPROVEMENT LOG
+       ================================ */
+    function addLogEntry(turnIndex) {
+        const container = document.getElementById('log-entries');
+
+        // Clear empty state
+        const empty = container.querySelector('.log-empty');
+        if (empty) empty.remove();
+
+        const entry = currentScenario.logEntries[turnIndex];
+        const el = document.createElement('div');
+        el.className = 'log-entry';
+        el.innerHTML = `
+            <div class="log-marker">${turnIndex + 1}</div>
+            <div class="log-detail">
+                <div class="log-technique">${entry.technique}</div>
+                <div class="log-desc">${entry.desc}</div>
+            </div>
+        `;
+        container.appendChild(el);
+    }
+
+    /* ================================
+       TIPS
+       ================================ */
+    function updateTips() {
+        const content = document.getElementById('tips-content');
+        if (!currentScenario) return;
+
+        let html = '';
+        for (let i = 0; i < 4; i++) {
+            const isActive = i === currentTurn;
+            const isDone = i < currentTurn;
+            const opacity = isDone ? '0.4' : (isActive ? '1' : '0.6');
+            const prefix = isDone ? '&#10003; ' : (isActive ? '&#9654; ' : '');
+            html += `<div class="tip-item" style="opacity: ${opacity}">
+                <span class="tip-turn">${prefix}Turn ${i + 1}:</span> ${currentScenario.turnLabels[i]}
+            </div>`;
+        }
+        content.innerHTML = html;
+    }
+
+    /* ================================
+       SUGGESTIONS
+       ================================ */
+    function updateSuggestion() {
+        const el = document.getElementById('suggestion');
+        if (!currentScenario || currentTurn >= 4) {
+            el.innerHTML = '';
+            return;
+        }
+
+        const suggestion = currentScenario.suggestions[currentTurn];
+        if (suggestion.startsWith('Try:')) {
+            const example = suggestion.replace('Try: ', '');
+            el.innerHTML = `Suggestion: <span onclick="useSuggestion(this)">${escHtml(example)}</span>`;
+        } else {
+            el.innerHTML = suggestion;
+        }
+    }
+
+    function useSuggestion(el) {
+        const text = el.textContent.replace(/^"|"$/g, '');
+        document.getElementById('prompt-input').value = text;
+        document.getElementById('prompt-input').focus();
+    }
+
+    function updateChatTitle() {
+        document.getElementById('chat-title').textContent = currentScenario
+            ? currentScenario.id + '-session'
+            : 'iterative-session';
+    }
+
+    /* ================================
+       INPUT CONTROL
+       ================================ */
+    function enableInput() {
+        document.getElementById('prompt-input').disabled = false;
+        document.getElementById('send-btn').disabled = false;
+        document.getElementById('prompt-input').focus();
+    }
+
+    function disableInput() {
+        document.getElementById('prompt-input').disabled = true;
+        document.getElementById('send-btn').disabled = true;
+    }
+
+    /* ================================
+       COMPLETION
+       ================================ */
+    function showCompletion() {
+        disableInput();
+
+        // Build journey steps
+        const steps = document.getElementById('journey-steps');
+        let html = '';
+        for (let i = 0; i < 4; i++) {
+            if (i > 0) {
+                html += '<div class="journey-arrow">&#8594;</div>';
+            }
+            html += `
+                <div class="journey-step">
+                    <div class="journey-step-num">Turn ${i + 1}</div>
+                    <div class="journey-step-quality">${currentScenario.quality[i]}</div>
+                    <div class="journey-step-label">${currentScenario.turnLabels[i]}</div>
+                </div>
+            `;
+        }
+        steps.innerHTML = html;
+
+        document.getElementById('completion-subtitle').textContent =
+            `You took "${currentScenario.title}" from quality ${currentScenario.quality[0]} to ${currentScenario.quality[3]} through 4 rounds of iterative refinement.`;
+
+        document.getElementById('completion-overlay').classList.add('active');
+        document.getElementById('completion-overlay').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Track completion
+        completedScenarios.add(currentScenario.id);
+
+        // Award XP
+        setTimeout(() => {
+            const toast = document.getElementById('xp-toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }, 600);
+    }
+
+    function tryAnother() {
+        // Find an uncompleted scenario, otherwise pick any different one
+        const otherScenarios = SCENARIOS.filter(s => s.id !== currentScenario.id);
+        const uncompleted = otherScenarios.filter(s => !completedScenarios.has(s.id));
+        const next = uncompleted.length > 0 ? uncompleted[0] : otherScenarios[0];
+        const index = SCENARIOS.indexOf(next);
+        selectScenario(index);
+    }
+
+    function backToScenarios() {
+        document.getElementById('simulator-area').classList.remove('active');
+        document.getElementById('completion-overlay').classList.remove('active');
+        document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
+        currentScenario = null;
+        currentTurn = 0;
+        currentQuality = 0;
+        document.getElementById('scenario-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ================================
+       UTIL
+       ================================ */
+    function escHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /* ================================
+       BOOT
+       ================================ */
+    init();
+    </script>
+</body>
+</html>

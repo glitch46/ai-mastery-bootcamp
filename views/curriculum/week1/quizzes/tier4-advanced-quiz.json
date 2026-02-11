@@ -1,0 +1,87 @@
+{
+  "quizId": "tier4-advanced",
+  "title": "Week 1 Advanced: Limitations, Verification & Project Workflows",
+  "description": "Apply advanced techniques including recognizing AI limitations, verifying AI-generated output, and designing complete project workflows. Covers Day 5 capstone material integrating all Week 1 skills.",
+  "day": 5,
+  "difficulty": 4,
+  "timeLimit": 1800,
+  "passingScore": 80,
+  "xpReward": 200,
+  "questions": [
+    {
+      "id": 1,
+      "type": "scenario",
+      "question": "SCENARIO: You are a backend developer building a payment processing service. You ask AI to implement JWT-based authentication middleware for your Express.js API. The AI returns clean, well-structured code that:\n- Validates the JWT on incoming requests\n- Extracts the user ID from the token payload\n- Stores the JWT_SECRET in a client-accessible environment variable (NEXT_PUBLIC_JWT_SECRET)\n- Uses the HS256 algorithm without explicitly specifying it in the verify options\n- Returns a generic 500 error for all authentication failures\n\nWhich of the five fundamental AI limitations is MOST relevant here, what are the specific security issues, and what is the correct verification approach?",
+      "options": [
+        "A) The limitation is 'no access to real-time data.' The only issue is that the library version might be outdated. Verify by checking npm for the latest jsonwebtoken version.",
+        "B) The limitation is 'no guarantee of accuracy (hallucination).' The AI generated code that looks correct on the surface but has critical security flaws: exposing the JWT secret in a client-accessible env var, not explicitly specifying the algorithm (enabling algorithm confusion attacks), and leaking information through generic 500 errors instead of proper 401 responses. Verify by: manual security review against OWASP guidelines, testing with malformed tokens, and peer review by someone who understands the threat model.",
+        "C) The limitation is 'unreliable on complex reasoning.' The code needs better variable names and more comments. Verify by running a linter.",
+        "D) The limitation is 'no access to private data.' The AI didn't know your database schema. Verify by checking the database connection string."
+      ],
+      "correctAnswer": "B",
+      "explanation": "This scenario demonstrates 'no guarantee of accuracy' --- the AI produced code that compiles, runs, and handles the happy path, but contains critical security flaws that would only be caught by someone who knows what to look for. The three specific issues are: (1) NEXT_PUBLIC_ prefix exposes the secret to the client bundle, (2) not specifying the algorithm in verify() options enables algorithm confusion attacks, and (3) returning 500 instead of 401 for auth failures masks the error type and gives incorrect HTTP semantics. The Verification Workflow requires security-focused manual review, testing with adversarial inputs, and peer review.",
+      "points": 30,
+      "topic": "limitations-verification"
+    },
+    {
+      "id": 2,
+      "type": "scenario",
+      "question": "SCENARIO: You are building a real-time analytics dashboard. You ask AI to recommend a database solution and it responds:\n\n'For your real-time analytics dashboard processing 50,000 events per second, I recommend TimescaleDB. It supports continuous aggregates out of the box, can handle ingestion rates up to 2 million rows per second on commodity hardware, and has a 40% smaller storage footprint than standard PostgreSQL due to its built-in compression.'\n\nApply the Verification Workflow. Which claims need external verification, and how would you verify each one?",
+      "options": [
+        "A) No verification needed --- TimescaleDB is a well-known database and the AI's recommendation is trustworthy for production decisions.",
+        "B) Verify only the '2 million rows per second' claim by running your own benchmark. The rest of the claims are general knowledge.",
+        "C) All three specific claims need verification against official sources: (1) '2 million rows/sec on commodity hardware' --- check TimescaleDB's official benchmarks, noting that performance depends on schema, row size, and hardware; (2) '40% smaller storage footprint' --- check TimescaleDB docs on compression ratios, noting actual ratios depend on data type; (3) 'continuous aggregates out of the box' --- verify the feature exists and check its limitations. Additionally, the recommendation itself needs evaluation against your specific query patterns, team expertise, and operational requirements.",
+        "D) Only verify the compression claim. Ingestion rate and continuous aggregates are standard features that don't need checking."
+      ],
+      "correctAnswer": "C",
+      "explanation": "The Verification Workflow requires cross-referencing ALL specific claims against official sources. Each numeric claim ('2 million rows/sec,' '40%') is particularly suspect because AI frequently generates plausible-sounding statistics. Beyond verifying individual claims, you also need to evaluate whether the recommendation fits YOUR context --- your query patterns (not just ingestion), your team's PostgreSQL expertise, licensing costs, and operational overhead. AI recommendations are starting points for research, not final decisions.",
+      "points": 30,
+      "topic": "limitations-verification"
+    },
+    {
+      "id": 3,
+      "type": "scenario",
+      "question": "SCENARIO: You ask AI to write a pagination function for your API. It returns:\n\n```javascript\nfunction paginateResults(items, page, pageSize) {\n  const startIndex = page * pageSize;\n  const endIndex = startIndex + pageSize;\n  return {\n    data: items.slice(startIndex, endIndex),\n    totalPages: Math.ceil(items.length / pageSize),\n    currentPage: page,\n    hasNext: endIndex < items.length,\n    hasPrevious: page > 0\n  };\n}\n```\n\nThe code passes your unit tests. Your frontend team sends page=1 for the first page. Users report that the first page of results is always missing. What happened, and which verification strategy would have caught this before it shipped?",
+      "options": [
+        "A) The AI used the wrong sorting algorithm. You should have verified by checking the sort order of results.",
+        "B) The function uses 0-based page indexing (page * pageSize), but the frontend sends 1-based page numbers (page=1 for the first page). Page 1 returns results starting at index pageSize, skipping the entire first page. The fix is `const startIndex = (page - 1) * pageSize`. This is a contract mismatch --- the code is internally consistent but its assumptions don't match the consumer's assumptions. Integration testing (testing the API endpoint with the actual frontend page parameter) would have caught this, as would the adversarial prompting strategy: asking the AI 'What assumptions does this code make that might not hold?'",
+        "C) The slice() method is broken in this JavaScript version. You should have verified the JavaScript runtime version.",
+        "D) The pageSize parameter should be hardcoded, not passed as an argument. You should have verified by checking the API documentation."
+      ],
+      "correctAnswer": "B",
+      "explanation": "This is a direct case study from the curriculum. AI generates code that is internally consistent --- the logic is correct for 0-based pages. But it doesn't know your frontend convention of 1-based pagination. This is a 'contract mismatch' that unit tests miss because the function works correctly in isolation. Integration testing (calling the endpoint the way the frontend actually calls it) or adversarial prompting ('What assumptions does this code make?') would have surfaced the 0-based vs. 1-based assumption before shipping.",
+      "points": 30,
+      "topic": "limitations-verification"
+    },
+    {
+      "id": 4,
+      "type": "capstone",
+      "question": "CAPSTONE: Design a complete AI-assisted workflow for the following developer project:\n\nYou are a senior developer tasked with building a new microservice that handles user notification preferences and delivery (in-app, email, and push notifications) for a SaaS application with ~10,000 active users.\n\nTech stack: Node.js 20, TypeScript, Express, PostgreSQL, Redis for pub/sub.\n\nYour workflow must include ALL of the following:\n\n1. A SETUP PROMPT that assigns a role, states the project scope, specifies conventions, and instructs the AI to ask clarifying questions.\n\n2. A CONTEXT PACKAGE listing 5 specific pieces of context you would provide to the AI.\n\n3. A FOLLOW-UP SEQUENCE of 4 prompts that build on each other (reference previous outputs), covering: database schema design, API endpoints, notification delivery logic, and tests.\n\n4. A VERIFICATION PLAN identifying at least 3 specific things you would verify in the AI's output and how you would verify each one.\n\n5. SUCCESS CRITERIA: 4 measurable criteria for evaluating whether the workflow produced good results.",
+      "sampleAnswer": "1. SETUP PROMPT:\n'You are a senior backend engineer specializing in event-driven architectures and notification systems. I'm building a notification preferences and delivery microservice for a SaaS platform with ~10,000 active users. The stack is Node.js 20, TypeScript (strict mode), Express, PostgreSQL, and Redis for pub/sub. Follow these conventions: functional programming patterns over classes, explicit return types on all functions, custom error classes extending a base AppError, and Conventional Commits for any suggested commit messages. If any requirements are ambiguous or potentially conflicting, ask me clarifying questions before proceeding.'\n\n2. CONTEXT PACKAGE:\n- Tech stack with versions: Node.js 20, TypeScript 5.3, Express 4.18, PostgreSQL 16, Redis 7, Prisma ORM for database, Bull for job queues\n- Notification channels: in-app (WebSocket via Socket.io), email (async via Bull queue + SendGrid), push (Firebase Cloud Messaging)\n- User preference model: users can enable/disable each channel per notification type (e.g., 'new_comment' -> email: on, push: off, in-app: on)\n- Non-functional requirements: email delivery must be async (never block the API response), in-app must be real-time via WebSocket, all notifications logged for audit\n- Existing infrastructure: the main API already has JWT auth middleware that provides req.user with { id, email, orgId }; Redis is already running for session caching\n\n3. FOLLOW-UP SEQUENCE:\nPrompt 1 (Database Schema): 'Design the PostgreSQL schema for the notification microservice. Include tables for: notification_types (system-defined notification categories), user_preferences (per-user, per-type, per-channel settings), and notification_log (record of every notification sent with status, channel, timestamp). Include proper indexes for common queries: fetching preferences by user_id, querying logs by user_id + date range, and filtering logs by status. Output as Prisma schema.'\n\nPrompt 2 (API Endpoints): 'Based on the Prisma schema above, create Express route handlers for: GET /preferences (list current user preferences), PUT /preferences/:notificationType (update preferences for a specific notification type), GET /notifications (paginated list of notification history for the current user), and POST /notifications/send (internal endpoint to trigger a notification, authenticated via service-to-service token). Include Zod validation schemas for all request bodies, proper error responses (400, 401, 404), and use the async error handler pattern.'\n\nPrompt 3 (Delivery Logic): 'Based on the API endpoints and schema above, implement the notification delivery engine. When POST /notifications/send is called: (1) look up the target user preferences, (2) for each enabled channel, dispatch to the appropriate handler: in-app via Socket.io emit to the user room, email via Bull queue job that calls SendGrid, push via Bull queue job that calls Firebase. Include retry logic (3 attempts with exponential backoff) for email and push. Update the notification_log with delivery status after each attempt.'\n\nPrompt 4 (Tests): 'Write integration tests using Jest and Supertest for the notification microservice. Cover: (a) preference CRUD: creating, reading, and updating preferences, (b) notification delivery: send a notification and verify logs are created for each enabled channel, (c) preference enforcement: send a notification to a user who disabled email and verify no email job was queued, (d) authentication: verify 401 for unauthenticated requests, (e) error cases: send to a non-existent user, send an invalid notification type. Mock Socket.io, Bull, and external services. Include at least 12 test cases.'\n\n4. VERIFICATION PLAN:\n- Verify the Prisma schema: run `prisma validate` and `prisma db push --dry-run` to confirm the schema is valid and the migrations would succeed. Manually check that indexes cover our common query patterns.\n- Verify security: review the POST /notifications/send endpoint for authorization (must require service-to-service token, not user JWT). Check that user preference queries are scoped to the authenticated user (no IDOR vulnerability). Review against OWASP API Security Top 10.\n- Verify the Bull queue implementation: check that the AI used the correct Bull API for the installed version (not Bull vs BullMQ confusion). Test retry logic by simulating SendGrid/Firebase failures. Verify that failed jobs are logged correctly.\n- Verify library imports and API compatibility: cross-reference every import against installed package versions. Check Socket.io emit syntax matches v4 API. Verify SendGrid SDK method signatures against their official docs.\n\n5. SUCCESS CRITERIA:\n- All generated code compiles with `tsc --noEmit` and zero TypeScript errors\n- Integration tests achieve at least 80% code coverage on the route handlers and delivery engine\n- The notification delivery pipeline handles all three channels (in-app, email, push) and correctly respects user preferences (verified by at least one test per channel)\n- End-to-end latency for the POST /notifications/send endpoint is under 200ms (email and push are async, so only in-app delivery and database writes should be in the critical path)",
+      "rubric": [
+        "SETUP PROMPT: Must assign a clear role to the AI",
+        "SETUP PROMPT: Must state project scope with specific details (not generic)",
+        "SETUP PROMPT: Must specify at least 2 conventions or constraints",
+        "SETUP PROMPT: Must instruct the AI to ask clarifying questions",
+        "CONTEXT PACKAGE: Must list exactly 5 specific, concrete pieces of context (not vague categories)",
+        "CONTEXT PACKAGE: Must include tech stack with versions",
+        "CONTEXT PACKAGE: Must include at least one non-functional requirement",
+        "FOLLOW-UP SEQUENCE: Must include 4 prompts that build on each other",
+        "FOLLOW-UP SEQUENCE: Later prompts must explicitly reference outputs from earlier prompts",
+        "FOLLOW-UP SEQUENCE: Must cover database design, API endpoints, core logic, and tests",
+        "FOLLOW-UP SEQUENCE: Each prompt must be specific enough to produce a reviewable artifact",
+        "VERIFICATION PLAN: Must identify at least 3 specific verification targets",
+        "VERIFICATION PLAN: Must describe HOW to verify each target (not just what to verify)",
+        "VERIFICATION PLAN: Should include at least one security verification",
+        "VERIFICATION PLAN: Should include at least one library/API compatibility check",
+        "SUCCESS CRITERIA: Must include exactly 4 measurable criteria",
+        "SUCCESS CRITERIA: Criteria must be objectively evaluable (not subjective like 'code is clean')",
+        "SUCCESS CRITERIA: Should include at least one test coverage or testing criterion",
+        "SUCCESS CRITERIA: Should include at least one performance or functionality criterion",
+        "OVERALL: Demonstrates integration of techniques from across Week 1 (structure, context, specificity, outcomes, guidelines, iteration, decomposition, verification)"
+      ],
+      "points": 60,
+      "topic": "project-workflows"
+    }
+  ]
+}

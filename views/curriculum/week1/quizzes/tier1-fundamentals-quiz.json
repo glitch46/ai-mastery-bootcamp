@@ -1,0 +1,162 @@
+{
+  "quizId": "tier1-fundamentals",
+  "title": "Week 1 Fundamentals: Prompt Anatomy, Context & Specificity",
+  "description": "Test your understanding of the three core components of effective prompts, how to provide context, and how to be specific. Covers Day 1 lessons on prompt anatomy, providing context, and specificity.",
+  "day": 1,
+  "difficulty": 1,
+  "timeLimit": 600,
+  "passingScore": 70,
+  "xpReward": 50,
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "What are the three core components of an effective prompt?",
+      "options": [
+        "A) Role, Instruction, Example",
+        "B) Context, Task, Details/Constraints",
+        "C) Input, Process, Output",
+        "D) Subject, Verb, Object"
+      ],
+      "correctAnswer": "B",
+      "explanation": "Every effective prompt is built from three parts: Context (tells the AI who you are and what situation you're in), Task (tells the AI what you want it to do), and Details/Constraints (tells the AI how to do it and what boundaries to respect).",
+      "points": 10,
+      "topic": "prompt-anatomy"
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "Which of the following prompts includes ALL three components (Context, Task, and Details)?",
+      "options": [
+        "A) Write a function that sorts a list.",
+        "B) I'm building a React app. Make a component.",
+        "C) I'm building a React 18 e-commerce app using TypeScript and Tailwind CSS. Create a ProductCard component that displays a product's image, name, price, and an 'Add to Cart' button. Use functional component syntax with proper TypeScript interfaces for props, format the price as USD currency, and make the card responsive.",
+        "D) Help me with my code. It should be fast and clean."
+      ],
+      "correctAnswer": "C",
+      "explanation": "Option C includes Context (React 18 e-commerce app with TypeScript and Tailwind CSS), Task (create a ProductCard component with specific features), and Details (functional component syntax, TypeScript interfaces, USD formatting, responsive design). Option A has only a vague Task. Option B has partial Context and a vague Task. Option D has almost no useful information.",
+      "points": 10,
+      "topic": "prompt-anatomy"
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "A developer writes the prompt: 'I'm working on a Django REST Framework app with a PostgreSQL database. The User model has custom fields for organization and role. Fix the serializer.' Which component is weakest or most incomplete?",
+      "options": [
+        "A) Context --- the developer didn't mention the tech stack",
+        "B) Task --- 'fix the serializer' doesn't say which serializer or what's broken",
+        "C) Details --- there are no constraints specified",
+        "D) Both B and C --- the Task is vague and there are no Details"
+      ],
+      "correctAnswer": "D",
+      "explanation": "The Context is actually present (Django, DRF, PostgreSQL, custom User model). However, the Task is vague --- which serializer? what's broken? --- and the Details are missing entirely (no error messages, no expected behavior, no code). Both the Task and Details need improvement.",
+      "points": 10,
+      "topic": "prompt-anatomy"
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "According to the 'new team member' mental model, how should you treat the AI when writing prompts?",
+      "options": [
+        "A) Like an expert who already knows your entire codebase",
+        "B) Like a skilled developer who just joined your team today and knows nothing about your project",
+        "C) Like an intern who needs step-by-step hand-holding on every decision",
+        "D) Like a search engine that returns documentation links"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The 'new team member' mental model says to treat the AI like a talented colleague who just walked in the door --- skilled at their job but with zero knowledge about your specific project, codebase, team conventions, or prior decisions. You need to provide that background explicitly.",
+      "points": 10,
+      "topic": "context"
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "Which of the following is NOT one of the five types of context recommended for software development prompts?",
+      "options": [
+        "A) Tech Stack (languages, frameworks, versions)",
+        "B) Project Scope (what the project does, who it's for)",
+        "C) Personal Opinion (what you think the answer should be)",
+        "D) History (what you've already tried, why it didn't work)"
+      ],
+      "correctAnswer": "C",
+      "explanation": "The five types of context are: Tech Stack, Project Scope, Current State, Constraints, and History. 'Personal Opinion' about the expected answer is not one of them. Each context type eliminates a category of guesswork the AI would otherwise have to do.",
+      "points": 10,
+      "topic": "context"
+    },
+    {
+      "id": 6,
+      "type": "multiple_choice",
+      "question": "A developer prompts: 'I'm getting a type error. Help.' What types of context would most improve this prompt?",
+      "options": [
+        "A) Only Tech Stack --- just tell the AI which language you're using",
+        "B) Tech Stack and Current State --- specify the language/framework and include the actual error message and relevant code",
+        "C) Project Scope and Constraints --- describe the full project and performance requirements",
+        "D) History only --- explain everything you've tried so far"
+      ],
+      "correctAnswer": "B",
+      "explanation": "For debugging, the most critical context types are Tech Stack (which language, framework, and versions) and Current State (the actual error message, the code that triggers it, and what's working vs. broken). History can also help if you've already tried fixes, but Tech Stack and Current State are the essential starting points.",
+      "points": 10,
+      "topic": "context"
+    },
+    {
+      "id": 7,
+      "type": "multiple_choice",
+      "question": "Why does providing context in prompts eliminate guessing by the AI?",
+      "options": [
+        "A) Context makes the prompt longer, and longer prompts always produce better results",
+        "B) Context gives the AI specific information about your situation, reducing the number of assumptions it needs to make",
+        "C) Context forces the AI to use a specific reasoning algorithm",
+        "D) Context is only useful for complex prompts and has no effect on simple ones"
+      ],
+      "correctAnswer": "B",
+      "explanation": "Every piece of context you provide is one less assumption the AI makes. Without context, the AI falls back on the most statistically likely interpretation, which may not match your specific situation. Context narrows the solution space to your actual problem.",
+      "points": 10,
+      "topic": "context"
+    },
+    {
+      "id": 8,
+      "type": "multiple_choice",
+      "question": "According to the Six Dimensions of Specificity, which dimension does the requirement 'Return a JSON object with keys: id, name, status' address?",
+      "options": [
+        "A) Quantity",
+        "B) Format",
+        "C) Technology",
+        "D) Quality Criteria"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The Format dimension answers 'What shape should the output take?' Specifying a JSON object with particular keys defines the exact structure of the output. Quantity would be 'how many,' Technology would be 'which tools/libraries,' and Quality Criteria would define what 'good' looks like.",
+      "points": 10,
+      "topic": "being-specific"
+    },
+    {
+      "id": 9,
+      "type": "multiple_choice",
+      "question": "On the Specificity Spectrum, which of the following prompts is at Level 4 (most specific)?",
+      "options": [
+        "A) Write a function",
+        "B) Write a Python function that sorts a list",
+        "C) Write a Python function that sorts a list of dictionaries by a given key, handling missing keys",
+        "D) Write a Python 3.11 function called sort_records that takes a list[dict] and a string key, returns the list sorted by that key ascending. Records missing the key should go at the end. Raise ValueError if the list is empty. Include type hints and a Google-style docstring."
+      ],
+      "correctAnswer": "D",
+      "explanation": "Level 4 specificity includes: the exact language version (Python 3.11), a function name (sort_records), precise parameter types (list[dict], string key), the sort direction (ascending), edge case handling (missing keys go at end), error handling (ValueError for empty list), and output format requirements (type hints, Google-style docstring).",
+      "points": 10,
+      "topic": "being-specific"
+    },
+    {
+      "id": 10,
+      "type": "multiple_choice",
+      "question": "A developer writes: 'Refactor this code to be better.' What is the main problem with this prompt from a specificity standpoint?",
+      "options": [
+        "A) It's too short --- prompts should always be at least 100 words",
+        "B) The word 'better' is subjective and unmeasurable --- the developer hasn't defined what 'better' means (faster? more readable? fewer lines? different patterns?)",
+        "C) Refactoring should never be done with AI assistance",
+        "D) The prompt is missing a role assignment"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The core principle of specificity is: 'If you can measure it, specify it.' The word 'better' is subjective --- two different people would interpret it differently. The developer should specify what 'better' means: extract to repository pattern, reduce function length to under 30 lines, replace nested try/catch blocks, etc.",
+      "points": 10,
+      "topic": "being-specific"
+    }
+  ]
+}

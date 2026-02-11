@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Workflow Designer | AI Mastery Bootcamp</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        /* ================================
+           PAGE LAYOUT
+           ================================ */
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+            min-height: 100vh;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            transition: color var(--transition-fast);
+        }
+
+        .back-link:hover { color: var(--accent-green); }
+        .back-link svg { width: 16px; height: 16px; }
+
+        /* ================================
+           HEADER
+           ================================ */
+        .page-header {
+            margin-bottom: var(--space-2xl);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-sm);
+        }
+
+        .day-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-orange);
+            background: var(--accent-orange-dim);
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        .page-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        /* ================================
+           PROGRESS BAR (GLOBAL)
+           ================================ */
+        .global-progress {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            position: sticky;
+            top: var(--space-sm);
+            z-index: var(--z-sticky);
+            backdrop-filter: blur(12px);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .progress-pct {
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--accent-green);
+        }
+
+        .progress-track {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-phases {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .progress-pip {
+            flex: 1;
+            height: 4px;
+            border-radius: var(--radius-full);
+            background: var(--bg-elevated);
+            transition: background var(--transition-normal);
+        }
+
+        .progress-pip.partial { background: var(--accent-blue); }
+        .progress-pip.complete { background: var(--accent-green); }
+
+        /* ================================
+           TEMPLATE SELECTOR
+           ================================ */
+        .template-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .template-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            border-color: var(--accent-green);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .template-icon {
+            font-size: 1.6rem;
+            margin-bottom: var(--space-sm);
+            display: block;
+        }
+
+        .template-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .template-desc {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ================================
+           PIPELINE / STEPPER
+           ================================ */
+        .pipeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .pipeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .phase {
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+
+        .phase-marker {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            transition: all var(--transition-normal);
+            z-index: 1;
+        }
+
+        .phase.partial .phase-marker {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .phase.complete .phase-marker {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .phase-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: border-color var(--transition-normal);
+        }
+
+        .phase.partial .phase-card { border-color: rgba(0, 168, 255, 0.3); }
+        .phase.complete .phase-card { border-color: rgba(0, 255, 136, 0.3); }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md) var(--space-lg);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            user-select: none;
+        }
+
+        .phase-header:hover { background: var(--bg-card-hover); }
+
+        .phase-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .phase-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .phase-pct {
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            background: var(--bg-elevated);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+        }
+
+        .phase-pct.has-progress { color: var(--accent-blue); background: var(--accent-blue-dim); }
+        .phase-pct.done { color: var(--accent-green); background: var(--accent-green-dim); }
+
+        .phase-chevron {
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            transition: transform var(--transition-normal);
+            flex-shrink: 0;
+        }
+
+        .phase.open .phase-chevron { transform: rotate(180deg); }
+
+        .phase-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .phase.open .phase-body { max-height: 3000px; }
+
+        .phase-content {
+            padding: 0 var(--space-lg) var(--space-lg);
+        }
+
+        /* ================================
+           FORM ELEMENTS (in-page)
+           ================================ */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .form-label .tooltip-trigger {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: help;
+            position: relative;
+        }
+
+        .tooltip-trigger .tooltip-text {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            max-width: 280px;
+            white-space: normal;
+            z-index: var(--z-tooltip);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tooltip-trigger:hover .tooltip-text { display: block; }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .form-input::placeholder { color: var(--text-dim); }
+
+        textarea.form-input {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        textarea.form-input.large {
+            min-height: 120px;
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606070' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+            cursor: pointer;
+        }
+
+        .word-count {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* ================================
+           CONTEXT SLOTS
+           ================================ */
+        .context-slot {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            transition: border-color var(--transition-fast);
+        }
+
+        .context-slot:has(textarea:focus) {
+            border-color: var(--accent-green);
+        }
+
+        .context-slot .form-label {
+            margin-bottom: var(--space-xs);
+        }
+
+        .context-slot textarea.form-input {
+            border: none;
+            background: transparent;
+            padding: var(--space-sm) 0;
+            min-height: 60px;
+        }
+
+        .context-slot textarea.form-input:focus {
+            box-shadow: none;
+        }
+
+        /* ================================
+           PROMPT CARD
+           ================================ */
+        .prompt-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .prompt-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .prompt-card-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .technique-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }
+
+        .technique-tag[data-day="1"] { color: var(--accent-green); background: var(--accent-green-dim); }
+        .technique-tag[data-day="2"] { color: var(--accent-blue); background: var(--accent-blue-dim); }
+        .technique-tag[data-day="3"] { color: var(--accent-purple); background: var(--accent-purple-dim); }
+        .technique-tag[data-day="4"] { color: var(--accent-orange); background: var(--accent-orange-dim); }
+
+        .quality-indicator {
+            display: flex;
+            gap: 6px;
+            margin-top: var(--space-sm);
+        }
+
+        .quality-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            transition: background var(--transition-fast);
+        }
+
+        .quality-dot.active { background: var(--accent-green); }
+
+        .quality-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: var(--space-sm);
+        }
+
+        /* ================================
+           REFINEMENT SLOT
+           ================================ */
+        .refinement-slot {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .refinement-header {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* ================================
+           VERIFICATION CHECKLIST
+           ================================ */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .checklist-item:hover { background: var(--bg-elevated); }
+
+        .checklist-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-fast);
+            color: transparent;
+            font-size: 0.7rem;
+        }
+
+        .checklist-item.checked .checklist-box {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+            color: var(--bg-primary);
+        }
+
+        .checklist-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .checklist-item.checked .checklist-text { color: var(--text-primary); }
+
+        /* ================================
+           CRITERIA LIST (PHASE 6)
+           ================================ */
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .criteria-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .criteria-radios {
+            display: flex;
+            gap: var(--space-sm);
+            flex-shrink: 0;
+        }
+
+        .criteria-radio {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .criteria-radio input { cursor: pointer; accent-color: var(--accent-green); }
+
+        /* ================================
+           TECHNIQUES USED (PHASE 6)
+           ================================ */
+        .techniques-used {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            min-height: 32px;
+        }
+
+        /* ================================
+           EXPORT SECTION
+           ================================ */
+        .export-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .export-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        .export-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-lg);
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-xl);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+        }
+
+        .btn-submit {
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-markdown {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-markdown:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .btn-reset-all {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset-all:hover {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .submit-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .submit-hint strong {
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           EXPORT PREVIEW
+           ================================ */
+        .export-preview {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: none;
+        }
+
+        .export-preview.show { display: block; }
+
+        .export-preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .export-preview-header span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .btn-copy-export {
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: var(--font-sans);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-copy-export:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .export-preview-body {
+            padding: var(--space-lg);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* ================================
+           XP TOAST
+           ================================ */
+        .xp-toast {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md) var(--space-xl);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-glow-green);
+            z-index: var(--z-toast);
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .xp-toast.show { transform: translateY(0); opacity: 1; }
+
+        .xp-toast-icon { font-size: 1.5rem; line-height: 1; }
+
+        .xp-toast-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .xp-toast-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* ================================
+           FEEDBACK / COPY
+           ================================ */
+        .copy-feedback {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.82rem;
+            color: var(--accent-green);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .copy-feedback.show { opacity: 1; }
+
+        /* ================================
+           RESPONSIVE
+           ================================ */
+        @media (max-width: 768px) {
+            .page-wrapper { padding: var(--space-md); }
+
+            .templates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pipeline { padding-left: 32px; }
+            .pipeline::before { left: 11px; }
+            .phase-marker { left: -32px; width: 24px; height: 24px; font-size: 0.65rem; }
+
+            .global-progress { position: static; }
+
+            .prompt-card-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 480px) {
+            .templates-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Back Link -->
+        <a href="/curriculum" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Back to Curriculum
+        </a>
+
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-row">
+                <span class="day-tag">Day 5 Capstone</span>
+            </div>
+            <h1>Project Workflow Designer</h1>
+            <p class="subtitle">Build a complete AI-powered project workflow. Combine every technique from Week 1 into a structured, repeatable process.</p>
+        </header>
+
+        <!-- Global Progress -->
+        <div class="global-progress" id="global-progress">
+            <div class="progress-info">
+                <span class="progress-label">Workflow Completion</span>
+                <span class="progress-pct" id="global-pct">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="global-fill"></div>
+            </div>
+            <div class="progress-phases" id="progress-pips"></div>
+        </div>
+
+        <!-- Template Selector -->
+        <div class="template-section">
+            <div class="section-label">Choose a Project Template</div>
+            <div class="templates-grid" id="templates-grid"></div>
+        </div>
+
+        <!-- Phase Pipeline -->
+        <div class="section-label">Workflow Phases</div>
+        <div class="pipeline" id="pipeline"></div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <h3>Export & Submit</h3>
+            <div class="export-actions">
+                <button class="btn-export btn-submit" id="btn-submit" disabled>Submit Workflow (+100 XP)</button>
+                <button class="btn-export btn-markdown" id="btn-markdown">Export as Markdown</button>
+                <button class="btn-export btn-reset-all" id="btn-reset">Reset All</button>
+            </div>
+            <p class="submit-hint" id="submit-hint">Reach <strong>70% completion</strong> to submit your workflow.</p>
+            <div class="export-preview" id="export-preview">
+                <div class="export-preview-header">
+                    <span>workflow-export.md</span>
+                    <button class="btn-copy-export" id="btn-copy-export">Copy</button>
+                </div>
+                <div class="export-preview-body" id="export-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XP Toast -->
+    <div class="xp-toast" id="xp-toast">
+        <span class="xp-toast-icon">&#9733;</span>
+        <div>
+            <div class="xp-toast-text">+100 XP Earned!</div>
+            <div class="xp-toast-sub">Capstone workflow submitted</div>
+        </div>
+    </div>
+
+    <script>
+    /* ================================================================
+       DATA & CONFIGURATION
+       ================================================================ */
+
+    const TEMPLATES = [
+        {
+            id: 'dev-accelerator',
+            name: 'Developer Project Accelerator',
+            icon: '\u2699\uFE0F',
+            desc: 'MVP scaffold',
+            prefill: {
+                projectName: 'MVP Application Scaffold',
+                projectDesc: 'Build a minimum viable product with core features, authentication, and deployment pipeline.',
+                targetOutcome: 'A working MVP deployed to production with user auth, core CRUD features, and CI/CD.',
+                timeline: '2-weeks',
+                contexts: [
+                    'React + TypeScript frontend, Node.js + Express backend, PostgreSQL database',
+                    'B2B SaaS, targeting small development teams',
+                    'Existing design mockups in Figma, API specification draft',
+                    'Solo developer, 2-week timeline, minimal budget for infrastructure',
+                    'Similar products: Linear, Notion, Basecamp'
+                ],
+                setupPrompt: 'I\'m building an MVP for a B2B SaaS tool using React/TypeScript and Node.js. Help me create a project scaffold with authentication, database schema, and core CRUD operations. Start with the project structure and key architectural decisions.',
+                technique0: 'context-setting'
+            }
+        },
+        {
+            id: 'client-research',
+            name: 'Client Research Hub',
+            icon: '\uD83D\uDD0D',
+            desc: 'Deep research workflow',
+            prefill: {
+                projectName: 'Client Industry Research Report',
+                projectDesc: 'Comprehensive research report on a client\'s industry including market analysis, competitor landscape, and strategic recommendations.',
+                targetOutcome: 'A 15-page research brief with data-backed insights the client can use for strategic planning.',
+                timeline: '1-week',
+                contexts: [
+                    'Research tools: industry databases, public filings, market reports',
+                    'Fintech sector, targeting mid-market financial advisors',
+                    'Client provided: company overview, key questions, previous reports',
+                    '5-day turnaround, budget for 2 premium data sources',
+                    'McKinsey industry reports, CB Insights fintech map'
+                ],
+                setupPrompt: 'I need to create a comprehensive industry research report for a fintech client targeting mid-market financial advisors. Help me build an outline that covers market size, key trends, competitor analysis, and strategic opportunities. The report should be data-driven and actionable.',
+                technique0: 'outcome-definition'
+            }
+        },
+        {
+            id: 'campaign-center',
+            name: 'Campaign Command Center',
+            icon: '\uD83D\uDCE3',
+            desc: 'Marketing campaign planner',
+            prefill: {
+                projectName: 'Product Launch Campaign',
+                projectDesc: 'Multi-channel marketing campaign for a new product launch including content, social media, email sequences, and ad copy.',
+                targetOutcome: 'Complete campaign kit with 30 days of content, email sequences, ad variations, and a launch timeline.',
+                timeline: '2-weeks',
+                contexts: [
+                    'Marketing stack: HubSpot, Canva, Meta Ads, Google Ads',
+                    'D2C wellness brand, health-conscious millennials, US market',
+                    'Brand guidelines PDF, product photos, customer testimonials',
+                    '3-person team, $5K ad budget, 2-week prep before launch',
+                    'Competitor campaigns: Calm app launch, Athletic Greens rebrand'
+                ],
+                setupPrompt: 'I\'m planning a 30-day multi-channel product launch campaign for a D2C wellness brand. Help me create a campaign framework covering content pillars, email sequences, social media calendar, and ad copy variations. Target audience: health-conscious millennials.',
+                technique0: 'task-breakdown'
+            }
+        },
+        {
+            id: 'ops-playbook',
+            name: 'Operations Playbook',
+            icon: '\uD83D\uDCD6',
+            desc: 'Process documentation',
+            prefill: {
+                projectName: 'Team Operations Playbook',
+                projectDesc: 'Create a comprehensive operations playbook documenting team processes, workflows, escalation procedures, and onboarding guides.',
+                targetOutcome: 'A living document that any new team member can use to understand all operational workflows within their first week.',
+                timeline: '1-month',
+                contexts: [
+                    'Documentation: Notion, Google Docs; Project management: Jira',
+                    'SaaS company, 20-person engineering team, remote-first',
+                    'Existing wiki (outdated), tribal knowledge from senior engineers',
+                    '1 technical writer, 1 month, access to all team leads for interviews',
+                    'GitLab handbook, Basecamp Shape Up methodology'
+                ],
+                setupPrompt: 'Help me create an operations playbook for a 20-person remote engineering team. I need to document deployment procedures, incident response, code review standards, and onboarding. Start with a table of contents and the structure for each section.',
+                technique0: 'guidelines'
+            }
+        },
+        {
+            id: 'support-kb',
+            name: 'Support Knowledge Base',
+            icon: '\uD83D\uDCA1',
+            desc: 'Help center content',
+            prefill: {
+                projectName: 'Customer Support Knowledge Base',
+                projectDesc: 'Build a comprehensive knowledge base with FAQs, troubleshooting guides, how-to articles, and video script outlines for customer self-service.',
+                targetOutcome: 'A searchable knowledge base with 50+ articles that reduces support tickets by 30%.',
+                timeline: '1-month',
+                contexts: [
+                    'Help center: Zendesk Guide; Analytics: Google Analytics, Hotjar',
+                    'SaaS platform, SMB customers, non-technical users',
+                    'Support ticket history (1 year), existing FAQ page, product changelog',
+                    '2-person support team, 1 month, existing Zendesk subscription',
+                    'Stripe docs, Notion help center, Intercom articles'
+                ],
+                setupPrompt: 'I\'m building a customer support knowledge base for a SaaS platform. Analyze common support patterns and help me create article templates for FAQs, troubleshooting guides, and how-to walkthroughs. Target audience: non-technical SMB users.',
+                technique0: 'specificity'
+            }
+        },
+        {
+            id: 'custom',
+            name: 'Custom Project',
+            icon: '\u2728',
+            desc: 'Start from scratch',
+            prefill: {}
+        }
+    ];
+
+    const TECHNIQUES = [
+        { value: 'context-setting', label: 'Context Setting', day: 1 },
+        { value: 'specificity', label: 'Specificity', day: 1 },
+        { value: 'outcome-definition', label: 'Outcome Definition', day: 2 },
+        { value: 'guidelines', label: 'Guidelines', day: 2 },
+        { value: 'iteration', label: 'Iteration', day: 3 },
+        { value: 'task-breakdown', label: 'Task Breakdown', day: 3 },
+        { value: 'meta-prompting', label: 'Meta-Prompting', day: 4 },
+        { value: 'tone-depth', label: 'Tone/Depth Control', day: 4 }
+    ];
+
+    const REFINEMENT_TYPES = [
+        { value: '', label: 'Select what to refine...' },
+        { value: 'tone', label: 'Tone' },
+        { value: 'depth', label: 'Depth' },
+        { value: 'format', label: 'Format' },
+        { value: 'scope', label: 'Scope' },
+        { value: 'detail', label: 'Detail Level' }
+    ];
+
+    const VERIFICATION_ITEMS = [
+        'Cross-referenced with reliable sources',
+        'Checked dates and statistics',
+        'Verified technical specifications',
+        'Tested code/outputs',
+        'Reviewed for bias',
+        'Confirmed with domain expert'
+    ];
+
+    const CONTEXT_SLOTS = [
+        { key: 'tech', label: 'Technical Context', tooltip: 'Tech stack, architecture, frameworks, tools, languages, platforms you\'re using.' },
+        { key: 'domain', label: 'Domain Context', tooltip: 'Industry, audience demographics, market conditions, business model.' },
+        { key: 'assets', label: 'Existing Assets', tooltip: 'Documentation, code repos, datasets, designs, or research you already have.' },
+        { key: 'constraints', label: 'Constraints', tooltip: 'Budget limits, time constraints, team size, technical limitations.' },
+        { key: 'references', label: 'Reference Materials', tooltip: 'Examples, competitors, inspiration, style guides, benchmarks to reference.' }
+    ];
+
+    const STORAGE_KEY = 'wf-designer-state';
+
+    /* ================================================================
+       STATE
+       ================================================================ */
+
+    let state = {
+        selectedTemplate: null,
+        openPhase: 0,
+        xpAwarded: false,
+        // Phase 1
+        projectName: '',
+        projectDesc: '',
+        targetOutcome: '',
+        timeline: '',
+        // Phase 2
+        contexts: ['', '', '', '', ''],
+        // Phase 3
+        setupPrompt: '',
+        followUpPrompts: ['', '', ''],
+        technique0: '',
+        technique1: '',
+        technique2: '',
+        technique3: '',
+        // Phase 4
+        refinements: [
+            { type: '', prompt: '', expected: '' },
+            { type: '', prompt: '', expected: '' },
+            { type: '', prompt: '', expected: '' }
+        ],
+        // Phase 5
+        verificationChecks: Array(VERIFICATION_ITEMS.length).fill(false),
+        verificationNotes: '',
+        // Phase 6
+        deliverableDesc: '',
+        criteriaResults: {},
+        lessonsLearned: ''
+    };
+
+    /* ================================================================
+       INIT
+       ================================================================ */
+
+    function init() {
+        loadState();
+        renderTemplates();
+        renderPipeline();
+        renderProgressPips();
+        updateProgress();
+        bindExportButtons();
+    }
+
+    /* ================================================================
+       TEMPLATE RENDERING
+       ================================================================ */
+
+    function renderTemplates() {
+        const grid = document.getElementById('templates-grid');
+        grid.innerHTML = TEMPLATES.map(t => `
+            <div class="template-card ${state.selectedTemplate === t.id ? 'selected' : ''}" data-id="${t.id}">
+                <span class="template-icon">${t.icon}</span>
+                <div class="template-name">${t.name}</div>
+                <div class="template-desc">${t.desc}</div>
+            </div>
+        `).join('');
+
+        grid.querySelectorAll('.template-card').forEach(card => {
+            card.addEventListener('click', () => selectTemplate(card.dataset.id));
+        });
+    }
+
+    function selectTemplate(id) {
+        const tpl = TEMPLATES.find(t => t.id === id);
+        if (!tpl) return;
+
+        state.selectedTemplate = id;
+
+        if (tpl.prefill && Object.keys(tpl.prefill).length > 0) {
+            const p = tpl.prefill;
+            if (p.projectName) state.projectName = p.projectName;
+            if (p.projectDesc) state.projectDesc = p.projectDesc;
+            if (p.targetOutcome) state.targetOutcome = p.targetOutcome;
+            if (p.timeline) state.timeline = p.timeline;
+            if (p.contexts) state.contexts = [...p.contexts];
+            if (p.setupPrompt) state.setupPrompt = p.setupPrompt;
+            if (p.technique0) state.technique0 = p.technique0;
+        }
+
+        renderTemplates();
+        renderPipeline();
+        updateProgress();
+        saveState();
+    }
+
+    /* ================================================================
+       PIPELINE RENDERING
+       ================================================================ */
+
+    function renderPipeline() {
+        const container = document.getElementById('pipeline');
+        container.innerHTML = '';
+
+        const phases = [
+            { num: 1, title: 'Define Scope', render: renderPhase1 },
+            { num: 2, title: 'Gather Context', render: renderPhase2 },
+            { num: 3, title: 'Create Prompts', render: renderPhase3 },
+            { num: 4, title: 'Iterate', render: renderPhase4 },
+            { num: 5, title: 'Verify', render: renderPhase5 },
+            { num: 6, title: 'Ship', render: renderPhase6 }
+        ];
+
+        phases.forEach((phase, idx) => {
+            const pct = getPhaseCompletion(idx);
+            const statusClass = pct >= 100 ? 'complete' : pct > 0 ? 'partial' : '';
+            const openClass = state.openPhase === idx ? 'open' : '';
+            const pctClass = pct >= 100 ? 'done' : pct > 0 ? 'has-progress' : '';
+
+            const el = document.createElement('div');
+            el.className = `phase ${statusClass} ${openClass}`.trim();
+            el.dataset.phase = idx;
+
+            el.innerHTML = `
+                <div class="phase-marker">${pct >= 100 ? '\u2713' : phase.num}</div>
+                <div class="phase-card">
+                    <div class="phase-header" data-phase="${idx}">
+                        <div class="phase-header-left">
+                            <span class="phase-title">Phase ${phase.num}: ${phase.title}</span>
+                            <span class="phase-pct ${pctClass}">${Math.round(pct)}%</span>
+                        </div>
+                        <svg class="phase-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    <div class="phase-body">
+                        <div class="phase-content" id="phase-content-${idx}"></div>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(el);
+
+            // Render content
+            phase.render(el.querySelector(`#phase-content-${idx}`));
+
+            // Header click
+            el.querySelector('.phase-header').addEventListener('click', () => togglePhase(idx));
+        });
+    }
+
+    function togglePhase(idx) {
+        const wasOpen = state.openPhase === idx;
+        state.openPhase = wasOpen ? -1 : idx;
+
+        document.querySelectorAll('.phase').forEach((p, i) => {
+            p.classList.toggle('open', i === state.openPhase);
+        });
+
+        if (!wasOpen) {
+            setTimeout(() => {
+                const el = document.querySelectorAll('.phase')[idx];
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    }
+
+    function advanceToNext(currentIdx) {
+        if (currentIdx < 5) {
+            togglePhase(currentIdx + 1);
+        }
+    }
+
+    /* ================================================================
+       PHASE 1: DEFINE SCOPE
+       ================================================================ */
+
+    function renderPhase1(container) {
+        container.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">Project Name</label>
+                <input type="text" class="form-input" id="f-projectName" placeholder="e.g., Customer Dashboard Redesign" value="${esc(state.projectName)}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Project Description</label>
+                <textarea class="form-input" id="f-projectDesc" placeholder="Describe what this project is about...">${esc(state.projectDesc)}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Target Outcome</label>
+                <textarea class="form-input" id="f-targetOutcome" placeholder="What does success look like when this project is done?">${esc(state.targetOutcome)}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Timeline</label>
+                <select class="form-input" id="f-timeline">
+                    <option value="">Select timeline...</option>
+                    <option value="1-day" ${state.timeline === '1-day' ? 'selected' : ''}>1 Day</option>
+                    <option value="1-week" ${state.timeline === '1-week' ? 'selected' : ''}>1 Week</option>
+                    <option value="2-weeks" ${state.timeline === '2-weeks' ? 'selected' : ''}>2 Weeks</option>
+                    <option value="1-month" ${state.timeline === '1-month' ? 'selected' : ''}>1 Month</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Completion Criteria</label>
+                <div id="completion-criteria" style="min-height:32px;color:var(--text-muted);font-size:0.85rem;">
+                    ${generateCriteria()}
+                </div>
+            </div>
+        `;
+
+        bindInput('f-projectName', 'projectName');
+        bindInput('f-projectDesc', 'projectDesc', () => {
+            document.getElementById('completion-criteria').innerHTML = generateCriteria();
+        });
+        bindInput('f-targetOutcome', 'targetOutcome', () => {
+            document.getElementById('completion-criteria').innerHTML = generateCriteria();
+        });
+        bindInput('f-timeline', 'timeline');
+    }
+
+    function generateCriteria() {
+        const desc = state.projectDesc.trim();
+        const outcome = state.targetOutcome.trim();
+        if (!desc && !outcome) return '<span style="color:var(--text-dim)">Fill in description and outcome to auto-generate criteria...</span>';
+
+        const items = [];
+        if (desc) {
+            const sentences = desc.split(/[.!?]+/).filter(s => s.trim().length > 5);
+            sentences.slice(0, 3).forEach(s => {
+                items.push('Completed: ' + s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
+            });
+        }
+        if (outcome) {
+            items.push('Achieved: ' + outcome.split('.')[0].trim());
+        }
+
+        if (items.length === 0) return '<span style="color:var(--text-dim)">Add more detail to generate criteria...</span>';
+
+        return items.map(item =>
+            `<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;">
+                <span style="color:var(--accent-green);flex-shrink:0;">\u2713</span>
+                <span style="color:var(--text-secondary);font-size:0.85rem;">${esc(item)}</span>
+            </div>`
+        ).join('');
+    }
+
+    /* ================================================================
+       PHASE 2: GATHER CONTEXT
+       ================================================================ */
+
+    function renderPhase2(container) {
+        container.innerHTML = CONTEXT_SLOTS.map((slot, i) => `
+            <div class="context-slot">
+                <label class="form-label">
+                    ${slot.label}
+                    <span class="tooltip-trigger">?<span class="tooltip-text">${slot.tooltip}</span></span>
+                </label>
+                <textarea class="form-input" id="f-context-${i}" placeholder="Enter ${slot.label.toLowerCase()}...">${esc(state.contexts[i])}</textarea>
+                <div class="word-count" id="wc-context-${i}">${wordCount(state.contexts[i])} words</div>
+            </div>
+        `).join('');
+
+        CONTEXT_SLOTS.forEach((_, i) => {
+            const el = document.getElementById(`f-context-${i}`);
+            el.addEventListener('input', () => {
+                state.contexts[i] = el.value;
+                document.getElementById(`wc-context-${i}`).textContent = wordCount(el.value) + ' words';
+                onFieldChange();
+            });
+        });
+    }
+
+    /* ================================================================
+       PHASE 3: CREATE PROMPTS
+       ================================================================ */
+
+    function renderPhase3(container) {
+        const techniqueOptions = TECHNIQUES.map(t =>
+            `<option value="${t.value}">${t.label} (Day ${t.day})</option>`
+        ).join('');
+
+        container.innerHTML = `
+            <div class="prompt-card">
+                <div class="prompt-card-header">
+                    <span class="prompt-card-title">Setup Prompt (Kick-off)</span>
+                    <select class="form-input" id="f-technique0" style="width:auto;padding:4px 28px 4px 8px;font-size:0.78rem;">
+                        <option value="">Tag technique...</option>
+                        ${techniqueOptions}
+                    </select>
+                </div>
+                <textarea class="form-input large" id="f-setupPrompt" placeholder="Write the initial prompt that kicks off your project with the AI...">${esc(state.setupPrompt)}</textarea>
+                <div class="quality-indicator" id="qi-setup">
+                    <div class="quality-dot" title="Has context"></div>
+                    <div class="quality-dot" title="Has task"></div>
+                    <div class="quality-dot" title="Has details"></div>
+                    <span class="quality-label" id="ql-setup"></span>
+                </div>
+            </div>
+            ${[0, 1, 2].map(i => `
+                <div class="prompt-card">
+                    <div class="prompt-card-header">
+                        <span class="prompt-card-title">Follow-up Prompt ${i + 1}</span>
+                        <select class="form-input" id="f-technique${i + 1}" style="width:auto;padding:4px 28px 4px 8px;font-size:0.78rem;">
+                            <option value="">Tag technique...</option>
+                            ${techniqueOptions}
+                        </select>
+                    </div>
+                    <textarea class="form-input" id="f-followUp-${i}" placeholder="What would you ask next to refine or expand the output?">${esc(state.followUpPrompts[i])}</textarea>
+                    <div class="quality-indicator" id="qi-followup-${i}">
+                        <div class="quality-dot" title="Has context"></div>
+                        <div class="quality-dot" title="Has task"></div>
+                        <div class="quality-dot" title="Has details"></div>
+                        <span class="quality-label" id="ql-followup-${i}"></span>
+                    </div>
+                </div>
+            `).join('')}
+        `;
+
+        // Set technique selects
+        for (let i = 0; i < 4; i++) {
+            const sel = document.getElementById(`f-technique${i}`);
+            sel.value = state[`technique${i}`] || '';
+            sel.addEventListener('change', () => {
+                state[`technique${i}`] = sel.value;
+                onFieldChange();
+            });
+        }
+
+        // Setup prompt
+        const setupEl = document.getElementById('f-setupPrompt');
+        setupEl.addEventListener('input', () => {
+            state.setupPrompt = setupEl.value;
+            updateQualityIndicator('qi-setup', 'ql-setup', setupEl.value);
+            onFieldChange();
+        });
+        updateQualityIndicator('qi-setup', 'ql-setup', state.setupPrompt);
+
+        // Follow-ups
+        [0, 1, 2].forEach(i => {
+            const el = document.getElementById(`f-followUp-${i}`);
+            el.addEventListener('input', () => {
+                state.followUpPrompts[i] = el.value;
+                updateQualityIndicator(`qi-followup-${i}`, `ql-followup-${i}`, el.value);
+                onFieldChange();
+            });
+            updateQualityIndicator(`qi-followup-${i}`, `ql-followup-${i}`, state.followUpPrompts[i]);
+        });
+    }
+
+    function updateQualityIndicator(containerId, labelId, text) {
+        const container = document.getElementById(containerId);
+        const label = document.getElementById(labelId);
+        if (!container || !label) return;
+        const dots = container.querySelectorAll('.quality-dot');
+
+        const lower = text.toLowerCase();
+        const hasContext = /\b(i'm|i am|we|our|my|using|building|working|for a|targeting)\b/.test(lower) && text.length > 20;
+        const hasTask = /\b(create|build|write|generate|help|make|design|analyze|review|explain|list|develop)\b/.test(lower);
+        const hasDetails = /\b(format|style|tone|include|avoid|limit|ensure|focus|specifically|must|should|at least|no more)\b/.test(lower) || text.length > 80;
+
+        dots[0].classList.toggle('active', hasContext);
+        dots[1].classList.toggle('active', hasTask);
+        dots[2].classList.toggle('active', hasDetails);
+
+        const count = [hasContext, hasTask, hasDetails].filter(Boolean).length;
+        const labels = ['Add context, task, and details', 'Getting there...', 'Good structure!', 'Excellent prompt!'];
+        label.textContent = text.trim() ? labels[count] : '';
+    }
+
+    /* ================================================================
+       PHASE 4: ITERATE
+       ================================================================ */
+
+    function renderPhase4(container) {
+        const typeOptions = REFINEMENT_TYPES.map(r =>
+            `<option value="${r.value}">${r.label}</option>`
+        ).join('');
+
+        container.innerHTML = [0, 1, 2].map(i => `
+            <div class="refinement-slot">
+                <div class="refinement-header">Refinement ${i + 1}</div>
+                <div class="form-group" style="margin-bottom:var(--space-md)">
+                    <label class="form-label">What to Refine</label>
+                    <select class="form-input" id="f-refType-${i}">
+                        ${typeOptions}
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:var(--space-md)">
+                    <label class="form-label">Refinement Prompt</label>
+                    <textarea class="form-input" id="f-refPrompt-${i}" placeholder="How would you ask the AI to refine its output?">${esc(state.refinements[i].prompt)}</textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">Expected Improvement</label>
+                    <textarea class="form-input" id="f-refExpected-${i}" placeholder="What should improve after this refinement?">${esc(state.refinements[i].expected)}</textarea>
+                </div>
+            </div>
+        `).join('');
+
+        [0, 1, 2].forEach(i => {
+            const typeSel = document.getElementById(`f-refType-${i}`);
+            typeSel.value = state.refinements[i].type;
+            typeSel.addEventListener('change', () => {
+                state.refinements[i].type = typeSel.value;
+                onFieldChange();
+            });
+
+            const promptEl = document.getElementById(`f-refPrompt-${i}`);
+            promptEl.addEventListener('input', () => {
+                state.refinements[i].prompt = promptEl.value;
+                onFieldChange();
+            });
+
+            const expectedEl = document.getElementById(`f-refExpected-${i}`);
+            expectedEl.addEventListener('input', () => {
+                state.refinements[i].expected = expectedEl.value;
+                onFieldChange();
+            });
+        });
+    }
+
+    /* ================================================================
+       PHASE 5: VERIFY
+       ================================================================ */
+
+    function renderPhase5(container) {
+        container.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">Verification Checklist</label>
+                <div class="checklist" id="verification-checklist">
+                    ${VERIFICATION_ITEMS.map((item, i) => `
+                        <div class="checklist-item ${state.verificationChecks[i] ? 'checked' : ''}" data-idx="${i}">
+                            <div class="checklist-box">\u2713</div>
+                            <span class="checklist-text">${item}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Verification Notes</label>
+                <textarea class="form-input" id="f-verificationNotes" placeholder="Document your verification results, sources checked, issues found...">${esc(state.verificationNotes)}</textarea>
+            </div>
+        `;
+
+        container.querySelectorAll('.checklist-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const idx = parseInt(item.dataset.idx);
+                state.verificationChecks[idx] = !state.verificationChecks[idx];
+                item.classList.toggle('checked');
+                onFieldChange();
+            });
+        });
+
+        bindInput('f-verificationNotes', 'verificationNotes');
+    }
+
+    /* ================================================================
+       PHASE 6: SHIP
+       ================================================================ */
+
+    function renderPhase6(container) {
+        const criteria = getCriteriaList();
+        const usedTechniques = getUsedTechniques();
+
+        container.innerHTML = `
+            <div class="form-group">
+                <label class="form-label">Final Deliverable Description</label>
+                <textarea class="form-input large" id="f-deliverableDesc" placeholder="Describe the final output of your project...">${esc(state.deliverableDesc)}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Success Criteria Met?</label>
+                ${criteria.length > 0 ? criteria.map((c, i) => `
+                    <div class="criteria-item">
+                        <span class="criteria-text">${esc(c)}</span>
+                        <div class="criteria-radios">
+                            <label class="criteria-radio">
+                                <input type="radio" name="criteria-${i}" value="yes" ${state.criteriaResults[i] === 'yes' ? 'checked' : ''}> Yes
+                            </label>
+                            <label class="criteria-radio">
+                                <input type="radio" name="criteria-${i}" value="no" ${state.criteriaResults[i] === 'no' ? 'checked' : ''}> No
+                            </label>
+                        </div>
+                    </div>
+                `).join('') : '<div style="color:var(--text-dim);font-size:0.85rem;">Complete Phase 1 to see success criteria here.</div>'}
+            </div>
+            <div class="form-group">
+                <label class="form-label">Lessons Learned</label>
+                <textarea class="form-input" id="f-lessonsLearned" placeholder="What did you learn about working with AI on this project?">${esc(state.lessonsLearned)}</textarea>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Techniques Used (auto-populated)</label>
+                <div class="techniques-used" id="techniques-used">
+                    ${usedTechniques.length > 0
+                        ? usedTechniques.map(t => `<span class="technique-tag" data-day="${t.day}">${t.label} (Day ${t.day})</span>`).join('')
+                        : '<span style="color:var(--text-dim);font-size:0.82rem;">Tag techniques in Phase 3 to see them here.</span>'
+                    }
+                </div>
+            </div>
+        `;
+
+        bindInput('f-deliverableDesc', 'deliverableDesc');
+        bindInput('f-lessonsLearned', 'lessonsLearned');
+
+        criteria.forEach((_, i) => {
+            document.querySelectorAll(`input[name="criteria-${i}"]`).forEach(radio => {
+                radio.addEventListener('change', () => {
+                    state.criteriaResults[i] = radio.value;
+                    onFieldChange();
+                });
+            });
+        });
+    }
+
+    function getCriteriaList() {
+        const items = [];
+        const desc = state.projectDesc.trim();
+        const outcome = state.targetOutcome.trim();
+        if (desc) {
+            desc.split(/[.!?]+/).filter(s => s.trim().length > 5).slice(0, 3).forEach(s => {
+                items.push(s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
+            });
+        }
+        if (outcome) {
+            items.push(outcome.split('.')[0].trim());
+        }
+        return items;
+    }
+
+    function getUsedTechniques() {
+        const used = new Set();
+        for (let i = 0; i < 4; i++) {
+            const val = state[`technique${i}`];
+            if (val) used.add(val);
+        }
+        return TECHNIQUES.filter(t => used.has(t.value));
+    }
+
+    /* ================================================================
+       COMPLETION CALCULATION
+       ================================================================ */
+
+    function getPhaseCompletion(phaseIdx) {
+        switch (phaseIdx) {
+            case 0: { // Define Scope
+                let filled = 0;
+                let total = 4;
+                if (state.projectName.trim()) filled++;
+                if (state.projectDesc.trim()) filled++;
+                if (state.targetOutcome.trim()) filled++;
+                if (state.timeline) filled++;
+                return (filled / total) * 100;
+            }
+            case 1: { // Gather Context
+                let filled = 0;
+                state.contexts.forEach(c => { if (c.trim()) filled++; });
+                return (filled / 5) * 100;
+            }
+            case 2: { // Create Prompts
+                let filled = 0;
+                let total = 5; // setup + technique + 3 follow-ups (at least 1)
+                if (state.setupPrompt.trim()) filled++;
+                if (state.technique0) filled++;
+                let followUpCount = state.followUpPrompts.filter(p => p.trim()).length;
+                filled += Math.min(followUpCount, 3);
+                return (filled / total) * 100;
+            }
+            case 3: { // Iterate
+                let filled = 0;
+                let total = 9; // 3 refinements x 3 fields
+                state.refinements.forEach(r => {
+                    if (r.type) filled++;
+                    if (r.prompt.trim()) filled++;
+                    if (r.expected.trim()) filled++;
+                });
+                return (filled / total) * 100;
+            }
+            case 4: { // Verify
+                let filled = 0;
+                let total = 7; // 6 checks + notes
+                state.verificationChecks.forEach(c => { if (c) filled++; });
+                if (state.verificationNotes.trim()) filled++;
+                return (filled / total) * 100;
+            }
+            case 5: { // Ship
+                let filled = 0;
+                let total = 3; // deliverable + lessons + at least 1 criteria
+                if (state.deliverableDesc.trim()) filled++;
+                if (state.lessonsLearned.trim()) filled++;
+                const criteria = getCriteriaList();
+                if (criteria.length > 0) {
+                    const answered = Object.keys(state.criteriaResults).length;
+                    filled += Math.min(answered / criteria.length, 1);
+                } else {
+                    filled += 1; // no criteria to answer
+                }
+                return (filled / total) * 100;
+            }
+            default: return 0;
+        }
+    }
+
+    function getOverallCompletion() {
+        let total = 0;
+        for (let i = 0; i < 6; i++) {
+            total += getPhaseCompletion(i);
+        }
+        return total / 6;
+    }
+
+    /* ================================================================
+       PROGRESS RENDERING
+       ================================================================ */
+
+    function renderProgressPips() {
+        const container = document.getElementById('progress-pips');
+        container.innerHTML = Array.from({ length: 6 }, (_, i) =>
+            `<div class="progress-pip" id="pip-${i}"></div>`
+        ).join('');
+    }
+
+    function updateProgress() {
+        const overall = getOverallCompletion();
+        document.getElementById('global-pct').textContent = Math.round(overall) + '%';
+        document.getElementById('global-fill').style.width = overall + '%';
+
+        for (let i = 0; i < 6; i++) {
+            const pct = getPhaseCompletion(i);
+            const pip = document.getElementById(`pip-${i}`);
+            pip.className = 'progress-pip';
+            if (pct >= 100) pip.classList.add('complete');
+            else if (pct > 0) pip.classList.add('partial');
+        }
+
+        // Update phase markers and badges without full re-render
+        document.querySelectorAll('.phase').forEach((phaseEl, idx) => {
+            const pct = getPhaseCompletion(idx);
+            phaseEl.className = `phase ${pct >= 100 ? 'complete' : pct > 0 ? 'partial' : ''} ${state.openPhase === idx ? 'open' : ''}`.trim();
+
+            const marker = phaseEl.querySelector('.phase-marker');
+            marker.textContent = pct >= 100 ? '\u2713' : (idx + 1);
+
+            const badge = phaseEl.querySelector('.phase-pct');
+            badge.textContent = Math.round(pct) + '%';
+            badge.className = `phase-pct ${pct >= 100 ? 'done' : pct > 0 ? 'has-progress' : ''}`;
+        });
+
+        // Submit button
+        const submitBtn = document.getElementById('btn-submit');
+        const hint = document.getElementById('submit-hint');
+        if (overall >= 70) {
+            submitBtn.disabled = false;
+            hint.innerHTML = 'Your workflow is <strong>ready to submit</strong>!';
+        } else {
+            submitBtn.disabled = true;
+            hint.innerHTML = `Reach <strong>70% completion</strong> to submit. Currently at <strong>${Math.round(overall)}%</strong>.`;
+        }
+    }
+
+    /* ================================================================
+       INPUT BINDING HELPERS
+       ================================================================ */
+
+    function bindInput(elId, stateKey, extraCb) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        el.addEventListener('input', () => {
+            state[stateKey] = el.value;
+            if (extraCb) extraCb();
+            onFieldChange();
+        });
+        el.addEventListener('change', () => {
+            state[stateKey] = el.value;
+            if (extraCb) extraCb();
+            onFieldChange();
+        });
+    }
+
+    function onFieldChange() {
+        updateProgress();
+        saveState();
+    }
+
+    /* ================================================================
+       EXPORT
+       ================================================================ */
+
+    function bindExportButtons() {
+        document.getElementById('btn-submit').addEventListener('click', submitWorkflow);
+        document.getElementById('btn-markdown').addEventListener('click', exportMarkdown);
+        document.getElementById('btn-reset').addEventListener('click', resetAll);
+        document.getElementById('btn-copy-export').addEventListener('click', copyExport);
+    }
+
+    function submitWorkflow() {
+        if (getOverallCompletion() < 70) return;
+        if (state.xpAwarded) {
+            exportMarkdown();
+            return;
+        }
+
+        state.xpAwarded = true;
+        saveState();
+
+        const toast = document.getElementById('xp-toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 5000);
+
+        const btn = document.getElementById('btn-submit');
+        btn.textContent = 'Submitted! View Export';
+
+        exportMarkdown();
+    }
+
+    function exportMarkdown() {
+        const md = generateMarkdown();
+        const body = document.getElementById('export-body');
+        body.textContent = md;
+
+        const preview = document.getElementById('export-preview');
+        preview.classList.add('show');
+        setTimeout(() => preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    }
+
+    function generateMarkdown() {
+        const tl = state.timeline ? state.timeline.replace('-', ' ') : 'Not set';
+        const criteria = getCriteriaList();
+        const techniques = getUsedTechniques();
+
+        let md = `# Project Workflow: ${state.projectName || 'Untitled Project'}\n\n`;
+        md += `---\n\n`;
+
+        // Phase 1
+        md += `## Phase 1: Define Scope\n\n`;
+        md += `**Project Name:** ${state.projectName || 'N/A'}\n\n`;
+        md += `**Description:** ${state.projectDesc || 'N/A'}\n\n`;
+        md += `**Target Outcome:** ${state.targetOutcome || 'N/A'}\n\n`;
+        md += `**Timeline:** ${tl}\n\n`;
+        if (criteria.length > 0) {
+            md += `**Completion Criteria:**\n`;
+            criteria.forEach(c => { md += `- ${c}\n`; });
+            md += `\n`;
+        }
+
+        // Phase 2
+        md += `## Phase 2: Gather Context\n\n`;
+        CONTEXT_SLOTS.forEach((slot, i) => {
+            md += `**${slot.label}:** ${state.contexts[i].trim() || 'N/A'}\n\n`;
+        });
+
+        // Phase 3
+        md += `## Phase 3: Create Prompts\n\n`;
+        const t0 = TECHNIQUES.find(t => t.value === state.technique0);
+        md += `**Setup Prompt** ${t0 ? `[${t0.label}]` : ''}:\n> ${state.setupPrompt || 'N/A'}\n\n`;
+        state.followUpPrompts.forEach((p, i) => {
+            if (p.trim()) {
+                const tKey = state[`technique${i + 1}`];
+                const tech = TECHNIQUES.find(t => t.value === tKey);
+                md += `**Follow-up ${i + 1}** ${tech ? `[${tech.label}]` : ''}:\n> ${p}\n\n`;
+            }
+        });
+
+        // Phase 4
+        md += `## Phase 4: Iterate\n\n`;
+        state.refinements.forEach((r, i) => {
+            if (r.type || r.prompt.trim()) {
+                md += `**Refinement ${i + 1}** (${r.type || 'unspecified'}):\n`;
+                md += `- Prompt: ${r.prompt || 'N/A'}\n`;
+                md += `- Expected Improvement: ${r.expected || 'N/A'}\n\n`;
+            }
+        });
+
+        // Phase 5
+        md += `## Phase 5: Verify\n\n`;
+        md += `**Checklist:**\n`;
+        VERIFICATION_ITEMS.forEach((item, i) => {
+            md += `- [${state.verificationChecks[i] ? 'x' : ' '}] ${item}\n`;
+        });
+        md += `\n**Notes:** ${state.verificationNotes || 'N/A'}\n\n`;
+
+        // Phase 6
+        md += `## Phase 6: Ship\n\n`;
+        md += `**Final Deliverable:** ${state.deliverableDesc || 'N/A'}\n\n`;
+        if (criteria.length > 0) {
+            md += `**Criteria Results:**\n`;
+            criteria.forEach((c, i) => {
+                const result = state.criteriaResults[i] || 'not answered';
+                md += `- ${c}: ${result}\n`;
+            });
+            md += `\n`;
+        }
+        md += `**Lessons Learned:** ${state.lessonsLearned || 'N/A'}\n\n`;
+        if (techniques.length > 0) {
+            md += `**Techniques Used:** ${techniques.map(t => `${t.label} (Day ${t.day})`).join(', ')}\n\n`;
+        }
+
+        md += `---\n`;
+        md += `*Generated by AI Mastery Bootcamp - Project Workflow Designer*\n`;
+        md += `*Completion: ${Math.round(getOverallCompletion())}%*\n`;
+
+        return md;
+    }
+
+    function copyExport() {
+        const text = document.getElementById('export-body').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('btn-copy-export');
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            const btn = document.getElementById('btn-copy-export');
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        });
+    }
+
+    function resetAll() {
+        if (!confirm('Reset all workflow data? This cannot be undone.')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        state = {
+            selectedTemplate: null,
+            openPhase: 0,
+            xpAwarded: false,
+            projectName: '',
+            projectDesc: '',
+            targetOutcome: '',
+            timeline: '',
+            contexts: ['', '', '', '', ''],
+            setupPrompt: '',
+            followUpPrompts: ['', '', ''],
+            technique0: '',
+            technique1: '',
+            technique2: '',
+            technique3: '',
+            refinements: [
+                { type: '', prompt: '', expected: '' },
+                { type: '', prompt: '', expected: '' },
+                { type: '', prompt: '', expected: '' }
+            ],
+            verificationChecks: Array(VERIFICATION_ITEMS.length).fill(false),
+            verificationNotes: '',
+            deliverableDesc: '',
+            criteriaResults: {},
+            lessonsLearned: ''
+        };
+        renderTemplates();
+        renderPipeline();
+        updateProgress();
+        document.getElementById('export-preview').classList.remove('show');
+        document.getElementById('btn-submit').textContent = 'Submit Workflow (+100 XP)';
+        document.getElementById('xp-toast').classList.remove('show');
+    }
+
+    /* ================================================================
+       PERSISTENCE
+       ================================================================ */
+
+    function saveState() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) { /* quota exceeded, ignore */ }
+    }
+
+    function loadState() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                Object.assign(state, parsed);
+                // Ensure arrays have correct length
+                while (state.contexts.length < 5) state.contexts.push('');
+                while (state.followUpPrompts.length < 3) state.followUpPrompts.push('');
+                while (state.refinements.length < 3) state.refinements.push({ type: '', prompt: '', expected: '' });
+                while (state.verificationChecks.length < VERIFICATION_ITEMS.length) state.verificationChecks.push(false);
+            }
+        } catch (e) { /* corrupt data, ignore */ }
+    }
+
+    /* ================================================================
+       UTILITIES
+       ================================================================ */
+
+    function esc(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function wordCount(str) {
+        if (!str || !str.trim()) return 0;
+        return str.trim().split(/\s+/).length;
+    }
+
+    /* ================================================================
+       BOOT
+       ================================================================ */
+
+    init();
+    </script>
+</body>
+</html>

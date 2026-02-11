@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Transformation Challenge | AI Mastery Bootcamp</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        /* ================================
+           PAGE LAYOUT
+           ================================ */
+        .page-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+            min-height: 100vh;
+        }
+
+        /* ================================
+           HEADER
+           ================================ */
+        .challenge-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .challenge-header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        .progress-bar-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            max-width: 400px;
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            transition: width var(--transition-slow);
+            width: 0%;
+        }
+
+        /* ================================
+           DIFFICULTY BADGE
+           ================================ */
+        .difficulty-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .difficulty-easy {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .difficulty-medium {
+            background: var(--accent-yellow-dim);
+            color: var(--accent-yellow);
+            border: 1px solid rgba(255, 214, 10, 0.3);
+        }
+
+        .difficulty-hard {
+            background: var(--accent-orange-dim);
+            color: var(--accent-orange);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .difficulty-expert {
+            background: var(--accent-purple-dim);
+            color: var(--accent-purple);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        /* ================================
+           CHALLENGE WORKSPACE
+           ================================ */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 700px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .panel-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+        }
+
+        .panel-title-icon {
+            margin-right: var(--space-sm);
+        }
+
+        .original-prompt {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            color: var(--error);
+            background: rgba(255, 71, 87, 0.08);
+            border: 1px dashed rgba(255, 71, 87, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            line-height: 1.7;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .issues-list {
+            margin-top: var(--space-md);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .issue-tag {
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(255, 71, 87, 0.12);
+            color: var(--error);
+            border: 1px solid rgba(255, 71, 87, 0.25);
+        }
+
+        .improved-textarea {
+            width: 100%;
+            flex: 1;
+            min-height: 160px;
+            padding: var(--space-md);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            resize: vertical;
+            transition: all var(--transition-fast);
+            line-height: 1.6;
+        }
+
+        .improved-textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .improved-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: var(--space-xs);
+        }
+
+        /* ================================
+           ACTIONS BAR
+           ================================ */
+        .actions-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-lg);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .submit-btn {
+            padding: 12px 36px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow-green);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ================================
+           SCOREBOARD
+           ================================ */
+        .scoreboard {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 700px) {
+            .scoreboard {
+                flex-wrap: wrap;
+            }
+        }
+
+        .score-card {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .score-card-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .score-card-value.green { color: var(--accent-green); }
+        .score-card-value.blue { color: var(--accent-blue); }
+        .score-card-value.purple { color: var(--accent-purple); }
+
+        .score-card-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        /* ================================
+           FEEDBACK PANEL
+           ================================ */
+        .feedback-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--space-lg);
+            display: none;
+        }
+
+        .feedback-panel.visible {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-header {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feedback-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .feedback-score {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .feedback-body {
+            padding: var(--space-lg);
+        }
+
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 500px) {
+            .criteria-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        .criteria-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+        }
+
+        .criteria-icon.pass { color: var(--accent-green); }
+        .criteria-icon.fail { color: var(--error); }
+
+        .criteria-label {
+            color: var(--text-secondary);
+        }
+
+        .criteria-label.pass { color: var(--text-primary); }
+
+        .criteria-points {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .criteria-points.pass { color: var(--accent-green); }
+        .criteria-points.fail { color: var(--text-muted); }
+
+        /* Tips */
+        .tips-section {
+            margin-bottom: var(--space-lg);
+        }
+
+        .tips-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-yellow);
+            margin-bottom: var(--space-sm);
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tip-icon {
+            color: var(--accent-yellow);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Model Answer */
+        .model-answer-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--space-lg);
+        }
+
+        .model-answer-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--font-sans);
+            padding: 0;
+            transition: color var(--transition-fast);
+        }
+
+        .model-answer-toggle:hover {
+            color: var(--accent-green);
+        }
+
+        .model-answer-content {
+            display: none;
+            margin-top: var(--space-md);
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .model-answer-content.visible {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        .model-answer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        /* ================================
+           COMPLETION SCREEN
+           ================================ */
+        .completion-screen {
+            display: none;
+            text-align: center;
+            padding: var(--space-3xl) var(--space-lg);
+        }
+
+        .completion-screen.visible {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        .completion-screen h2 {
+            font-size: 1.75rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+
+        .completion-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .final-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+            flex-wrap: wrap;
+        }
+
+        .final-stat {
+            text-align: center;
+        }
+
+        .final-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .final-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .restart-btn {
+            padding: 12px 32px;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 700;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .restart-btn:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* ================================
+           XP TOAST
+           ================================ */
+        .xp-toast {
+            position: fixed;
+            top: var(--space-lg);
+            right: var(--space-lg);
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-green);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--accent-green);
+            box-shadow: var(--shadow-glow-green);
+            z-index: var(--z-toast);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .xp-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="challenge-header">
+        <h1>Prompt Transformation Challenge</h1>
+        <p class="header-subtitle">Transform vague prompts into powerful, specific instructions</p>
+        <div class="progress-bar-container">
+            <span class="progress-label" id="progressLabel">Challenge 1 of 8</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span id="difficultyBadge" class="difficulty-badge difficulty-easy">Easy</span>
+        </div>
+    </header>
+
+    <!-- SCOREBOARD -->
+    <div class="scoreboard">
+        <div class="score-card">
+            <div class="score-card-value green" id="currentScore">0</div>
+            <div class="score-card-label">Current Score</div>
+        </div>
+        <div class="score-card">
+            <div class="score-card-value blue" id="totalScore">0 / 800</div>
+            <div class="score-card-label">Total Score</div>
+        </div>
+        <div class="score-card">
+            <div class="score-card-value purple" id="xpDisplay">0 XP</div>
+            <div class="score-card-label">XP Earned</div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (hidden when completion screen shows) -->
+    <div id="mainContent">
+        <!-- WORKSPACE -->
+        <div class="workspace">
+            <!-- LEFT: Original Prompt -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="panel-title-icon">&#x26A0;</span>Original Prompt</span>
+                </div>
+                <div class="original-prompt" id="originalPrompt">
+                    "Write code for a website"
+                </div>
+                <div class="issues-list" id="issuesList"></div>
+            </div>
+
+            <!-- RIGHT: Improved Prompt -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="panel-title-icon">&#x2728;</span>Your Improved Prompt</span>
+                </div>
+                <textarea
+                    class="improved-textarea"
+                    id="improvedPrompt"
+                    placeholder="Rewrite the prompt with more context, specificity, and constraints..."
+                ></textarea>
+                <div class="char-count"><span id="charCount">0</span> characters</div>
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                &#8592; Previous
+            </button>
+            <button class="submit-btn" id="submitBtn" disabled>
+                Submit Answer
+            </button>
+            <button class="nav-btn" id="nextBtn" disabled>
+                Next &#8594;
+            </button>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div class="feedback-panel" id="feedbackPanel">
+            <div class="feedback-header">
+                <span class="feedback-title">Score Breakdown</span>
+                <span class="feedback-score" id="feedbackScore"></span>
+            </div>
+            <div class="feedback-body">
+                <div class="criteria-grid" id="criteriaGrid"></div>
+
+                <div class="tips-section" id="tipsSection"></div>
+
+                <div class="model-answer-section">
+                    <button class="model-answer-toggle" id="modelToggle">
+                        &#9660; Show Model Answer
+                    </button>
+                    <div class="model-answer-content" id="modelAnswer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLETION SCREEN -->
+    <div class="completion-screen" id="completionScreen">
+        <div class="completion-icon">&#127942;</div>
+        <h2>Challenge Complete!</h2>
+        <p class="completion-subtitle">You've transformed all 8 prompts. Here's how you did:</p>
+        <div class="final-stats">
+            <div class="final-stat">
+                <div class="final-stat-value green" id="finalScore">0</div>
+                <div class="final-stat-label">Total Score</div>
+            </div>
+            <div class="final-stat">
+                <div class="final-stat-value blue" id="finalPercent">0%</div>
+                <div class="final-stat-label">Accuracy</div>
+            </div>
+            <div class="final-stat">
+                <div class="final-stat-value purple" id="finalXP">0 XP</div>
+                <div class="final-stat-label">XP Earned</div>
+            </div>
+        </div>
+        <button class="restart-btn" id="restartBtn">Try Again</button>
+    </div>
+</div>
+
+<!-- XP TOAST -->
+<div class="xp-toast" id="xpToast">+10 XP</div>
+
+<script>
+// ================================
+// CHALLENGE DATA
+// ================================
+const challenges = [
+    {
+        id: 1,
+        difficulty: 'easy',
+        original: 'Write code for a website',
+        issues: ['No technology specified', 'No site purpose', 'No constraints or requirements'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['react', 'vue', 'angular', 'next', 'html', 'css', 'javascript', 'typescript', 'node', 'python', 'django', 'flask', 'rails', 'ruby', 'php', 'laravel', 'svelte', 'wordpress', 'tailwind', 'bootstrap'],
+                description: 'Mentions a technology or framework'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['landing page', 'portfolio', 'blog', 'e-commerce', 'dashboard', 'todo', 'store', 'booking', 'social', 'forum', 'saas', 'marketplace', 'web app', 'single page', 'multi-page', 'homepage', 'contact form', 'sign up', 'login'],
+                description: 'Specifies what kind of website'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['page', 'section', 'header', 'footer', 'nav', 'responsive', 'mobile', 'desktop', 'component', 'layout', 'grid', 'form', 'button', 'card', 'hero', 'feature', 'testimonial'],
+                description: 'Describes specific elements or structure'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['accessibility', 'seo', 'performance', 'no dependencies', 'vanilla', 'under', 'maximum', 'minimum', 'without', 'only', 'must', 'should', 'compatible', 'browser', 'fast', 'lightweight', 'semantic'],
+                description: 'Includes limitations or requirements'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['professional', 'modern', 'minimalist', 'clean', 'corporate', 'creative', 'playful', 'developer', 'client', 'user', 'customer', 'visitor', 'beginner', 'enterprise', 'startup', 'personal'],
+                description: 'Mentions target audience or visual style'
+            }
+        },
+        tips: [
+            'Specify which technology or framework to use (e.g., React, vanilla HTML/CSS)',
+            'Describe what kind of website (portfolio, e-commerce, blog, etc.)',
+            'Include structural requirements like number of pages or key sections',
+            'Mention design preferences or target audience'
+        ],
+        modelAnswer: 'Build a responsive personal portfolio website using React and Tailwind CSS. Include a hero section with my name and title, an about section, a project gallery with at least 6 cards that link to GitHub repos, a skills section with categorized technology icons, and a contact form. Use a modern minimalist design with a dark theme. Ensure the site is accessible (WCAG 2.1 AA) and scores above 90 on Lighthouse performance.'
+    },
+    {
+        id: 2,
+        difficulty: 'easy',
+        original: 'Help me with my database',
+        issues: ['No database type mentioned', 'No specific problem described', 'No context about the project'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['mysql', 'postgres', 'postgresql', 'mongodb', 'sqlite', 'redis', 'dynamodb', 'firebase', 'supabase', 'sql', 'nosql', 'relational', 'document', 'graph', 'cassandra', 'mariadb', 'oracle', 'database'],
+                description: 'Identifies the database type or technology'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['query', 'schema', 'table', 'collection', 'index', 'migration', 'optimize', 'design', 'model', 'normalize', 'create', 'insert', 'update', 'delete', 'join', 'relationship', 'foreign key', 'primary key', 'backup', 'restore'],
+                description: 'Specifies what database task to perform'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['user', 'product', 'order', 'column', 'field', 'row', 'record', 'type', 'varchar', 'integer', 'boolean', 'timestamp', 'array', 'json', 'blob', 'text', 'constraint', 'unique', 'null'],
+                description: 'Includes specific data details'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['performance', 'million', 'rows', 'fast', 'slow', 'latency', 'concurrent', 'scale', 'size', 'limit', 'timeout', 'connection', 'pool', 'cache', 'replica', 'shard', 'partition'],
+                description: 'Mentions performance or scale requirements'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['production', 'development', 'staging', 'local', 'team', 'application', 'api', 'backend', 'server', 'service', 'microservice', 'app', 'project', 'system'],
+                description: 'Describes the project or environment context'
+            }
+        },
+        tips: [
+            'Specify which database system you are using (PostgreSQL, MongoDB, etc.)',
+            'Describe the specific problem: slow queries? schema design? migration issues?',
+            'Include relevant details like table names, data types, or error messages',
+            'Mention the scale or environment (development, production, data volume)'
+        ],
+        modelAnswer: 'I have a PostgreSQL database for an e-commerce application with tables for users, products, orders, and order_items. My query that joins orders with order_items and products to generate monthly sales reports is taking over 8 seconds on ~2 million order records. I already have indexes on order_items.order_id and orders.created_at. Can you analyze the query plan and suggest optimizations, including any additional indexes, query restructuring, or materialized views that might help get this under 500ms?'
+    },
+    {
+        id: 3,
+        difficulty: 'medium',
+        original: 'Create an API',
+        issues: ['No technology or framework', 'No endpoints defined', 'No data format specified', 'No authentication mentioned'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['rest', 'graphql', 'grpc', 'websocket', 'node', 'express', 'fastify', 'django', 'flask', 'fastapi', 'spring', 'rails', 'go', 'rust', 'python', 'typescript', 'java', 'net', 'asp', 'hono', 'nest'],
+                description: 'Specifies API type and technology stack'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['endpoint', 'route', 'get', 'post', 'put', 'delete', 'patch', 'crud', 'resource', 'controller', 'handler', 'middleware', 'request', 'response', 'status code', 'method'],
+                description: 'Defines endpoints or operations'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['json', 'xml', 'yaml', 'pagination', 'filter', 'sort', 'search', 'header', 'body', 'param', 'query', 'path', 'payload', 'schema', 'validation', 'dto'],
+                description: 'Specifies data format and features'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['auth', 'jwt', 'oauth', 'token', 'api key', 'rate limit', 'cors', 'https', 'ssl', 'security', 'permission', 'role', 'session', 'cookie', 'bearer'],
+                description: 'Includes authentication or security'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['mobile', 'frontend', 'client', 'consumer', 'third-party', 'internal', 'public', 'private', 'documentation', 'swagger', 'openapi', 'developer', 'integrate'],
+                description: 'Identifies who will consume the API'
+            }
+        },
+        tips: [
+            'Specify the API architecture (REST, GraphQL, gRPC)',
+            'List the key endpoints and their HTTP methods',
+            'Define the data format (JSON) and include validation requirements',
+            'Include authentication strategy (JWT, OAuth, API keys)',
+            'Mention who will consume this API (mobile app, frontend, third-party)'
+        ],
+        modelAnswer: 'Create a RESTful API using Node.js with Express and TypeScript for a task management application. Implement the following endpoints:\n\n- POST /api/auth/register and POST /api/auth/login (JWT authentication)\n- GET /api/tasks (with pagination, filtering by status, and sorting by due_date)\n- POST /api/tasks (create with title, description, due_date, priority)\n- PUT /api/tasks/:id (update task fields)\n- DELETE /api/tasks/:id (soft delete)\n\nUse JSON request/response format with proper HTTP status codes. Include input validation with Zod, error handling middleware, and rate limiting (100 requests/minute). The API will be consumed by a React frontend. Include Swagger/OpenAPI documentation.'
+    },
+    {
+        id: 4,
+        difficulty: 'medium',
+        original: 'Fix the bug in my app',
+        issues: ['No error description', 'No reproduction steps', 'No expected vs actual behavior', 'No code or context'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['react', 'vue', 'angular', 'node', 'python', 'java', 'swift', 'kotlin', 'flutter', 'mobile', 'web', 'desktop', 'browser', 'chrome', 'firefox', 'safari', 'ios', 'android', 'server', 'lambda', 'typescript'],
+                description: 'Identifies the technology and platform'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['error', 'exception', 'crash', 'fail', 'broken', 'not working', 'undefined', 'null', 'typeerror', 'referenceerror', 'syntaxerror', '500', '404', '403', '401', 'timeout', 'memory leak', 'infinite loop', 'stack overflow', 'warning', 'console'],
+                description: 'Describes the error or symptom'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['when', 'click', 'submit', 'load', 'navigate', 'refresh', 'scroll', 'type', 'open', 'close', 'step', 'then', 'after', 'before', 'during', 'trigger', 'reproduce', 'happens', 'occurs'],
+                description: 'Includes reproduction steps'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['expected', 'actual', 'should', 'instead', 'supposed to', 'want', 'correct', 'wrong', 'display', 'show', 'return', 'render', 'output', 'result', 'behavior'],
+                description: 'States expected vs actual behavior'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['version', 'dependency', 'package', 'library', 'framework', 'os', 'environment', 'config', 'setting', 'file', 'component', 'function', 'module', 'line', 'stack trace', 'log'],
+                description: 'Provides environment or version details'
+            }
+        },
+        tips: [
+            'Include the exact error message or unexpected behavior',
+            'Describe step-by-step how to reproduce the bug',
+            'State clearly what should happen vs what actually happens',
+            'Mention your tech stack, relevant versions, and the specific file/function',
+            'Share relevant code snippets or stack traces if possible'
+        ],
+        modelAnswer: 'I have a React 18 app (TypeScript, Vite) with a user registration form. When I submit the form by clicking the "Register" button, the app crashes with: "TypeError: Cannot read properties of undefined (reading \'email\')" in UserForm.tsx at line 42.\n\nSteps to reproduce:\n1. Navigate to /register\n2. Fill in name and email fields\n3. Click "Register"\n4. App crashes immediately\n\nExpected: Form data should be sent via POST to /api/users and redirect to /dashboard.\nActual: The app crashes on form submission.\n\nThe relevant code is in the onSubmit handler where I access formData.email. I suspect the issue is with my useState initialization or the form ref. Using React Hook Form v7.48 and Axios 1.6.'
+    },
+    {
+        id: 5,
+        difficulty: 'medium',
+        original: 'Write tests for my code',
+        issues: ['No test framework specified', 'No description of what to test', 'No coverage goals', 'No edge cases mentioned'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['jest', 'mocha', 'vitest', 'pytest', 'junit', 'rspec', 'cypress', 'playwright', 'testing library', 'enzyme', 'chai', 'sinon', 'supertest', 'msw', 'unit', 'integration', 'e2e', 'end-to-end'],
+                description: 'Specifies test framework or type'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['function', 'component', 'api', 'endpoint', 'class', 'method', 'module', 'hook', 'service', 'utility', 'helper', 'handler', 'controller', 'middleware', 'route', 'model'],
+                description: 'Identifies what code to test'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['return', 'expect', 'assert', 'should', 'input', 'output', 'parameter', 'argument', 'value', 'true', 'false', 'equal', 'match', 'contain', 'throw', 'resolve', 'reject', 'mock', 'spy', 'stub'],
+                description: 'Describes expected test behavior'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['edge case', 'boundary', 'empty', 'null', 'undefined', 'negative', 'zero', 'large', 'invalid', 'error', 'failure', 'timeout', 'concurrent', 'race condition', 'overflow', 'special character', 'duplicate'],
+                description: 'Mentions edge cases to cover'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['coverage', 'percent', '%', 'ci', 'pipeline', 'automated', 'regression', 'suite', 'describe', 'it', 'test', 'spec', 'scenario', 'given', 'when', 'then', 'arrange', 'act'],
+                description: 'Specifies coverage goals or testing approach'
+            }
+        },
+        tips: [
+            'Specify which test framework to use (Jest, Vitest, Pytest, etc.)',
+            'Describe exactly which function, component, or module needs testing',
+            'List the key scenarios: happy path, error cases, edge cases',
+            'Mention any mocking requirements (APIs, databases, dependencies)',
+            'State your coverage goals (line coverage %, specific behaviors)'
+        ],
+        modelAnswer: 'Write unit tests using Vitest and React Testing Library for my ShoppingCart component. The component has the following functionality:\n\n1. Displays a list of cart items with name, price, and quantity\n2. Has increment/decrement buttons for each item\n3. Shows a total price that updates dynamically\n4. Has a "Remove" button that deletes items\n5. Shows an empty state when cart is empty\n\nPlease cover:\n- Rendering with 0, 1, and multiple items\n- Incrementing quantity (including max limit of 99)\n- Decrementing quantity (minimum 1, removing at 0)\n- Total price calculation with decimals\n- Edge cases: empty strings for names, negative prices, very large quantities\n\nMock the useCart hook that provides cart state. Target 90%+ line coverage. Use describe/it blocks organized by feature.'
+    },
+    {
+        id: 6,
+        difficulty: 'hard',
+        original: 'Make my code better',
+        issues: ['No specific improvement metric', 'No language or codebase context', 'No constraints on approach', 'No current problems identified'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['javascript', 'typescript', 'python', 'java', 'go', 'rust', 'c#', 'ruby', 'php', 'swift', 'kotlin', 'react', 'node', 'django', 'spring', 'function', 'class', 'module', 'file', 'component', 'codebase'],
+                description: 'Identifies the language and codebase'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['performance', 'readability', 'maintainability', 'security', 'scalability', 'memory', 'speed', 'clean', 'dry', 'solid', 'refactor', 'optimize', 'simplify', 'restructure', 'decouple', 'modular'],
+                description: 'Specifies what "better" means'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['function', 'class', 'loop', 'algorithm', 'data structure', 'pattern', 'anti-pattern', 'complexity', 'big-o', 'o(n)', 'o(1)', 'nested', 'callback', 'promise', 'async', 'await', 'duplication', 'coupling'],
+                description: 'Points to specific code areas or patterns'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['backward compatible', 'no breaking', 'same api', 'interface', 'without changing', 'keep', 'maintain', 'preserve', 'existing', 'must support', 'cannot remove', 'legacy', 'deprecate'],
+                description: 'Defines what must be preserved'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['team', 'junior', 'senior', 'review', 'production', 'open source', 'internal', 'convention', 'style guide', 'linter', 'eslint', 'prettier', 'standard', 'best practice', 'idiomatic'],
+                description: 'Mentions team context or coding standards'
+            }
+        },
+        tips: [
+            'Define exactly what "better" means: performance? readability? security? maintainability?',
+            'Specify the language and framework of the code',
+            'Point to specific functions, classes, or patterns that need improvement',
+            'State any constraints: backward compatibility, API stability, timeline',
+            'Mention your team\'s coding standards or conventions'
+        ],
+        modelAnswer: 'Refactor my TypeScript Express API\'s authentication middleware (auth.ts, ~200 lines) for better readability and maintainability. Currently it has:\n\n1. A single 150-line function handling JWT verification, role checking, and rate limiting\n2. Deeply nested try/catch blocks (4 levels deep)\n3. Duplicated token parsing logic in 3 places\n4. Magic strings for role names\n\nPlease:\n- Split into single-responsibility functions following SOLID principles\n- Extract role names into an enum\n- Replace nested try/catch with early returns\n- Add TypeScript interfaces for the decoded token and user context\n- Keep the same middleware signature (req, res, next) for backward compatibility\n- Follow our team\'s ESLint/Prettier config (2-space indent, no semicolons, single quotes)\n\nThe existing test suite must continue to pass without modification.'
+    },
+    {
+        id: 7,
+        difficulty: 'hard',
+        original: 'Build a dashboard',
+        issues: ['No data source specified', 'No metrics defined', 'No target audience', 'No technology or design requirements'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['react', 'vue', 'angular', 'next', 'svelte', 'd3', 'chart', 'recharts', 'plotly', 'grafana', 'metabase', 'power bi', 'tableau', 'dashboard', 'analytics', 'admin', 'typescript', 'javascript'],
+                description: 'Specifies the technology and data source'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['metric', 'kpi', 'revenue', 'user', 'traffic', 'conversion', 'retention', 'churn', 'growth', 'sales', 'performance', 'uptime', 'latency', 'error rate', 'chart', 'graph', 'table', 'widget', 'count', 'total', 'average'],
+                description: 'Defines the metrics and visualizations'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['line chart', 'bar chart', 'pie chart', 'donut', 'area chart', 'heatmap', 'sparkline', 'gauge', 'number card', 'data table', 'time series', 'real-time', 'historical', 'comparison', 'trend', 'filter', 'date range', 'dropdown'],
+                description: 'Describes specific chart types and interactions'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['responsive', 'mobile', 'tablet', 'desktop', 'grid', 'layout', 'column', 'row', 'drag', 'resize', 'refresh', 'interval', 'cache', 'api', 'websocket', 'sse', 'polling', 'loading', 'skeleton'],
+                description: 'Includes responsive and technical requirements'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['manager', 'executive', 'developer', 'ops', 'marketing', 'sales', 'customer', 'stakeholder', 'team lead', 'ceo', 'cto', 'product', 'analyst', 'non-technical', 'technical'],
+                description: 'Identifies who the dashboard is for'
+            }
+        },
+        tips: [
+            'Specify the data source (API, database, CSV, real-time stream)',
+            'List the exact metrics and KPIs to display',
+            'Define chart types for each metric (line, bar, pie, table, etc.)',
+            'Include responsive/layout requirements and interactivity (filters, date ranges)',
+            'Identify the target audience (executives, developers, marketing team)'
+        ],
+        modelAnswer: 'Build an analytics dashboard using Next.js 14 and Recharts for our SaaS product\'s admin panel. The audience is product managers who need weekly performance reviews.\n\nLayout: Responsive 12-column grid, 2 columns on mobile, 4 on desktop.\n\nWidgets:\n1. Top row: 4 KPI number cards (Total Users, MRR, Churn Rate, Active Sessions) with sparkline trends\n2. Line chart: Daily active users over the past 30/60/90 days with date range picker\n3. Bar chart: Revenue by plan tier (Free, Pro, Enterprise) - monthly comparison\n4. Donut chart: User distribution by country (top 10 + "Other")\n5. Data table: Recent signups with sortable columns, pagination, and search filter\n\nData comes from our REST API at /api/analytics/*. Include loading skeletons, error states, and auto-refresh every 60 seconds. Use a dark theme consistent with our design system. Export to CSV functionality for the data table.'
+    },
+    {
+        id: 8,
+        difficulty: 'expert',
+        original: 'Create a deployment pipeline',
+        issues: ['No cloud provider', 'No pipeline stages defined', 'No environments mentioned', 'No testing strategy', 'No rollback plan'],
+        criteria: {
+            context: {
+                label: 'Context',
+                keywords: ['aws', 'gcp', 'azure', 'github actions', 'gitlab', 'jenkins', 'circleci', 'travis', 'bitbucket', 'docker', 'kubernetes', 'k8s', 'ecs', 'lambda', 'vercel', 'netlify', 'terraform', 'pulumi', 'cloudformation', 'ansible'],
+                description: 'Specifies cloud provider and CI/CD tool'
+            },
+            taskClarity: {
+                label: 'Task Clarity',
+                keywords: ['build', 'test', 'deploy', 'lint', 'scan', 'stage', 'step', 'job', 'pipeline', 'workflow', 'trigger', 'push', 'merge', 'tag', 'release', 'artifact', 'image', 'package', 'bundle'],
+                description: 'Defines pipeline stages and triggers'
+            },
+            specificity: {
+                label: 'Specificity',
+                keywords: ['development', 'staging', 'production', 'preview', 'canary', 'blue-green', 'rolling', 'environment', 'branch', 'main', 'master', 'develop', 'feature', 'hotfix', 'release branch', 'tag'],
+                description: 'Lists environments and deployment strategy'
+            },
+            constraints: {
+                label: 'Constraints',
+                keywords: ['rollback', 'revert', 'fallback', 'health check', 'monitoring', 'alert', 'notification', 'slack', 'email', 'approval', 'manual', 'gate', 'timeout', 'retry', 'failure', 'recovery', 'zero downtime'],
+                description: 'Includes rollback and monitoring strategy'
+            },
+            audience: {
+                label: 'Audience/Tone',
+                keywords: ['team', 'devops', 'sre', 'developer', 'ops', 'security', 'compliance', 'audit', 'soc2', 'hipaa', 'gdpr', 'secret', 'credential', 'vault', 'ssm', 'environment variable'],
+                description: 'Addresses team and compliance needs'
+            }
+        },
+        tips: [
+            'Specify the cloud provider (AWS, GCP, Azure) and CI/CD tool (GitHub Actions, GitLab CI)',
+            'Define each pipeline stage: lint, test, build, deploy',
+            'List all environments (dev, staging, production) and deployment triggers',
+            'Include a rollback strategy and health check mechanism',
+            'Address secrets management, notifications, and approval gates'
+        ],
+        modelAnswer: 'Create a CI/CD pipeline using GitHub Actions to deploy our Node.js/TypeScript API to AWS ECS Fargate across 3 environments.\n\nPipeline Stages:\n1. **Lint & Type Check**: ESLint + tsc --noEmit on every push\n2. **Unit Tests**: Vitest with coverage threshold (80%+ lines)\n3. **Build**: Docker multi-stage build, push to ECR\n4. **Integration Tests**: Run against a temporary Postgres container\n5. **Security Scan**: Trivy container scan, fail on HIGH/CRITICAL\n6. **Deploy to Staging**: Auto-deploy on merge to main, run smoke tests\n7. **Deploy to Production**: Manual approval gate, blue-green deployment via ECS\n\nEnvironments: dev (on push to feature/*), staging (merge to main), production (manual trigger with approval from 2 team leads).\n\nRollback: Automatic rollback if ECS health checks fail within 5 minutes. Keep last 5 task definitions for manual rollback. Alert via Slack #deployments channel.\n\nSecrets: Use AWS SSM Parameter Store for DB credentials and API keys. No secrets in the repository or Docker image.\n\nNotifications: Slack notifications for pipeline start, success, and failure. PagerDuty integration for production deployment failures.'
+    }
+];
+
+// ================================
+// STATE
+// ================================
+let currentIndex = 0;
+let scores = new Array(challenges.length).fill(null); // null = not attempted, number = score
+let submissions = new Array(challenges.length).fill('');
+let totalXP = 0;
+
+// ================================
+// DOM REFERENCES
+// ================================
+const $ = (sel) => document.querySelector(sel);
+const progressLabel = $('#progressLabel');
+const progressFill = $('#progressFill');
+const difficultyBadge = $('#difficultyBadge');
+const originalPrompt = $('#originalPrompt');
+const issuesList = $('#issuesList');
+const improvedPrompt = $('#improvedPrompt');
+const charCount = $('#charCount');
+const submitBtn = $('#submitBtn');
+const prevBtn = $('#prevBtn');
+const nextBtn = $('#nextBtn');
+const feedbackPanel = $('#feedbackPanel');
+const criteriaGrid = $('#criteriaGrid');
+const tipsSection = $('#tipsSection');
+const modelToggle = $('#modelToggle');
+const modelAnswer = $('#modelAnswer');
+const feedbackScore = $('#feedbackScore');
+const currentScoreEl = $('#currentScore');
+const totalScoreEl = $('#totalScore');
+const xpDisplay = $('#xpDisplay');
+const mainContent = $('#mainContent');
+const completionScreen = $('#completionScreen');
+const xpToast = $('#xpToast');
+
+// ================================
+// RENDER
+// ================================
+function render() {
+    const ch = challenges[currentIndex];
+
+    // Header
+    progressLabel.textContent = `Challenge ${currentIndex + 1} of ${challenges.length}`;
+    const completedCount = scores.filter(s => s !== null).length;
+    progressFill.style.width = `${(completedCount / challenges.length) * 100}%`;
+
+    // Difficulty badge
+    difficultyBadge.textContent = ch.difficulty.charAt(0).toUpperCase() + ch.difficulty.slice(1);
+    difficultyBadge.className = `difficulty-badge difficulty-${ch.difficulty}`;
+
+    // Original prompt
+    originalPrompt.textContent = `"${ch.original}"`;
+
+    // Issues
+    issuesList.innerHTML = ch.issues.map(issue =>
+        `<span class="issue-tag">${issue}</span>`
+    ).join('');
+
+    // Textarea
+    improvedPrompt.value = submissions[currentIndex];
+    charCount.textContent = submissions[currentIndex].length;
+
+    // Buttons
+    prevBtn.disabled = currentIndex === 0;
+    submitBtn.disabled = scores[currentIndex] !== null;
+    submitBtn.textContent = scores[currentIndex] !== null ? 'Submitted' : 'Submit Answer';
+
+    // Next button: enable if current is submitted, or if next challenge exists
+    const isLast = currentIndex === challenges.length - 1;
+    if (scores[currentIndex] !== null && isLast && scores.every(s => s !== null)) {
+        nextBtn.textContent = 'Finish';
+        nextBtn.disabled = false;
+    } else if (scores[currentIndex] !== null && !isLast) {
+        nextBtn.textContent = 'Next \u2192';
+        nextBtn.disabled = false;
+    } else {
+        nextBtn.textContent = 'Next \u2192';
+        nextBtn.disabled = true;
+    }
+
+    // Feedback
+    if (scores[currentIndex] !== null) {
+        showFeedback(currentIndex);
+        improvedPrompt.setAttribute('readonly', true);
+    } else {
+        feedbackPanel.classList.remove('visible');
+        improvedPrompt.removeAttribute('readonly');
+    }
+
+    // Score display
+    currentScoreEl.textContent = scores[currentIndex] !== null ? scores[currentIndex] : '\u2014';
+    const total = scores.reduce((sum, s) => sum + (s || 0), 0);
+    totalScoreEl.textContent = `${total} / ${challenges.length * 100}`;
+    xpDisplay.textContent = `${totalXP} XP`;
+
+    // Completion
+    mainContent.style.display = '';
+    completionScreen.classList.remove('visible');
+}
+
+// ================================
+// SCORING ENGINE
+// ================================
+function scoreSubmission(index) {
+    const ch = challenges[index];
+    const text = submissions[index].toLowerCase();
+    const results = {};
+    let total = 0;
+
+    for (const [key, crit] of Object.entries(ch.criteria)) {
+        const found = crit.keywords.some(kw => text.includes(kw.toLowerCase()));
+        results[key] = {
+            label: crit.label,
+            description: crit.description,
+            passed: found,
+            points: found ? 20 : 0
+        };
+        total += found ? 20 : 0;
+    }
+
+    // Bonus: length-based quality indicator (longer, more detailed prompts)
+    // If text is very short (< 30 chars), penalize any passed criteria
+    if (text.length < 30) {
+        for (const key of Object.keys(results)) {
+            if (results[key].passed) {
+                // Require at least some substance
+                const hasSubstance = text.split(/\s+/).length >= 8;
+                if (!hasSubstance) {
+                    results[key].passed = false;
+                    results[key].points = 0;
+                    total -= 20;
+                }
+            }
+        }
+    }
+
+    return { results, total: Math.max(0, total) };
+}
+
+// ================================
+// FEEDBACK DISPLAY
+// ================================
+function showFeedback(index) {
+    const ch = challenges[index];
+    const { results, total } = scoreSubmission(index);
+
+    feedbackPanel.classList.add('visible');
+
+    // Score
+    const color = total >= 80 ? 'var(--accent-green)' : total >= 40 ? 'var(--accent-yellow)' : 'var(--error)';
+    feedbackScore.style.color = color;
+    feedbackScore.textContent = `${total} / 100`;
+
+    // Criteria grid
+    criteriaGrid.innerHTML = Object.values(results).map(r => `
+        <div class="criteria-item">
+            <span class="criteria-icon ${r.passed ? 'pass' : 'fail'}">${r.passed ? '\u2713' : '\u2717'}</span>
+            <span class="criteria-label ${r.passed ? 'pass' : ''}">${r.label}</span>
+            <span class="criteria-points ${r.passed ? 'pass' : 'fail'}">${r.passed ? '+20' : '0'}</span>
+        </div>
+    `).join('');
+
+    // Tips (only show tips for failed criteria)
+    const failedCriteria = Object.values(results).filter(r => !r.passed);
+    if (failedCriteria.length > 0) {
+        const relevantTips = [];
+        failedCriteria.forEach(r => {
+            relevantTips.push(r.description);
+        });
+        // Also include challenge-specific tips
+        const tipsToShow = ch.tips.slice(0, failedCriteria.length + 1);
+
+        tipsSection.innerHTML = `
+            <div class="tips-title">Tips for Improvement</div>
+            ${tipsToShow.map(tip => `
+                <div class="tip-item">
+                    <span class="tip-icon">\u25B6</span>
+                    <span>${tip}</span>
+                </div>
+            `).join('')}
+        `;
+    } else {
+        tipsSection.innerHTML = `
+            <div class="tips-title" style="color: var(--accent-green);">Perfect Score!</div>
+            <div class="tip-item">
+                <span class="tip-icon" style="color: var(--accent-green);">\u2713</span>
+                <span>Excellent work! Your prompt covers all the key elements of an effective prompt.</span>
+            </div>
+        `;
+    }
+
+    // Model answer
+    modelToggle.textContent = '\u25B6 Show Model Answer';
+    modelAnswer.classList.remove('visible');
+    modelAnswer.innerHTML = `
+        <div class="model-answer-label">Model Answer</div>
+        ${ch.modelAnswer.replace(/\n/g, '<br>')}
+    `;
+}
+
+// ================================
+// EVENT HANDLERS
+// ================================
+improvedPrompt.addEventListener('input', () => {
+    const val = improvedPrompt.value;
+    submissions[currentIndex] = val;
+    charCount.textContent = val.length;
+    submitBtn.disabled = val.trim().length < 10 || scores[currentIndex] !== null;
+});
+
+submitBtn.addEventListener('click', () => {
+    if (scores[currentIndex] !== null) return;
+    if (submissions[currentIndex].trim().length < 10) return;
+
+    const { total } = scoreSubmission(currentIndex);
+    scores[currentIndex] = total;
+    totalXP += 10;
+
+    // Show XP toast
+    xpToast.classList.add('show');
+    setTimeout(() => xpToast.classList.remove('show'), 2000);
+
+    render();
+
+    // Scroll to feedback
+    setTimeout(() => {
+        feedbackPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+});
+
+prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    const allDone = scores.every(s => s !== null);
+    const isLast = currentIndex === challenges.length - 1;
+
+    if (allDone && isLast) {
+        showCompletion();
+        return;
+    }
+
+    if (currentIndex < challenges.length - 1) {
+        currentIndex++;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+modelToggle.addEventListener('click', () => {
+    const isVisible = modelAnswer.classList.contains('visible');
+    modelAnswer.classList.toggle('visible');
+    modelToggle.textContent = isVisible ? '\u25B6 Show Model Answer' : '\u25BC Hide Model Answer';
+});
+
+$('#restartBtn').addEventListener('click', () => {
+    currentIndex = 0;
+    scores = new Array(challenges.length).fill(null);
+    submissions = new Array(challenges.length).fill('');
+    totalXP = 0;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ================================
+// COMPLETION
+// ================================
+function showCompletion() {
+    mainContent.style.display = 'none';
+    completionScreen.classList.add('visible');
+
+    const total = scores.reduce((sum, s) => sum + (s || 0), 0);
+    const maxTotal = challenges.length * 100;
+    const percent = Math.round((total / maxTotal) * 100);
+
+    $('#finalScore').textContent = total;
+    $('#finalScore').style.color = percent >= 70 ? 'var(--accent-green)' : percent >= 40 ? 'var(--accent-yellow)' : 'var(--error)';
+    $('#finalPercent').textContent = `${percent}%`;
+    $('#finalPercent').style.color = percent >= 70 ? 'var(--accent-green)' : percent >= 40 ? 'var(--accent-yellow)' : 'var(--error)';
+    $('#finalXP').textContent = `${totalXP} XP`;
+}
+
+// ================================
+// KEYBOARD SHORTCUTS
+// ================================
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        if (!submitBtn.disabled) submitBtn.click();
+    }
+});
+
+// ================================
+// INIT
+// ================================
+render();
+</script>
+
+</body>
+</html>

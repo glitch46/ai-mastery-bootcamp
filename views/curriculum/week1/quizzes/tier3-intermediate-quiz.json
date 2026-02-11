@@ -1,0 +1,168 @@
+{
+  "quizId": "tier3-intermediate",
+  "title": "Week 1 Intermediate: Iterative Prompting, Task Decomposition & Clarification",
+  "description": "Demonstrate your ability to refine prompts iteratively, decompose complex tasks into focused sub-prompts, and diagnose ambiguity using the Clarification Checklist. Covers Day 3 lessons.",
+  "day": 3,
+  "difficulty": 3,
+  "timeLimit": 1200,
+  "passingScore": 75,
+  "xpReward": 100,
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "question": "What is the three-stage iteration pattern for refining AI responses?",
+      "options": [
+        "A) Draft -> Edit -> Publish",
+        "B) General -> Focused -> Reformatted",
+        "C) Plan -> Execute -> Review",
+        "D) Input -> Process -> Output"
+      ],
+      "correctAnswer": "B",
+      "explanation": "The iteration pattern is General (establish the topic and scope) -> Focused (add specifics, constraints, or missing pieces) -> Reformatted (shape the output format for your needs). Each turn builds on the previous response rather than replacing it.",
+      "points": 10,
+      "topic": "iterative-prompting"
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "question": "You ask AI to design a REST API and it returns basic CRUD endpoints, but you realize you also need authentication. What is the best approach?",
+      "options": [
+        "A) Start a new conversation and write a completely new prompt that includes authentication from the beginning",
+        "B) Say 'Make it better' and hope the AI adds authentication",
+        "C) Write a follow-up prompt: 'Good start. Now add authentication endpoints --- user registration, login, and logout. Make sure each task is associated with a user.'",
+        "D) Abandon the AI approach and write the API design manually"
+      ],
+      "correctAnswer": "C",
+      "explanation": "Iterative prompting means refining, not restarting. The AI already produced a useful foundation. A targeted follow-up that builds on the existing response ('Good start. Now add...') is more efficient and maintains context. Starting over loses the accumulated context and forces redundant work.",
+      "points": 10,
+      "topic": "iterative-prompting"
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "question": "Which of the following is a common mistake when writing follow-up prompts?",
+      "options": [
+        "A) Referencing what the AI already produced",
+        "B) Focusing each follow-up on one or two related modifications",
+        "C) Saying 'Make it better' without specifying what to change",
+        "D) Building on the previous response rather than replacing it"
+      ],
+      "correctAnswer": "C",
+      "explanation": "'Make it better' is a vague follow-up because the AI doesn't know what 'better' means to you. Effective follow-ups are specific about what to add, remove, or change. Options A, B, and D are all recommended best practices for iterative prompting.",
+      "points": 10,
+      "topic": "iterative-prompting"
+    },
+    {
+      "id": 4,
+      "type": "multiple_choice",
+      "question": "When decomposing a complex task into sub-prompts, what is the recommended number of sub-prompts for most tasks?",
+      "options": [
+        "A) Exactly 2 --- keep it simple",
+        "B) 4-7 sub-prompts",
+        "C) At least 15 to cover every detail",
+        "D) 1 --- monolithic prompts are always better for complex tasks"
+      ],
+      "correctAnswer": "B",
+      "explanation": "For most complex tasks, 4-7 sub-prompts hit the right balance. Fewer than 4 means you probably haven't broken it down enough. More than 7 means you might be micro-managing --- the AI can handle some complexity per step. This isn't a hard rule, but a strong default.",
+      "points": 10,
+      "topic": "breaking-tasks-down"
+    },
+    {
+      "id": 5,
+      "type": "multiple_choice",
+      "question": "A developer prompts: 'Build me a full-stack task management application with a database, REST API, React frontend, authentication, and tests.' Why is this likely to produce poor results?",
+      "options": [
+        "A) The prompt is too short",
+        "B) The AI cannot build full-stack applications at all",
+        "C) The prompt asks for five different engineering disciplines in one shot, causing attention dilution, shallow coverage, and output that's hard to review",
+        "D) The prompt doesn't specify a role for the AI"
+      ],
+      "correctAnswer": "C",
+      "explanation": "Large monolithic prompts fail because of attention dilution (the model juggles too many requirements), shallow coverage (it skims the surface of everything), hard-to-review output (errors hide in volume), and all-or-nothing quality. Decomposing into focused sub-prompts (database design, API routes, frontend, auth, tests) produces better results at each step.",
+      "points": 10,
+      "topic": "breaking-tasks-down"
+    },
+    {
+      "id": 6,
+      "type": "short_answer",
+      "question": "You asked an AI to help write a Python function and it returned this:\n\n```python\ndef process_data(data):\n    result = []\n    for item in data:\n        if item > 0:\n            result.append(item * 2)\n    return result\n```\n\nWrite two follow-up prompts that progressively refine this code. Follow-up 1 should add type hints, a docstring, and input validation. Follow-up 2 should refactor the loop into a list comprehension and add logging for filtered items.",
+      "sampleAnswer": "Follow-up 1: 'Add type hints to the function signature (input: list[int | float], return: list[int | float]), add a Google-style docstring explaining the function's purpose, parameters, returns, and raises. Add input validation that raises a TypeError if data is not a list and a ValueError if any element is not a number.'\n\nFollow-up 2: 'Refactor the for-loop and append pattern into a list comprehension. Add a logging statement using Python's logging module that logs at INFO level how many items were filtered out (items that were not positive), for example: \"Filtered out 3 of 10 items (non-positive values).\"'",
+      "rubric": [
+        "Follow-up 1 must request type hints on the function signature",
+        "Follow-up 1 must request a docstring (any recognized style)",
+        "Follow-up 1 must request input validation with specific error types",
+        "Follow-up 2 must request refactoring the loop to a list comprehension",
+        "Follow-up 2 must request logging with a specific detail (count of filtered items)",
+        "Each follow-up should be specific about what to change, not vague like 'make it better'",
+        "Bonus for referencing the existing code in follow-ups"
+      ],
+      "points": 15,
+      "topic": "iterative-prompting"
+    },
+    {
+      "id": 7,
+      "type": "short_answer",
+      "question": "Decompose the following request into 5 focused sub-prompts. For each sub-prompt, write the prompt text and note which previous step(s) it depends on.\n\nRequest: 'Create a weather dashboard web application that shows current weather and a 5-day forecast for any city, with a search function and the ability to save favorite cities.'",
+      "sampleAnswer": "Sub-prompt 1 (API & Data Model): 'I'm building a weather dashboard app. Using the OpenWeatherMap API (free tier), design TypeScript interfaces for current weather (temp, humidity, wind, conditions, icon) and 5-day forecast (daily high/low, conditions, icon). List the API endpoints and query parameters I'll need.'\nDepends on: Nothing\n\nSub-prompt 2 (Search & Geocoding): 'Based on the data model above, build a search service that takes a city name, uses the OpenWeatherMap geocoding API to resolve it to coordinates, then fetches current weather and forecast data. Return typed results matching our interfaces. Handle errors for invalid cities and API failures.'\nDepends on: Sub-prompt 1\n\nSub-prompt 3 (UI Components): 'Using the data interfaces from step 1, create React components: a SearchBar with debounced input, a CurrentWeather card displaying all current conditions, and a ForecastList showing the 5-day forecast as daily cards. Use TypeScript and Tailwind CSS.'\nDepends on: Sub-prompt 1\n\nSub-prompt 4 (Favorites Feature): 'Add a favorites system: a FavoriteButton component that toggles a city as favorite, a FavoritesList sidebar that displays saved cities, and a localStorage service that persists favorites across sessions. Clicking a favorite city should load its weather.'\nDepends on: Sub-prompts 1, 3\n\nSub-prompt 5 (Error Handling & Loading States): 'Add loading skeletons for the weather card and forecast list while data is fetching. Add error boundaries and user-friendly error messages for: API failures, rate limiting, invalid city names, and network offline. Include a retry button on error states.'\nDepends on: Sub-prompts 2, 3",
+      "rubric": [
+        "Must include exactly 5 sub-prompts (not more, not fewer)",
+        "Each sub-prompt must be specific enough to produce a reviewable artifact",
+        "Must identify dependencies between sub-prompts",
+        "Must cover: data model/API, search functionality, UI components, favorites feature, and error handling (or equivalent decomposition)",
+        "Sub-prompts should reference outputs from previous steps where dependent",
+        "Should not be overly granular (micromanaging) or overly broad (still monolithic)"
+      ],
+      "points": 20,
+      "topic": "breaking-tasks-down"
+    },
+    {
+      "id": 8,
+      "type": "short_answer",
+      "question": "The following prompt produced an off-target response. The developer wanted a security-focused code review but the AI returned a general style review.\n\nOriginal prompt: 'Review this code.'\n\nUsing the Clarification Checklist (audience, purpose, length/detail, tone, constraints), rewrite this prompt to eliminate ambiguity. Assume the code is an Express.js middleware function that handles JWT verification.",
+      "sampleAnswer": "Review this Express.js middleware function for security vulnerabilities. Specifically check for: SQL injection vectors, missing input validation, improper error handling that could leak internal server details to clients, and any issues with the JWT verification logic (token expiration handling, algorithm specification, secret management). Format your review as a numbered list of findings, each with the line number, the issue description, the severity (high/medium/low), and a suggested fix. Assume the reader is a mid-level backend developer.",
+      "rubric": [
+        "Must specify the purpose: security review (not general review)",
+        "Must specify constraints: Express.js middleware, JWT verification",
+        "Must specify at least 2-3 specific security categories to check (e.g., injection, input validation, error handling, JWT issues)",
+        "Must specify a format for the review output (e.g., numbered findings, severity ratings)",
+        "Should specify the audience or their technical level",
+        "Should demonstrate understanding that the original prompt failed because 'review' was ambiguous in scope"
+      ],
+      "points": 15,
+      "topic": "clarification"
+    },
+    {
+      "id": 9,
+      "type": "short_answer",
+      "question": "You prompted: 'Write a function to handle user data.' The AI returned a function that parses a CSV file of user records. You actually wanted a function that validates and sanitizes user input from a web form.\n\nDiagnose the ambiguity: which word(s) caused the misinterpretation? Write a revised prompt that eliminates the ambiguity.",
+      "sampleAnswer": "Diagnosis: The word 'handle' was the ambiguity. It could mean process, validate, parse, transform, store, or sanitize. The AI interpreted 'handle' as 'process/parse' while the developer meant 'validate and sanitize.' The phrase 'user data' was also ambiguous --- it could be CSV data, form input, API payload, or database records.\n\nRevised prompt: 'Write a TypeScript function that validates and sanitizes user registration data from a web form. Validate: email format using a regex, password strength (minimum 8 characters, at least one uppercase letter, one lowercase letter, and one number), and name length (2-50 characters). Sanitize all string inputs by trimming whitespace and escaping HTML entities. Return an object with isValid: boolean and errors: string[] listing any validation failures.'",
+      "rubric": [
+        "Must identify 'handle' as the primary ambiguous word",
+        "Should also identify 'user data' as ambiguous (could mean many things)",
+        "Revised prompt must use a specific verb instead of 'handle' (e.g., validate, sanitize)",
+        "Revised prompt must specify the data source (web form, not CSV)",
+        "Revised prompt must include concrete validation rules",
+        "Revised prompt must specify the return type or output format"
+      ],
+      "points": 15,
+      "topic": "clarification"
+    },
+    {
+      "id": 10,
+      "type": "short_answer",
+      "question": "Apply the Clarification Checklist to the following ambiguous prompt and identify which of the five ambiguity traps (unclear audience, vague scope, missing constraints, undefined purpose, ambiguous tone) it falls into. Then write a clarified version.\n\nAmbiguous prompt: 'Explain Docker.'",
+      "sampleAnswer": "Ambiguity traps present:\n- Unclear audience: For a CTO? A junior dev? A non-technical stakeholder?\n- Vague scope: Docker basics? Docker Compose? Docker in CI/CD? Dockerfile best practices? All of Docker?\n- Missing constraints: How long? How deep? Which aspects?\n- Undefined purpose: Is this for a blog post? A team wiki? A presentation? Onboarding docs?\n- Ambiguous tone: Academic? Casual tutorial? Technical reference?\n\nThis prompt falls into ALL FIVE traps.\n\nClarified version: 'Write a 400-word explanation of Docker for junior developers who know how to write code but have never used containers. Cover: what Docker is (in plain language), why developers use it (the \"it works on my machine\" problem), and the three core concepts they need to know (images, containers, Dockerfiles). Use a casual, approachable tone suitable for a team onboarding wiki. Include one simple example --- a Dockerfile for a Node.js Express app. Do not cover Docker Compose, Kubernetes, or container orchestration.'",
+      "rubric": [
+        "Must identify at least 3 of the 5 ambiguity traps present in the prompt",
+        "Must provide a clarified version that specifies the audience",
+        "Clarified version must define the scope (what to cover AND what to exclude)",
+        "Clarified version must specify a purpose or format",
+        "Clarified version must include a length or depth signal",
+        "Bonus for specifying tone and including a concrete example request"
+      ],
+      "points": 15,
+      "topic": "clarification"
+    }
+  ]
+}
